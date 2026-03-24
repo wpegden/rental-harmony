@@ -245,6 +245,24 @@ theorem sperner_exists_fully_labeled_simplex_of_surjectiveStatement
   rcases exists_piecewiseLinearSimplexMap_of_spernerLabeling T L with ⟨φ, hvertex⟩
   exact fullyLabeledFacet_exists_of_surjective T L φ hvertex (@hSurj Vertex _ _ T φ)
 
+/-- The global face-preserving surjectivity statement is proved in dimension `1`. -/
+theorem facePreservingMap_surjective_statement_one :
+    facePreservingMap_surjective_statement 1 := by
+  intro Vertex _ _ T φ
+  exact RentalHarmony.facePreservingMap_surjective_dimensionOne T φ
+
+/-- Hence the Section 5 barycenter-cell statement is also available in dimension `1`. -/
+theorem exists_barycenterPreimageCell_of_facePreservingMap_statement_one :
+    exists_barycenterPreimageCell_of_facePreservingMap_statement 1 := by
+  exact exists_barycenterPreimageCell_of_surjectiveStatement 1
+    facePreservingMap_surjective_statement_one
+
+/-- Hence the paper's Sperner statement is fully proved in dimension `1`. -/
+theorem sperner_exists_fully_labeled_simplex_statement_one :
+    sperner_exists_fully_labeled_simplex_statement 1 := by
+  exact sperner_exists_fully_labeled_simplex_of_surjectiveStatement 1
+    facePreservingMap_surjective_statement_one
+
 end GeometricReductions
 
 section Section6

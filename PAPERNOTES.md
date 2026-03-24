@@ -65,6 +65,12 @@
   derived center-of-mass map from its vertex images. The basic interpolation lemmas
   (`map_vertex`, `map_mem_facetImage`, continuity, boundary-face preservation) and the canonical
   Sperner extension have all been rebuilt against this stronger interface.
+- Formalization note after the first surjectivity progress:
+  the repaired interface is now strong enough to prove the full Section 5 surjectivity statement
+  in dimension `1`. The proof transports `RentDivision 2` to `unitInterval` using
+  `stdSimplexHomeomorphUnitInterval`, proves that a face-preserving map fixes the two endpoints,
+  and applies the intermediate value theorem. So the remaining difficulty is genuinely
+  higher-dimensional.
 - `Section 5` also has a minor notation slip: around line 387, "The vertex `e_1` of `Δ_n`" should be `Δ_{n-1}`.
 - `Section 6`, first theorem (around lines 449-463): the proof implicitly upgrades the face `τ` containing `x` to a facet. The hypothesis that `y` is not in the convex hull of any `n` lattice points rules out lower-dimensional faces, since those would map into convex hulls of at most `n` lattice points.
 - `Section 6`, second theorem (around lines 487-490): the counting step should be written explicitly. If fewer than `k_j` indices `i` had `β_ij > 0`, then `∑_i β_ij ≤ (k_j - 1) / (n + 1) < α_j`, contradicting `∑_i β_ij = α_j`.
@@ -77,6 +83,7 @@
 - The higher-dimensional algorithm in `Section 5` is the least formal part of the paper; it appears repairable, but a Lean development should plan to restate and prove that surjectivity result independently rather than following the paper literally line by line.
 - Current proof frontier:
   the modeling repair is now complete: the derived-map barycentric-coordinate interface is in
-  place, and the canonical Sperner extension theorem has been reproved on top of it. The immediate
-  frontier is again the actual Section 5 surjectivity proof for those face-preserving simplex
-  self-maps, followed by instantiating the existing Section 5 / Section 2 wrappers.
+  place, and the canonical Sperner extension theorem has been reproved on top of it. The
+  dimension-`1` surjectivity base case and its Section 5 / Section 2 wrappers are now proved. The
+  immediate frontier is the higher-dimensional Section 5 surjectivity proof for those
+  face-preserving simplex self-maps, followed by the Hall-witness extraction in Sections 3 and 4.

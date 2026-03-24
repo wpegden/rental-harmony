@@ -143,8 +143,10 @@
 - Use the new barycentric-coordinate model to prove the global Section 5 surjectivity theorem for
   face-preserving simplex self-maps.
 - The supporting-facet, continuity, and derived `toFun` lemmas are now proved, as is the rebuilt
-  Sperner extension theorem; the next geometric step is no longer interface repair but actual
-  surjectivity.
+  Sperner extension theorem.
+- The dimension-`1` surjectivity base case is now proved by transporting the simplex to
+  `unitInterval` and applying the intermediate value theorem, so the next geometric step is the
+  higher-dimensional argument rather than more interval infrastructure.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

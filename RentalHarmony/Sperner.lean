@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Convex.Combination
 import RentalHarmony.PaperDefinitions
+import Mathlib.Topology.Order.IntermediateValue
 
 /-!
 # Sperner Support
@@ -346,7 +347,80 @@ theorem boundary_preserving_toFun (φ : PiecewiseLinearSimplexMap T) :
         exact ((T.boundaryFace_exact v i).mp hi) hvertex0
       simp [φ.boundary_preserving v i hi_not]
 
+/-- A point of the 1-simplex with vanishing second coordinate is the left endpoint. -/
+lemma rentDivision_two_eq_vertex_zero_of_coord1_zero (x : RentDivision 2)
+    (hx : (((x : RentDivision 2) : RealPoint 1) 1) = 0) :
+    x = stdSimplex.vertex (S := ℝ) (0 : Fin 2) := by
+  apply Subtype.ext
+  funext i
+  fin_cases i
+  · have hsum := stdSimplex.add_eq_one x
+    have h0 : x 0 = 1 := by simpa [hx] using hsum
+    simpa [stdSimplex.vertex] using h0
+  · simpa [stdSimplex.vertex] using hx
+
+/-- A point of the 1-simplex with vanishing first coordinate is the right endpoint. -/
+lemma rentDivision_two_eq_vertex_one_of_coord0_zero (x : RentDivision 2)
+    (hx : (((x : RentDivision 2) : RealPoint 1) 0) = 0) :
+    x = stdSimplex.vertex (S := ℝ) (1 : Fin 2) := by
+  apply Subtype.ext
+  funext i
+  fin_cases i
+  · simpa [stdSimplex.vertex] using hx
+  · have hsum := stdSimplex.add_eq_one x
+    have h1 : x 1 = 1 := by simpa [hx, add_comm] using hsum
+    simpa [stdSimplex.vertex] using h1
+
 end PiecewiseLinearSimplexMap
+
+/--
+Paper Section 5 in dimension `1`: a continuous face-preserving piecewise-linear self-map of the
+interval is surjective.
+-/
+theorem facePreservingMap_surjective_dimensionOne
+    {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
+    (T : SimplicialSubdivision 1 Vertex) (φ : PiecewiseLinearSimplexMap T) :
+    Function.Surjective φ.toFun := by
+  let h : RentDivision 2 ≃ₜ unitInterval := stdSimplexHomeomorphUnitInterval
+  let g : unitInterval → unitInterval := fun t => h (φ.toFun (h.symm t))
+  have hg : Continuous g :=
+    h.continuous_toFun.comp ((PiecewiseLinearSimplexMap.continuous_toFun (T := T) (φ := φ)).comp
+      h.symm.continuous_toFun)
+  have hsymm0 : h.symm 0 = stdSimplex.vertex (S := ℝ) (0 : Fin 2) := by
+    apply h.injective
+    simp [h]
+  have hsymm1 : h.symm 1 = stdSimplex.vertex (S := ℝ) (1 : Fin 2) := by
+    apply h.injective
+    simp [h]
+  have hg0 : g 0 = 0 := by
+    rw [show g 0 = h (φ.toFun (stdSimplex.vertex (S := ℝ) (0 : Fin 2))) by
+      simp [g, hsymm0]]
+    have hcoord :
+        (((φ.toFun (stdSimplex.vertex (S := ℝ) (0 : Fin 2)) : RentDivision 2) :
+          RealPoint 1) 1) = 0 :=
+      PiecewiseLinearSimplexMap.boundary_preserving_toFun (T := T) (φ := φ)
+        (stdSimplex.vertex (S := ℝ) (0 : Fin 2)) 1 rfl
+    rw [PiecewiseLinearSimplexMap.rentDivision_two_eq_vertex_zero_of_coord1_zero _ hcoord]
+    simp [h]
+  have hg1 : g 1 = 1 := by
+    rw [show g 1 = h (φ.toFun (stdSimplex.vertex (S := ℝ) (1 : Fin 2))) by
+      simp [g, hsymm1]]
+    have hcoord :
+        (((φ.toFun (stdSimplex.vertex (S := ℝ) (1 : Fin 2)) : RentDivision 2) :
+          RealPoint 1) 0) = 0 :=
+      PiecewiseLinearSimplexMap.boundary_preserving_toFun (T := T) (φ := φ)
+        (stdSimplex.vertex (S := ℝ) (1 : Fin 2)) 0 rfl
+    rw [PiecewiseLinearSimplexMap.rentDivision_two_eq_vertex_one_of_coord0_zero _ hcoord]
+    simp [h]
+  intro y
+  let hy : unitInterval := h y
+  have hy_mem : hy ∈ Set.Icc (g 0) (g 1) := by
+    rw [hg0, hg1]
+    exact ⟨hy.2.1, hy.2.2⟩
+  rcases (intermediate_value_univ 0 1 hg hy_mem) with ⟨t, ht⟩
+  refine ⟨h.symm t, ?_⟩
+  apply h.injective
+  simpa [g, hy] using ht
 
 /--
 Paper Section 2: every Sperner labeling admits the piecewise-linear simplex map determined by its
