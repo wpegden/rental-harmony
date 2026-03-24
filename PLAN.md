@@ -41,6 +41,11 @@
   every subdivision vertex must lie in some full-dimensional facet. Otherwise the `map_vertex`
   field can force a value at an isolated vertex that is not contained in the image simplex of any
   facet through that geometric point, so the extension lemma is again false.
+- Further revision forced by the surjectivity proof:
+  `PiecewiseLinearSimplexMap` cannot be modeled only by a function `toFun`, vertex values, and the
+  existence of some facet-image witness for each point. That permits discontinuous step maps on the
+  1-simplex, so the Section 5 surjectivity theorem is false. The map object must be strengthened to
+  encode genuine affine-on-cells / continuity data.
 
 ## Mathlib dependencies to reuse
 - `Mathlib.Analysis.Convex.StdSimplex`
@@ -130,15 +135,13 @@
 - Keep the lattice-point and weighted-average arguments finite and combinatorial after that point.
 
 ## Immediate next steps
-- Use the new `exists_facet_weights` lemma in `RentalHarmony/Sperner.lean` to turn a
-  `FacetContainsPoint` witness into an explicit center-of-mass formula on one facet.
-- The canonical Sperner extension is now proved:
-  `exists_piecewiseLinearSimplexMap_of_spernerLabeling` handles the vertex branch using
-  `vertex_in_some_facet` and the non-vertex branch using `exists_facet_weights` plus the new
-  zero-coordinate lemmas for weighted facet images.
-- Prove the actual `facePreservingMap_surjective_statement` for `PiecewiseLinearSimplexMap`.
-- Feed the now-single remaining geometric ingredient into the already-proved wrappers in
-  `PaperTheorems.lean` to obtain the barycenter-cell and Sperner statements.
+- Repair `PiecewiseLinearSimplexMap` so it encodes actual piecewise-linear / affine-on-cell data,
+  not only pointwise facet-image membership.
+- Rework the new Sperner extension theorem against that repaired map interface; the present proof
+  gives the right combinatorial recipe, but it currently targets the too-weak map notion.
+- Re-approach the Section 5 surjectivity theorem only after that repair.
+- Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
+  barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's
   `k + 1`-labels-for-`k`-agents counting lemma from the geometric cell.
 

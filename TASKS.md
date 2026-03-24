@@ -10,8 +10,10 @@
 <!-- SUPERVISOR_TASKS:END -->
 
 ## Worker Tasks
-- [ ] Prove the actual Section 5 surjectivity theorem for `PiecewiseLinearSimplexMap`.
-- [ ] Use the now-proved Sperner extension together with the surjectivity theorem to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
+- [ ] Repair `PiecewiseLinearSimplexMap`: the current interface admits a Lean-checked nonsurjective boundary-preserving step map on the 1-simplex, so Section 5 is false as stated under the present encoding.
+- [ ] Reprove the canonical Sperner extension for the repaired map interface.
+- [ ] Prove the actual Section 5 surjectivity theorem for the repaired `PiecewiseLinearSimplexMap`.
+- [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Produce the Hall witnesses promised by the new wrapper theorems from the geometric label-count arguments.
 - [ ] Connect the Section 6 lattice-point statements to actual label-count arguments.
 

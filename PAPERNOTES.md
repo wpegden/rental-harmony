@@ -47,6 +47,17 @@
   the image labels of every facet containing that geometric point, and then the `map_vertex` field
   forces a value that no `map_mem_facetImage` witness can realize. The paper-facing subdivision
   interface therefore now also records `vertex_in_some_facet`.
+- Formalization note after proving the Sperner extension:
+  the current `PiecewiseLinearSimplexMap` interface is still too weak for the Section 5
+  surjectivity theorem. A Lean-checkable 1-dimensional counterexample uses the honest boundary
+  subdivision with vertices `e_0, e_1` and the map `f(x) = e_0` if `x_0 = 1`, `f(x) = e_1`
+  otherwise. This satisfies the current fields:
+  `map_vertex` holds at the two subdivision vertices;
+  `map_mem_facetImage` holds because the unique facet image is the whole interval;
+  `boundary_preserving` holds because `f(e_0) = e_0` and every other point is sent to `e_1`.
+  But `f` is not surjective. So the surjectivity statement is false under the current encoding
+  until `PiecewiseLinearSimplexMap` is strengthened to record actual affine-on-cells / continuity
+  data, not only pointwise facet-image membership.
 - `Section 5` also has a minor notation slip: around line 387, "The vertex `e_1` of `Δ_n`" should be `Δ_{n-1}`.
 - `Section 6`, first theorem (around lines 449-463): the proof implicitly upgrades the face `τ` containing `x` to a facet. The hypothesis that `y` is not in the convex hull of any `n` lattice points rules out lower-dimensional faces, since those would map into convex hulls of at most `n` lattice points.
 - `Section 6`, second theorem (around lines 487-490): the counting step should be written explicitly. If fewer than `k_j` indices `i` had `β_ij > 0`, then `∑_i β_ij ≤ (k_j - 1) / (n + 1) < α_j`, contradicting `∑_i β_ij = α_j`.
@@ -58,9 +69,10 @@
 - No fatal mathematical gap found in this pass.
 - The higher-dimensional algorithm in `Section 5` is the least formal part of the paper; it appears repairable, but a Lean development should plan to restate and prove that surjectivity result independently rather than following the paper literally line by line.
 - Current proof frontier:
-  the repaired geometric API now also includes the missing vertex-incidence condition needed for
-  the Sperner extension map, and that extension theorem has now been proved in Lean. The remaining
-  internal geometric lemma is therefore the actual surjectivity theorem for the repaired
-  `PiecewiseLinearSimplexMap`s. Once that is available, the Section 5 barycenter-cell statement
-  and the Section 2 Sperner statement reduce immediately to already-proved wrappers, and the
-  formalization can push the resulting labeled facet into the Hall-style rental-harmony arguments.
+  the Sperner extension theorem is now proved for the current weak interface, but the Section 5
+  surjectivity statement is false for that same interface. The immediate frontier is therefore a
+  modeling repair:
+  strengthen `PiecewiseLinearSimplexMap` so it really represents a piecewise-linear simplex map
+  with enough geometric coherence to imply surjectivity. After that repair, the current extension
+  proof will need to be rechecked or rebuilt against the stronger notion, and only then can the
+  Section 5 / Section 2 wrappers be resumed.
