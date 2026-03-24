@@ -59,10 +59,8 @@
 - The higher-dimensional algorithm in `Section 5` is the least formal part of the paper; it appears repairable, but a Lean development should plan to restate and prove that surjectivity result independently rather than following the paper literally line by line.
 - Current proof frontier:
   the repaired geometric API now also includes the missing vertex-incidence condition needed for
-  the Sperner extension map. The remaining work is therefore back to the two intended internal
-  lemmas:
-  prove the actual surjectivity theorem for those repaired `PiecewiseLinearSimplexMap`s, and prove
-  that a Sperner labeling extends to such a piecewise-linear simplex map with the expected vertex
-  images. Inside the extension proof, the vertex case is now covered by `vertex_in_some_facet`;
-  the remaining non-vertex case is to turn convex weights on one domain facet into a codomain
-  simplex point with the same vanished coordinates.
+  the Sperner extension map, and that extension theorem has now been proved in Lean. The remaining
+  internal geometric lemma is therefore the actual surjectivity theorem for the repaired
+  `PiecewiseLinearSimplexMap`s. Once that is available, the Section 5 barycenter-cell statement
+  and the Section 2 Sperner statement reduce immediately to already-proved wrappers, and the
+  formalization can push the resulting labeled facet into the Hall-style rental-harmony arguments.

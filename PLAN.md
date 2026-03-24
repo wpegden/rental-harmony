@@ -132,15 +132,12 @@
 ## Immediate next steps
 - Use the new `exists_facet_weights` lemma in `RentalHarmony/Sperner.lean` to turn a
   `FacetContainsPoint` witness into an explicit center-of-mass formula on one facet.
-- Use the new `vertex_in_some_facet` field and `exists_incident_facet_for_sperner_vertex` lemma to
-  handle the vertex branch of the canonical Sperner extension.
-- Prove that the corresponding center of mass of the labeled simplex vertices stays in the correct
-  boundary face, giving the missing non-vertex facet-image point for the Sperner extension.
+- The canonical Sperner extension is now proved:
+  `exists_piecewiseLinearSimplexMap_of_spernerLabeling` handles the vertex branch using
+  `vertex_in_some_facet` and the non-vertex branch using `exists_facet_weights` plus the new
+  zero-coordinate lemmas for weighted facet images.
 - Prove the actual `facePreservingMap_surjective_statement` for `PiecewiseLinearSimplexMap`.
-- Prove the remaining Section 2 extension lemma:
-  every Sperner labeling should admit a `PiecewiseLinearSimplexMap` whose vertex map is
-  `spernerVertexMap L`.
-- Feed those two ingredients into the now-proved statement-level wrappers in
+- Feed the now-single remaining geometric ingredient into the already-proved wrappers in
   `PaperTheorems.lean` to obtain the barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's
   `k + 1`-labels-for-`k`-agents counting lemma from the geometric cell.

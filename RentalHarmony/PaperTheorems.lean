@@ -234,19 +234,15 @@ theorem fullyLabeledFacet_exists_of_surjective
     (by simpa [hvertex] using facetImageContainsBarycenter_of_surjective T φ h)
 
 /--
-Paper Section 2 reduces to two internal ingredients:
-surjectivity of the face-preserving simplex maps, and existence of a piecewise-linear extension of
-the Sperner vertex map.
+Paper Section 2 now reduces only to the global surjectivity theorem:
+the required piecewise-linear Sperner extension is proved in `RentalHarmony/Sperner.lean`.
 -/
 theorem sperner_exists_fully_labeled_simplex_of_surjectiveStatement
     (dimension : ℕ)
-    (hSurj : @facePreservingMap_surjective_statement.{u} dimension)
-    (hExt : ∀ {Vertex : Type u} [Fintype Vertex] [DecidableEq Vertex]
-      (T : SimplicialSubdivision dimension Vertex) (L : SpernerLabeling T),
-      ∃ φ : PiecewiseLinearSimplexMap T, φ.vertexMap = (spernerVertexMap L).vertexMap) :
+    (hSurj : @facePreservingMap_surjective_statement.{u} dimension) :
     @sperner_exists_fully_labeled_simplex_statement.{u} dimension := by
   intro Vertex _ _ T L
-  rcases hExt T L with ⟨φ, hvertex⟩
+  rcases exists_piecewiseLinearSimplexMap_of_spernerLabeling T L with ⟨φ, hvertex⟩
   exact fullyLabeledFacet_exists_of_surjective T L φ hvertex (@hSurj Vertex _ _ T φ)
 
 end GeometricReductions
