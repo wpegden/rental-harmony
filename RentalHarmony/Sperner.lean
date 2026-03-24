@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Convex.Combination
 import RentalHarmony.PaperDefinitions
+import Mathlib.Topology.Homotopy.Basic
 import Mathlib.Topology.Order.IntermediateValue
 
 /-!
@@ -258,6 +259,16 @@ theorem continuous_toFun (φ : PiecewiseLinearSimplexMap T) :
   simpa [PiecewiseLinearSimplexMap.toFun] using
     (Continuous.subtype_mk (continuous_toRealPoint (φ := φ)) fun x => (φ.toFun x).2)
 
+/-- The piecewise-linear simplex map as a bundled continuous map. -/
+def toContinuousMap (φ : PiecewiseLinearSimplexMap T) :
+    C(RentDivision (dimension + 1), RentDivision (dimension + 1)) :=
+  ⟨φ.toFun, φ.continuous_toFun⟩
+
+@[simp] theorem toContinuousMap_apply (φ : PiecewiseLinearSimplexMap T)
+    (x : RentDivision (dimension + 1)) :
+    φ.toContinuousMap x = φ.toFun x :=
+  rfl
+
 /-- The derived simplex map interpolates its prescribed vertex values. -/
 theorem map_vertex (φ : PiecewiseLinearSimplexMap T) (v : Vertex) :
     φ.toFun (T.vertexPos v) = φ.vertexMap v := by
@@ -346,6 +357,107 @@ theorem boundary_preserving_toFun (φ : PiecewiseLinearSimplexMap T) :
         intro hi
         exact ((T.boundaryFace_exact v i).mp hi) hvertex0
       simp [φ.boundary_preserving v i hi_not]
+
+/-- A boundary-preserving simplex self-map preserves every coordinate face setwise. -/
+theorem maps_face_to_itself {f : RentDivision (dimension + 1) → RentDivision (dimension + 1)}
+    (hf : PreservesBoundaryFaces f) {σ : Finset (Room (dimension + 1))}
+    {x : RentDivision (dimension + 1)}
+    (hx : ∀ i, i ∉ σ → (((x : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0) :
+    ∀ i, i ∉ σ → (((f x : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 := by
+  intro i hi
+  exact hf x i (hx i hi)
+
+/--
+The straight-line homotopy from the identity map to a face-preserving piecewise-linear simplex map.
+
+In the repaired barycentric-coordinate model this homotopy is available for free because both
+endpoints lie in the convex simplex.
+-/
+def straightLineHomotopy (φ : PiecewiseLinearSimplexMap T) :
+    ContinuousMap.Homotopy (ContinuousMap.id (RentDivision (dimension + 1))) φ.toContinuousMap where
+  toFun tx := by
+    refine
+      ⟨(1 - (tx.1 : ℝ)) • (((tx.2 : RentDivision (dimension + 1)) : RealPoint dimension)) +
+          (tx.1 : ℝ) •
+            (((φ.toFun tx.2 : RentDivision (dimension + 1)) : RealPoint dimension)), ?_⟩
+    exact (convex_stdSimplex ℝ (Room (dimension + 1))) tx.2.2 (φ.toFun tx.2).2
+      (sub_nonneg.mpr tx.1.2.2) tx.1.2.1 (sub_add_cancel 1 (tx.1 : ℝ))
+  continuous_toFun := by
+    have ht : Continuous fun tx : unitInterval × RentDivision (dimension + 1) => ((tx.1 : ℝ)) :=
+      continuous_subtype_val.comp continuous_fst
+    have hx :
+        Continuous fun tx : unitInterval × RentDivision (dimension + 1) =>
+          (((tx.2 : RentDivision (dimension + 1)) : RealPoint dimension)) :=
+      continuous_subtype_val.comp continuous_snd
+    have hφ :
+        Continuous fun tx : unitInterval × RentDivision (dimension + 1) =>
+          (((φ.toFun tx.2 : RentDivision (dimension + 1)) : RealPoint dimension)) :=
+      continuous_subtype_val.comp
+        ((PiecewiseLinearSimplexMap.continuous_toFun (T := T) (φ := φ)).comp continuous_snd)
+    exact (((continuous_const.sub ht).smul hx).add (ht.smul hφ)).subtype_mk fun tx =>
+      (show
+        (1 - (tx.1 : ℝ)) • (((tx.2 : RentDivision (dimension + 1)) : RealPoint dimension)) +
+            (tx.1 : ℝ) •
+              (((φ.toFun tx.2 : RentDivision (dimension + 1)) : RealPoint dimension)) ∈
+          stdSimplex ℝ (Room (dimension + 1)) from by
+            exact (convex_stdSimplex ℝ (Room (dimension + 1))) tx.2.2 (φ.toFun tx.2).2
+              (sub_nonneg.mpr tx.1.2.2) tx.1.2.1 (sub_add_cancel 1 (tx.1 : ℝ)))
+  map_zero_left := by
+    intro x
+    apply Subtype.ext
+    funext i
+    change
+      (1 - (0 : ℝ)) *
+          ((((x : RentDivision (dimension + 1)) : RealPoint dimension) i)) +
+        (0 : ℝ) *
+          ((((φ.toFun x : RentDivision (dimension + 1)) : RealPoint dimension) i)) =
+      (((x : RentDivision (dimension + 1)) : RealPoint dimension) i)
+    simp
+  map_one_left := by
+    intro x
+    apply Subtype.ext
+    funext i
+    change
+      (1 - (1 : ℝ)) *
+          ((((x : RentDivision (dimension + 1)) : RealPoint dimension) i)) +
+        (1 : ℝ) *
+          ((((φ.toFun x : RentDivision (dimension + 1)) : RealPoint dimension) i)) =
+      (((φ.toFun x : RentDivision (dimension + 1)) : RealPoint dimension) i)
+    simp
+
+/-- The intermediate map in the straight-line homotopy at time `t`. -/
+def straightLineMap (φ : PiecewiseLinearSimplexMap T) (t : unitInterval) :
+    C(RentDivision (dimension + 1), RentDivision (dimension + 1)) :=
+  (φ.straightLineHomotopy).curry t
+
+/--
+Every intermediate map in the straight-line homotopy still preserves each boundary face setwise.
+-/
+theorem straightLineMap_preservesBoundaryFaces (φ : PiecewiseLinearSimplexMap T)
+    (t : unitInterval) :
+    PreservesBoundaryFaces (φ.straightLineMap t) := by
+  intro x i hx₀
+  have hφ₀ :
+      (((φ.toFun x : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 :=
+    φ.boundary_preserving_toFun x i hx₀
+  have hφReal : φ.toRealPoint x i = 0 := by
+    simpa [PiecewiseLinearSimplexMap.coe_toFun] using hφ₀
+  change
+      (((1 - (t : ℝ)) • (((x : RentDivision (dimension + 1)) : RealPoint dimension)) +
+          (t : ℝ) • (φ.toRealPoint x)) i) = 0
+  simp [Pi.smul_apply, smul_eq_mul, hx₀, hφReal]
+
+/--
+The identity is homotopic to any face-preserving piecewise-linear simplex map through
+face-preserving maps.
+-/
+theorem homotopicWith_id_boundaryPreserving (φ : PiecewiseLinearSimplexMap T) :
+    ContinuousMap.HomotopicWith
+      (ContinuousMap.id (RentDivision (dimension + 1))) φ.toContinuousMap
+      (fun f => PreservesBoundaryFaces f) := by
+  refine ⟨{ toHomotopy := φ.straightLineHomotopy, prop' := ?_ }⟩
+  intro t
+  exact φ.straightLineMap_preservesBoundaryFaces t
 
 /-- A point of the 1-simplex with vanishing second coordinate is the left endpoint. -/
 lemma rentDivision_two_eq_vertex_zero_of_coord1_zero (x : RentDivision 2)

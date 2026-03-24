@@ -132,6 +132,11 @@
 ### Surjectivity subproblem
 - First attempt: prove a local theorem for continuous/affine-on-cells maps that preserve each face
   of the standard simplex setwise.
+- The straight-line homotopy from `id` to such a map is now formalized in
+  `RentalHarmony/Sperner.lean`, and every intermediate map still preserves every coordinate face.
+  So the topological route has sharpened:
+  it remains to formalize an explicit retraction from the simplex minus the barycenter to the
+  boundary, and then supply the contradiction showing the simplex boundary is not contractible.
 - If the topological route is awkward, switch to the paper's combinatorial path-following proof.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
@@ -147,6 +152,8 @@
 - The dimension-`1` surjectivity base case is now proved by transporting the simplex to
   `unitInterval` and applying the intermediate value theorem, so the next geometric step is the
   higher-dimensional argument rather than more interval infrastructure.
+- The new homotopy infrastructure shows that higher-dimensional surjectivity can now be attacked as
+  a genuine topological contradiction, not another interface repair.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

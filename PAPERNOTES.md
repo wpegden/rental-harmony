@@ -71,6 +71,14 @@
   `stdSimplexHomeomorphUnitInterval`, proves that a face-preserving map fixes the two endpoints,
   and applies the intermediate value theorem. So the remaining difficulty is genuinely
   higher-dimensional.
+- Formalization note after the next topological reduction:
+  in the repaired barycentric-coordinate model, the straight-line homotopy from `id` to a
+  face-preserving `PiecewiseLinearSimplexMap` automatically stays face-preserving, because
+  vanishing coordinates remain zero under convex combination. This part of the Section 5
+  topological argument is now formalized. So the higher-dimensional frontier has narrowed further:
+  either formalize an explicit deformation from the simplex minus the barycenter onto the boundary
+  and combine it with noncontractibility of the boundary, or return to the paper's trap-door
+  argument.
 - `Section 5` also has a minor notation slip: around line 387, "The vertex `e_1` of `Δ_n`" should be `Δ_{n-1}`.
 - `Section 6`, first theorem (around lines 449-463): the proof implicitly upgrades the face `τ` containing `x` to a facet. The hypothesis that `y` is not in the convex hull of any `n` lattice points rules out lower-dimensional faces, since those would map into convex hulls of at most `n` lattice points.
 - `Section 6`, second theorem (around lines 487-490): the counting step should be written explicitly. If fewer than `k_j` indices `i` had `β_ij > 0`, then `∑_i β_ij ≤ (k_j - 1) / (n + 1) < α_j`, contradicting `∑_i β_ij = α_j`.
@@ -84,6 +92,8 @@
 - Current proof frontier:
   the modeling repair is now complete: the derived-map barycentric-coordinate interface is in
   place, and the canonical Sperner extension theorem has been reproved on top of it. The
-  dimension-`1` surjectivity base case and its Section 5 / Section 2 wrappers are now proved. The
-  immediate frontier is the higher-dimensional Section 5 surjectivity proof for those
-  face-preserving simplex self-maps, followed by the Hall-witness extraction in Sections 3 and 4.
+  dimension-`1` surjectivity base case and its Section 5 / Section 2 wrappers are now proved, and
+  the straight-line face-preserving homotopy to `id` is also formalized. The immediate frontier is
+  the higher-dimensional Section 5 surjectivity proof for those face-preserving simplex self-maps,
+  most likely via an omitted-barycenter retraction argument or else the paper's trap-door proof,
+  followed by the Hall-witness extraction in Sections 3 and 4.
