@@ -111,11 +111,13 @@
 - Keep the lattice-point and weighted-average arguments finite and combinatorial after that point.
 
 ## Immediate next steps
-- Prove the newly stated Hall-based reduction lemmas from the geometric hypotheses produced by the
-  Sperner/barycenter cell arguments.
-- Build the concrete triangulation and piecewise-linear map API behind `SimplicialSubdivision` and
-  `PiecewiseLinearVertexMap`.
-- Start the geometric side with barycenter-containing facets and face-preserving surjectivity.
+- Extend the new `RentalHarmony/Sperner.lean` support layer from reduction lemmas to an actual
+  proof of the Section 5 surjectivity / barycenter-cell theorem.
+- Use the resulting barycenter-cell theorem to discharge
+  `sperner_exists_fully_labeled_simplex_statement` via the new local barycenter/facet reductions
+  already in place.
+- Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's
+  `k + 1`-labels-for-`k`-agents counting lemma from the geometric cell.
 
 ## Current input status
 - No proposed axioms.

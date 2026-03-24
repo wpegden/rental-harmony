@@ -2,18 +2,23 @@
 
 <!-- SUPERVISOR_TASKS:START -->
 ## Supervisor Tasks
-- [x] Create `PaperDefinitions.lean` with the definitions needed to state the paper results.
-- [x] Create `PaperTheorems.lean` with theorem statements as close to the paper as Lean allows.
-- [x] Keep the files easy for a human to compare against the paper.
-- [x] Make both files syntactically valid Lean.
+- [ ] Prove the target statements presented in `PaperTheorems.lean`.
+- [ ] Keep reusable proof infrastructure in separate support files when that yields a cleaner project structure.
+- [ ] Maintain `TASKS.md` and `PLAN.md` as the proof frontier moves.
+- [ ] Keep sorrys within the configured policy.
+- [ ] Do not introduce unapproved axioms.
 <!-- SUPERVISOR_TASKS:END -->
 
 ## Worker Tasks
-- [ ] Prove the statement wrappers in `PaperTheorems.lean` from the Hall lemmas and future Sperner/surjectivity results.
-- [ ] Build the geometric side of the theory: subdivision cells, barycenter-containing facets, and face-preserving maps.
+- [ ] Prove the actual Section 5 surjectivity / barycenter-cell theorem for `PiecewiseLinearVertexMap`.
+- [ ] Strengthen the current Sperner support from reduction lemmas to a direct proof of `sperner_exists_fully_labeled_simplex_statement`.
+- [ ] Produce the Hall witnesses promised by the new wrapper theorems from the geometric label-count arguments.
 - [ ] Connect the Section 6 lattice-point statements to actual label-count arguments.
 
 ## Completed
+- [x] Added `RentalHarmony/Sperner.lean` with the first reusable geometric infrastructure for the Sperner map.
+- [x] Proved the local geometric reductions: a facet-covering hypothesis gives a barycenter cell, and a barycenter cell for the Sperner map gives a fully labeled facet.
+- [x] Added Hall-side wrapper theorems reducing the rental-harmony statements to secretive Hall witnesses.
 - [x] Created root-level `PaperDefinitions.lean` and `PaperTheorems.lean` as the reviewer-facing statement files.
 - [x] Added an explicit tolerance-profile structure so the paper's one-cent hypothesis now appears in the rental-harmony statements.
 - [x] Tightened the surjectivity wrapper to the paper-facing piecewise-linear facet-image formulation.

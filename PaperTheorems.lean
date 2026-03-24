@@ -1,5 +1,6 @@
 import Mathlib.Combinatorics.Hall.Basic
 import RentalHarmony.PaperDefinitions
+import RentalHarmony.Sperner
 
 /-!
 # Paper Theorems
@@ -135,6 +136,38 @@ def secretiveRentalHarmony_statement (rooms : ℕ) : Prop :=
 
 end Section4
 
+section HallReductions
+
+/--
+Once the geometric argument produces a rent division satisfying the paper's strengthened Hall
+condition, the general secretive rental-harmony theorem follows from the Hall lemmas above.
+-/
+theorem secretiveRentalHarmony_of_secretiveHallWitness
+    {rooms : ℕ}
+    (h : ∀ prefs : KnownTolerantPreferences rooms (rooms - 1),
+      ∃ d : RentDivision rooms,
+        SecretiveHallCondition (acceptableChoiceFamily (forgetTolerance prefs) d)) :
+    secretiveRentalHarmony_statement rooms := by
+  intro prefs
+  rcases h prefs with ⟨d, hd⟩
+  exact hasSecretiveEnvyFreeDivision_of_secretiveHallCondition
+    (prefs := forgetTolerance prefs) d hd
+
+/--
+The three-roommate theorem is the first nontrivial instance of the same Hall reduction.
+-/
+theorem threeRoommates_secretiveRentalHarmony_of_secretiveHallWitness
+    (h : ∀ prefs : KnownTolerantPreferences 3 2,
+      ∃ d : RentDivision 3,
+        SecretiveHallCondition (acceptableChoiceFamily (forgetTolerance prefs) d)) :
+    threeRoommates_secretiveRentalHarmony_statement := by
+  intro prefs
+  rcases h prefs with ⟨d, hd⟩
+  exact hasSecretiveEnvyFreeDivision_of_secretiveHallCondition
+    (prefs := forgetTolerance prefs) d hd
+
+end HallReductions
+
 section Section5
 
 /--
@@ -147,6 +180,48 @@ def exists_barycenterPreimageCell_of_facePreservingMap_statement (dimension : �
       ∃ σ ∈ T.facets, FacetImageContainsBarycenter σ φ.vertexMap
 
 end Section5
+
+section GeometricReductions
+
+/--
+Paper Section 5 reduces to the stronger statement that every point lies in the image of some
+facet.
+-/
+theorem facetImageContainsBarycenter_of_surjectiveOnFacets
+    {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
+    (T : SimplicialSubdivision dimension Vertex) (φ : PiecewiseLinearVertexMap T)
+    (h : ∀ x : RentDivision (dimension + 1),
+      ∃ σ ∈ T.facets, FacetImageContains σ φ.vertexMap x) :
+    ∃ σ ∈ T.facets, FacetImageContainsBarycenter σ φ.vertexMap := by
+  simpa [FacetImageContainsBarycenter] using
+    h (barycentricRentDivision (dimension + 1))
+
+/--
+Paper Section 2: a barycenter-containing facet for the Sperner label map is automatically fully
+labeled.
+-/
+theorem fullyLabeledFacet_exists_of_barycenterPreimage
+    {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
+    (T : SimplicialSubdivision dimension Vertex) (L : SpernerLabeling T)
+    (h : ∃ σ ∈ T.facets, FacetImageContainsBarycenter σ (spernerVertexMap L).vertexMap) :
+    ∃ σ ∈ T.facets, FullyLabeledFacet σ L.label := by
+  rcases h with ⟨σ, hσfacet, hσbary⟩
+  exact ⟨σ, hσfacet, fullyLabeledFacet_of_barycenter_mem_spernerImage L σ hσbary⟩
+
+/--
+If the Sperner vertex map covers every point of the simplex by some facet image, then one facet is
+fully labeled.
+-/
+theorem fullyLabeledFacet_exists_of_surjectiveOnFacets
+    {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
+    (T : SimplicialSubdivision dimension Vertex) (L : SpernerLabeling T)
+    (h : ∀ x : RentDivision (dimension + 1),
+      ∃ σ ∈ T.facets, FacetImageContains σ (spernerVertexMap L).vertexMap x) :
+    ∃ σ ∈ T.facets, FullyLabeledFacet σ L.label :=
+  fullyLabeledFacet_exists_of_barycenterPreimage T L
+    (facetImageContainsBarycenter_of_surjectiveOnFacets T (spernerVertexMap L) h)
+
+end GeometricReductions
 
 section Section6
 
