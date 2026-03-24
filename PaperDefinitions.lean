@@ -170,6 +170,7 @@ structure SimplicialSubdivision (dimension : ℕ) (Vertex : Type*) [Fintype Vert
       ((vertexPos v : Room (dimension + 1) → ℝ) i ≠ 0)
   facets : Finset (Finset Vertex)
   facet_card : ∀ σ ∈ facets, σ.card = dimension + 1
+  vertex_in_some_facet : ∀ v, ∃ σ ∈ facets, v ∈ σ
   covers_simplex :
     ∀ x : RentDivision (dimension + 1), ∃ σ ∈ facets,
       ((x : RealPoint dimension) ∈

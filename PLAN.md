@@ -37,6 +37,10 @@
   subdivision vertices must have unique geometric positions. Otherwise two distinct interior
   vertices may occupy the same point and receive different Sperner labels, making any actual
   extension map impossible at that shared point.
+- Further revision forced by the extension proof:
+  every subdivision vertex must lie in some full-dimensional facet. Otherwise the `map_vertex`
+  field can force a value at an isolated vertex that is not contained in the image simplex of any
+  facet through that geometric point, so the extension lemma is again false.
 
 ## Mathlib dependencies to reuse
 - `Mathlib.Analysis.Convex.StdSimplex`
@@ -126,6 +130,12 @@
 - Keep the lattice-point and weighted-average arguments finite and combinatorial after that point.
 
 ## Immediate next steps
+- Use the new `exists_facet_weights` lemma in `RentalHarmony/Sperner.lean` to turn a
+  `FacetContainsPoint` witness into an explicit center-of-mass formula on one facet.
+- Use the new `vertex_in_some_facet` field and `exists_incident_facet_for_sperner_vertex` lemma to
+  handle the vertex branch of the canonical Sperner extension.
+- Prove that the corresponding center of mass of the labeled simplex vertices stays in the correct
+  boundary face, giving the missing non-vertex facet-image point for the Sperner extension.
 - Prove the actual `facePreservingMap_surjective_statement` for `PiecewiseLinearSimplexMap`.
 - Prove the remaining Section 2 extension lemma:
   every Sperner labeling should admit a `PiecewiseLinearSimplexMap` whose vertex map is

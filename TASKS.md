@@ -12,11 +12,15 @@
 ## Worker Tasks
 - [ ] Prove the actual Section 5 surjectivity theorem for `PiecewiseLinearSimplexMap`.
 - [ ] Prove that every Sperner labeling extends to a `PiecewiseLinearSimplexMap` with the expected vertex map.
+- [ ] Use `vertex_in_some_facet` to finish the vertex branch of the Sperner extension construction and isolate the remaining non-vertex branch cleanly.
+- [ ] Turn the new facet-weight extraction lemma into a facet-image point that preserves the zero coordinates of the original simplex point.
 - [ ] Use the new statement-level wrappers to push surjectivity and extension existence through the repaired API and obtain the Section 5 barycenter-cell and Section 2 Sperner statements.
 - [ ] Produce the Hall witnesses promised by the new wrapper theorems from the geometric label-count arguments.
 - [ ] Connect the Section 6 lattice-point statements to actual label-count arguments.
 
 ## Completed
+- [x] Identified and repaired a fourth geometric interface bug: every subdivision vertex must belong to some facet, and added the corresponding incident-facet helper lemma for Sperner vertices.
+- [x] Proved a reusable convex-combination lemma extracting facet weights from `FacetContainsPoint`.
 - [x] Identified and repaired a third geometric interface bug: duplicated geometric vertices make the Sperner extension lemma false, so `vertexPos` must be injective.
 - [x] Identified and repaired a second geometric interface bug: `boundaryFace` must describe the exact simplex face, and `PiecewiseLinearSimplexMap` must record its vertex values.
 - [x] Reconnected the global Section 5 / Section 2 statement aliases to the proved local geometric reductions, after fixing the universe-polymorphic wrapper issue.

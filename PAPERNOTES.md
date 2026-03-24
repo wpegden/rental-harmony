@@ -40,6 +40,13 @@
   `map_vertex` field then forces any extension map to take the same input point to both simplex
   vertices simultaneously. The paper-facing subdivision interface therefore also needs
   `vertexPos` to be injective.
+- Formalization note after continuing the extension proof further:
+  the repaired interface still needed one more simplicial-complex incidence condition:
+  every subdivision vertex must belong to at least one full-dimensional facet. Otherwise one can
+  add an "isolated" interior vertex that is not used by any facet, label it by a room absent from
+  the image labels of every facet containing that geometric point, and then the `map_vertex` field
+  forces a value that no `map_mem_facetImage` witness can realize. The paper-facing subdivision
+  interface therefore now also records `vertex_in_some_facet`.
 - `Section 5` also has a minor notation slip: around line 387, "The vertex `e_1` of `Δ_n`" should be `Δ_{n-1}`.
 - `Section 6`, first theorem (around lines 449-463): the proof implicitly upgrades the face `τ` containing `x` to a facet. The hypothesis that `y` is not in the convex hull of any `n` lattice points rules out lower-dimensional faces, since those would map into convex hulls of at most `n` lattice points.
 - `Section 6`, second theorem (around lines 487-490): the counting step should be written explicitly. If fewer than `k_j` indices `i` had `β_ij > 0`, then `∑_i β_ij ≤ (k_j - 1) / (n + 1) < α_j`, contradicting `∑_i β_ij = α_j`.
@@ -51,9 +58,11 @@
 - No fatal mathematical gap found in this pass.
 - The higher-dimensional algorithm in `Section 5` is the least formal part of the paper; it appears repairable, but a Lean development should plan to restate and prove that surjectivity result independently rather than following the paper literally line by line.
 - Current proof frontier:
-  the repaired geometric API is now strong enough that the Section 5 statement is meaningful again.
-  The remaining work now splits cleanly into two internal lemmas:
+  the repaired geometric API now also includes the missing vertex-incidence condition needed for
+  the Sperner extension map. The remaining work is therefore back to the two intended internal
+  lemmas:
   prove the actual surjectivity theorem for those repaired `PiecewiseLinearSimplexMap`s, and prove
   that a Sperner labeling extends to such a piecewise-linear simplex map with the expected vertex
-  images. The paper-facing Section 5 barycenter-cell wrapper and the Section 2 Sperner wrapper are
-  already reduced to those ingredients.
+  images. Inside the extension proof, the vertex case is now covered by `vertex_in_some_facet`;
+  the remaining non-vertex case is to turn convex weights on one domain facet into a codomain
+  simplex point with the same vanished coordinates.
