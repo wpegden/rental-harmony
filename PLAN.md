@@ -216,8 +216,10 @@
 - That support-theorem route is now started concretely:
   `RentalHarmony/Section5Graph.lean` defines the bundled subtype `PrefixFace k` and the map
   `Section5MilestoneChain.prefixPoint`, which packages every milestone as a point of its ambient
-  prefix face. The next missing lemma on this route is the explicit restriction/padding
-  equivalence `PrefixFace k ≃ RentDivision (k + 1)`.
+  prefix face. The explicit restriction/padding equivalence
+  `PrefixFace.equivRentDivision : PrefixFace k ≃ RentDivision (k + 1)` is now formalized, so the
+  next missing lemma on this route is the finite-union avoidance theorem inside those smaller
+  simplices / prefix faces.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -248,7 +250,9 @@
   generic milestone chain has open segment crossings and away-from-boundary milestone hits in the
   sense recorded there. At the moment this reduces to a missing support theorem about choosing
   points in the relative interior of prefix simplex faces away from finitely many lower-dimensional
-  convex hulls.
+  convex hulls. The new `PrefixFace.equivRentDivision` means this support theorem can now be
+  transported to smaller standard simplices instead of being proved directly in the ambient
+  simplex coordinates.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

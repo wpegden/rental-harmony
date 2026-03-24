@@ -13,14 +13,10 @@
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
 - [ ] Prove the actual milestone-chain geometric/transversality consequences that imply `Section5GraphNode.MilestoneSegmentTransversality`.
 - [ ] Instantiate `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality` from the milestone-chain genericity proof to obtain the Section 5 terminal-node / barycenter-face existence statement.
-- [ ] Resolve the current geometric blocker for milestone perturbations:
-  either build an explicit equivalence between each prefix face `conv{e_1, ..., e_k}` and a
-  smaller standard simplex, or prove a direct finite-union avoidance theorem in the affine span of
-  that prefix face. Without one of these, the new open-segment / away-from-boundary existence
-  proof does not go through in Lean.
-- [ ] Finish the prefix-face support theorem now started in `RentalHarmony/Section5Graph.lean`:
-  extend the new bundled subtype `PrefixFace k` and `Section5MilestoneChain.prefixPoint` to an
-  explicit restriction/padding equivalence with `RentDivision (k + 1)`.
+- [ ] Prove the remaining prefix-face support theorem needed for milestone perturbations:
+  transport a finite-union avoidance statement to each `PrefixFace k` via the new equivalence
+  `PrefixFace k ≃ RentDivision (k + 1)`, or prove the equivalent relative-interior avoidance lemma
+  directly there.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
@@ -63,6 +59,9 @@
   `SubdivisionFace.ImageContainsMilestoneAwayFromBoundary`, together with the stronger support-layer
   package `Section5GraphNode.MilestoneSegmentTransversality` and the wrapper
   `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality`.
+- [x] Built the explicit prefix-face equivalence in `RentalHarmony/Section5Graph.lean`:
+  `PrefixFace.restrict`, `PrefixFace.pad`, and `PrefixFace.equivRentDivision` identify
+  `PrefixFace k` with `RentDivision (k + 1)`.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made

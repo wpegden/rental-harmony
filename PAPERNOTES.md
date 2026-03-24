@@ -221,6 +221,11 @@
   the prefix-face route is now started in Lean. `RentalHarmony/Section5Graph.lean` defines the
   bundled subtype `PrefixFace k` for the outer face `conv{e_1, ..., e_{k+1}}`, and
   `Section5MilestoneChain.prefixPoint` upgrades each milestone to an element of that subtype.
-  The next concrete target is the restriction/padding equivalence `PrefixFace k ≃ RentDivision (k +
-  1)`. My scratch attempt shows the forward restriction map is close but still needs a careful
-  finite-sum reindexing proof.
+- Formalization note after the latest prefix-face step:
+  that restriction/padding support theorem is now fully formalized.
+  `RentalHarmony/Section5Graph.lean` defines `PrefixFace.restrict`, `PrefixFace.pad`, and the
+  explicit equivalence `PrefixFace.equivRentDivision : PrefixFace k ≃ RentDivision (k + 1)`.
+  The finite-sum reindexing proof is now packaged inside the support file rather than left in
+  scratch. So the remaining milestone-chain blocker is no longer face identification; it is the
+  actual finite-union avoidance theorem in the relative interior of the smaller simplex, which can
+  now be transported back to the ambient prefix face through this equivalence.

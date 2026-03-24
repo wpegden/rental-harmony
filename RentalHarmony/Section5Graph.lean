@@ -167,6 +167,156 @@ def PrefixFace (k : Fin (dimension + 1)) :=
   {x : RentDivision (dimension + 1) //
     ∀ i : Room (dimension + 1), k.1 < i.1 → ((x : RealPoint dimension) i) = 0}
 
+namespace PrefixFace
+
+variable {k : Fin (dimension + 1)}
+
+/-- Reindex the first `k + 1` ambient coordinates by a smaller `Fin (k + 1)`. -/
+def indexEquiv : Fin (k.1 + 1) ≃ {i : Fin (dimension + 1) // i.1 < k.1 + 1} where
+  toFun j := ⟨j.castLE (Nat.succ_le_of_lt k.2), by simpa using j.2⟩
+  invFun i := ⟨i.1.1, i.2⟩
+  left_inv j := by
+    ext
+    rfl
+  right_inv i := by
+    apply Subtype.ext
+    rfl
+
+/-- Restrict a point of the prefix face to the corresponding smaller simplex. -/
+def restrict (x : PrefixFace (dimension := dimension) k) : RentDivision (k.1 + 1) := by
+  refine ⟨fun j => ((x.1 : RealPoint dimension) (j.castLE (Nat.succ_le_of_lt k.2))), ?_⟩
+  refine ⟨?_, ?_⟩
+  · intro j
+    exact (x.1.2).1 _
+  · let p : Fin (dimension + 1) → Prop := fun i => i.1 < k.1 + 1
+    have hsplit :
+        (∑ i : {j // p j}, ((x.1 : RealPoint dimension) i.1)) +
+          ∑ i : {j // ¬ p j}, ((x.1 : RealPoint dimension) i.1) =
+            ∑ i : Fin (dimension + 1), ((x.1 : RealPoint dimension) i) :=
+      Fintype.sum_subtype_add_sum_subtype (p := p)
+        (f := fun i : Fin (dimension + 1) => ((x.1 : RealPoint dimension) i))
+    have hsmall :
+        (∑ i : {j // p j}, ((x.1 : RealPoint dimension) i.1)) =
+          ∑ j : Fin (k.1 + 1),
+            ((x.1 : RealPoint dimension) (j.castLE (Nat.succ_le_of_lt k.2))) := by
+      symm
+      simpa using
+        (Fintype.sum_equiv (indexEquiv (k := k))
+          (fun j : Fin (k.1 + 1) =>
+            ((x.1 : RealPoint dimension) (j.castLE (Nat.succ_le_of_lt k.2))))
+          (fun i : {j // p j} => ((x.1 : RealPoint dimension) i.1))
+          (fun j => rfl))
+    have htail : (∑ i : {j // ¬ p j}, ((x.1 : RealPoint dimension) i.1)) = 0 := by
+      apply Fintype.sum_eq_zero
+      intro i
+      have hi : k.1 < i.1 := by
+        have : ¬ i.1 < k.1 + 1 := i.2
+        omega
+      exact x.2 i.1 hi
+    have hxsum : (∑ i : Fin (dimension + 1), ((x.1 : RealPoint dimension) i)) = 1 := (x.1.2).2
+    rw [← hsmall]
+    linarith [hsplit, htail, hxsum]
+
+/-- Pad a smaller simplex point with trailing zeros to land in the ambient prefix face. -/
+def pad (y : RentDivision (k.1 + 1)) : PrefixFace (dimension := dimension) k := by
+  refine ⟨?_, ?_⟩
+  · refine ⟨fun i => if hi : i.1 < k.1 + 1 then ((y : RealPoint k.1) ⟨i.1, hi⟩) else 0, ?_⟩
+    refine ⟨?_, ?_⟩
+    · intro i
+      by_cases hi : i.1 < k.1 + 1
+      · simp [hi]
+      · simp [hi]
+    · let p : Fin (dimension + 1) → Prop := fun i => i.1 < k.1 + 1
+      have hsplit :
+          (∑ i : {j // p j},
+              (if hi : i.1.1 < k.1 + 1 then ((y : RealPoint k.1) ⟨i.1.1, hi⟩) else 0)) +
+            ∑ i : {j // ¬ p j},
+              (if hi : i.1.1 < k.1 + 1 then ((y : RealPoint k.1) ⟨i.1.1, hi⟩) else 0) =
+              ∑ i : Fin (dimension + 1),
+                (if hi : i.1 < k.1 + 1 then ((y : RealPoint k.1) ⟨i.1, hi⟩) else 0) :=
+        Fintype.sum_subtype_add_sum_subtype (p := p)
+          (f := fun i : Fin (dimension + 1) =>
+            if hi : i.1 < k.1 + 1 then ((y : RealPoint k.1) ⟨i.1, hi⟩) else 0)
+      have hsmall :
+          (∑ i : {j // p j},
+              (if hi : i.1.1 < k.1 + 1 then ((y : RealPoint k.1) ⟨i.1.1, hi⟩) else 0)) =
+            ∑ j : Fin (k.1 + 1), ((y : RealPoint k.1) j) := by
+        simpa using
+          (Fintype.sum_equiv (indexEquiv (k := k)).symm
+            (fun i : {j // p j} =>
+              if hi : i.1.1 < k.1 + 1 then ((y : RealPoint k.1) ⟨i.1.1, hi⟩) else 0)
+            (fun j : Fin (k.1 + 1) => ((y : RealPoint k.1) j))
+            (fun i => by
+              have hle : i.1.1 ≤ k.1 := by omega
+              simp [indexEquiv, hle]))
+      have htail :
+          (∑ i : {j // ¬ p j},
+              (if hi : i.1.1 < k.1 + 1 then ((y : RealPoint k.1) ⟨i.1.1, hi⟩) else 0)) = 0 := by
+        apply Fintype.sum_eq_zero
+        intro i
+        simp [p, i.2]
+      have hysum : (∑ j : Fin (k.1 + 1), ((y : RealPoint k.1) j)) = 1 := y.2.2
+      linarith [hsplit, hsmall, htail, hysum]
+  · intro i hi
+    have hnot : ¬ i.1 < k.1 + 1 := by omega
+    change (if hi' : i.1 < k.1 + 1 then ((↑y : RealPoint k.1) ⟨i.1, hi'⟩) else 0) = 0
+    simp [hnot]
+
+@[simp] lemma restrict_apply (x : PrefixFace (dimension := dimension) k) (j : Fin (k.1 + 1)) :
+    ((restrict (k := k) x : RealPoint k.1) j) =
+      ((x.1 : RealPoint dimension) (j.castLE (Nat.succ_le_of_lt k.2))) :=
+  rfl
+
+@[simp] lemma pad_apply_lt (y : RentDivision (k.1 + 1)) {i : Room (dimension + 1)}
+    (hi : i.1 < k.1 + 1) :
+    (((pad (k := k) y).1 : RealPoint dimension) i) = ((y : RealPoint k.1) ⟨i.1, hi⟩) := by
+  have hle : i ≤ k := Nat.le_of_lt_succ hi
+  have hEq : (⟨i.1, Nat.lt_succ_of_le hle⟩ : Fin (k.1 + 1)) = ⟨i.1, hi⟩ := by
+    apply Fin.ext
+    rfl
+  unfold pad
+  change (if hi' : i.1 < k.1 + 1 then ((y : RealPoint k.1) ⟨i.1, hi'⟩) else 0) =
+    ((y : RealPoint k.1) ⟨i.1, hi⟩)
+  simp [hi, hEq]
+
+@[simp] lemma pad_apply_ge (y : RentDivision (k.1 + 1)) {i : Room (dimension + 1)}
+    (hi : ¬ i.1 < k.1 + 1) :
+    (((pad (k := k) y).1 : RealPoint dimension) i) = 0 := by
+  unfold pad
+  change (if hi' : i.1 < k.1 + 1 then ((y : RealPoint k.1) ⟨i.1, hi'⟩) else 0) = 0
+  simp [hi]
+
+/-- The outer prefix face is explicitly equivalent to the smaller standard simplex. -/
+def equivRentDivision : PrefixFace (dimension := dimension) k ≃ RentDivision (k.1 + 1) where
+  toFun := restrict (k := k)
+  invFun := pad (k := k)
+  left_inv x := by
+    apply Subtype.ext
+    ext i
+    by_cases hi : i.1 < k.1 + 1
+    · have hEq : ((⟨i.1, hi⟩ : Fin (k.1 + 1)).castLE (Nat.succ_le_of_lt k.2) :
+          Fin (dimension + 1)) = i := by
+        apply Fin.ext
+        rfl
+      rw [pad_apply_lt (k := k) (y := restrict (k := k) x) hi]
+      simp [hEq]
+    · have hgt : k.1 < i.1 := by omega
+      rw [pad_apply_ge (k := k) (y := restrict (k := k) x) hi]
+      symm
+      exact x.2 i hgt
+  right_inv y := by
+    ext j
+    have hEq :
+        (⟨(j.castLE (Nat.succ_le_of_lt k.2)).1, by simpa using j.2⟩ : Fin (k.1 + 1)) = j := by
+      apply Fin.ext
+      rfl
+    rw [restrict_apply]
+    rw [pad_apply_lt (k := k) (y := y) (i := j.castLE (Nat.succ_le_of_lt k.2))]
+    · rw [hEq]
+    · simpa using j.2
+
+end PrefixFace
+
 /-- The `j`-th original vertex inside the prefix face spanned by the first `k + 1` rooms. -/
 def prefixVertex (k : Fin (dimension + 1)) (j : Fin (k.1 + 1)) :
     RentDivision (dimension + 1) :=
