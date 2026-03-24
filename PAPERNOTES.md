@@ -174,3 +174,10 @@
   generic inside their prefix faces. So the remaining Section 5 work is now correctly targeted:
   prove the local odd/even degree lemmas for this repaired graph, not for the old exact-barycenter
   object.
+- Formalization note after the latest graph-theoretic step:
+  the remaining local degree analysis has now been factored into a clean interface.
+  `Section5GraphNode.LocalDegreeHypotheses` packages the paper's intended local consequences of
+  genericity: a unique door out of the start room and exactly two doors out of each nonterminal
+  room. The support file then proves the corresponding odd/even graph-degree lemmas from that
+  package. So the next missing ingredient is not more graph arithmetic; it is the actual convex-
+  geometric proof that a generic milestone chain satisfies those local hypotheses.

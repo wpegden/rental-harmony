@@ -442,6 +442,80 @@ def IsTerminal : Section5GraphNode c φ → Prop
       ν.face.dim = dimension ∧
         ν.face.ImageContainsMilestone (T := T) c φ.vertexMap (Fin.last dimension)
 
+/--
+Local degree data expected from the geometric genericity analysis in Section 5.
+
+The paper's "rooms and doors" argument is local: one starting room has exactly one door, and every
+nonterminal room has exactly two doors. This structure packages those consequences abstractly, so
+the graph-theoretic parity step can be proved independently of the remaining convex-geometry work.
+-/
+structure LocalDegreeHypotheses where
+  start_neighbor : Section5PositiveNode c φ
+  start_adj :
+    Adj (T := T) c φ .start (.positive start_neighbor)
+  start_unique :
+    ∀ w : Section5GraphNode c φ,
+      Adj (T := T) c φ .start w → w = .positive start_neighbor
+  nonterminal_two_neighbors :
+    ∀ ν : Section5PositiveNode c φ,
+      ¬ IsTerminal (T := T) c φ (.positive ν) →
+      ∃ a b : Section5GraphNode c φ,
+        a ≠ b ∧
+        Adj (T := T) c φ (.positive ν) a ∧
+        Adj (T := T) c φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode c φ,
+          Adj (T := T) c φ (.positive ν) w → w = a ∨ w = b
+
+lemma degree_start_eq_one
+    [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
+    (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ)) :
+    (graph (T := T) c φ).degree .start = 1 := by
+  classical
+  let G : SimpleGraph (Section5GraphNode c φ) := graph (T := T) c φ
+  rw [SimpleGraph.degree_eq_one_iff_existsUnique_adj (G := G) (v := .start)]
+  refine ⟨.positive hdeg.start_neighbor, hdeg.start_adj, ?_⟩
+  intro w hw
+  exact hdeg.start_unique w hw
+
+lemma odd_degree_start
+    [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
+    (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ)) :
+    Odd ((graph (T := T) c φ).degree .start) := by
+  rw [degree_start_eq_one (T := T) (c := c) (φ := φ) hdeg]
+  decide
+
+lemma degree_positive_eq_two
+    [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
+    (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ))
+    (ν : Section5PositiveNode c φ)
+    (hν : ¬ IsTerminal (T := T) c φ (.positive ν)) :
+    (graph (T := T) c φ).degree (.positive ν) = 2 := by
+  classical
+  let G : SimpleGraph (Section5GraphNode c φ) := graph (T := T) c φ
+  rcases hdeg.nonterminal_two_neighbors ν hν with ⟨a, b, hab, hadja, hadjb, hall⟩
+  have hfinset : G.neighborFinset (.positive ν) = ({a, b} : Finset (Section5GraphNode c φ)) := by
+    ext w
+    rw [SimpleGraph.mem_neighborFinset]
+    constructor
+    · intro hw
+      simpa [Finset.mem_insert, Finset.mem_singleton] using hall w hw
+    · intro hw
+      rw [Finset.mem_insert, Finset.mem_singleton] at hw
+      rcases hw with rfl | rfl
+      · exact hadja
+      · exact hadjb
+  rw [← G.card_neighborFinset_eq_degree, hfinset]
+  simp [hab]
+
+lemma even_degree_of_not_terminal
+    [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
+    (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ))
+    (ν : Section5PositiveNode c φ)
+    (hν : ¬ IsTerminal (T := T) c φ (.positive ν)) :
+    Even ((graph (T := T) c φ).degree (.positive ν)) := by
+  rw [degree_positive_eq_two (T := T) (c := c) (φ := φ) hdeg ν hν]
+  decide
+
 theorem exists_terminal_of_local_degree_lemmas
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
     (hstart : Odd ((graph (T := T) c φ).degree .start))
