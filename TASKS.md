@@ -13,6 +13,11 @@
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
 - [ ] Prove the actual milestone-chain geometric/transversality consequences that imply `Section5GraphNode.MilestoneSegmentTransversality`.
 - [ ] Instantiate `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality` from the milestone-chain genericity proof to obtain the Section 5 terminal-node / barycenter-face existence statement.
+- [ ] Resolve the current geometric blocker for milestone perturbations:
+  either build an explicit equivalence between each prefix face `conv{e_1, ..., e_k}` and a
+  smaller standard simplex, or prove a direct finite-union avoidance theorem in the affine span of
+  that prefix face. Without one of these, the new open-segment / away-from-boundary existence
+  proof does not go through in Lean.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for

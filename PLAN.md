@@ -205,6 +205,14 @@
   `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality`, so the remaining Section 5
   work is now the actual convex-geometric proof of this transversality package for a suitable
   milestone chain.
+- Latest blocker after pushing on that proof directly:
+  mathlib does provide full-dimensional interior lemmas such as
+  `interior_convexHull_nonempty_iff_affineSpan_eq_top`, but the milestone-chain argument needs
+  finite-union avoidance inside the lower-dimensional prefix faces `conv{e_1, ..., e_k}`.
+  The current project does not yet identify those prefix faces with smaller standard simplices, and
+  there is no ready-made theorem in the installed library giving "a finite union of proper convex
+  hulls cannot cover the relative interior of a simplex face". So the next proof step is now a
+  support theorem of that exact kind, not another graph or parity lemma.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -233,7 +241,9 @@
   The new concrete target `Section5GraphNode.MilestoneSegmentTransversality` sharpens this one
   step further, so the next missing proof is now exactly the geometric claim that a suitably
   generic milestone chain has open segment crossings and away-from-boundary milestone hits in the
-  sense recorded there.
+  sense recorded there. At the moment this reduces to a missing support theorem about choosing
+  points in the relative interior of prefix simplex faces away from finitely many lower-dimensional
+  convex hulls.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

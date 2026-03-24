@@ -208,3 +208,12 @@
   `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality`. So the remaining Section 5
   work is now the actual convex-geometric proof that a suitably perturbed milestone chain satisfies
   these transversality predicates.
+- Formalization note after the latest direct search for that proof:
+  the remaining obstacle is now a specific missing support theorem, not another unclear proof plan.
+  The installed mathlib does contain full-dimensional results such as
+  `interior_convexHull_nonempty_iff_affineSpan_eq_top`, but the milestone perturbation argument
+  lives inside the lower-dimensional prefix faces `conv{e_1, ..., e_k}`. I did not find a ready-
+  made identification of those prefix faces with smaller standard simplices, nor a theorem stating
+  that the relative interior of such a simplex face cannot be covered by finitely many convex hulls
+  of at most `k` points. Without one of those support results, the existence of a milestone chain
+  satisfying `Section5GraphNode.MilestoneSegmentTransversality` is currently blocked.
