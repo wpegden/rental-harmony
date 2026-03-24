@@ -118,13 +118,12 @@
 - Keep the lattice-point and weighted-average arguments finite and combinatorial after that point.
 
 ## Immediate next steps
-- Extend the repaired geometric interface to an actual proof of the Section 5 surjectivity theorem
-  for `PiecewiseLinearSimplexMap`.
-- Then derive the barycenter-cell theorem through the new surjectivity-to-cell reduction already
-  available in `PaperTheorems.lean`.
-- Use the resulting barycenter-cell theorem to discharge
-  `sperner_exists_fully_labeled_simplex_statement` via the local barycenter/facet reductions
-  already in place.
+- Prove the actual `facePreservingMap_surjective_statement` for `PiecewiseLinearSimplexMap`.
+- Prove the remaining Section 2 extension lemma:
+  every Sperner labeling should admit a `PiecewiseLinearSimplexMap` whose vertex map is
+  `spernerVertexMap L`.
+- Feed those two ingredients into the now-proved statement-level wrappers in
+  `PaperTheorems.lean` to obtain the barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's
   `k + 1`-labels-for-`k`-agents counting lemma from the geometric cell.
 

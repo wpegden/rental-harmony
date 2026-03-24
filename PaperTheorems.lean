@@ -16,6 +16,8 @@ open scoped BigOperators
 
 namespace RentalHarmony
 
+universe u
+
 section HallLemmas
 
 /-- `choiceNeighbors` is exactly the finite union used in Hall's theorem. -/
@@ -196,6 +198,17 @@ theorem facetImageContainsBarycenter_of_surjective
   simpa [hx] using himage
 
 /--
+Paper Section 5: once the global surjectivity statement is available, the barycenter-cell
+statement follows immediately.
+-/
+theorem exists_barycenterPreimageCell_of_surjectiveStatement
+    (dimension : ℕ)
+    (h : @facePreservingMap_surjective_statement.{u} dimension) :
+    @exists_barycenterPreimageCell_of_facePreservingMap_statement.{u} dimension := by
+  intro Vertex _ _ T φ
+  exact facetImageContainsBarycenter_of_surjective T φ (@h Vertex _ _ T φ)
+
+/--
 Paper Section 2: a barycenter-containing facet for the Sperner label map is automatically fully
 labeled.
 -/
@@ -219,6 +232,22 @@ theorem fullyLabeledFacet_exists_of_surjective
     ∃ σ ∈ T.facets, FullyLabeledFacet σ L.label :=
   fullyLabeledFacet_exists_of_barycenterPreimage T L
     (by simpa [hvertex] using facetImageContainsBarycenter_of_surjective T φ h)
+
+/--
+Paper Section 2 reduces to two internal ingredients:
+surjectivity of the face-preserving simplex maps, and existence of a piecewise-linear extension of
+the Sperner vertex map.
+-/
+theorem sperner_exists_fully_labeled_simplex_of_surjectiveStatement
+    (dimension : ℕ)
+    (hSurj : @facePreservingMap_surjective_statement.{u} dimension)
+    (hExt : ∀ {Vertex : Type u} [Fintype Vertex] [DecidableEq Vertex]
+      (T : SimplicialSubdivision dimension Vertex) (L : SpernerLabeling T),
+      ∃ φ : PiecewiseLinearSimplexMap T, φ.vertexMap = (spernerVertexMap L).vertexMap) :
+    @sperner_exists_fully_labeled_simplex_statement.{u} dimension := by
+  intro Vertex _ _ T L
+  rcases hExt T L with ⟨φ, hvertex⟩
+  exact fullyLabeledFacet_exists_of_surjective T L φ hvertex (@hSurj Vertex _ _ T φ)
 
 end GeometricReductions
 

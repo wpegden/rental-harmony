@@ -11,12 +11,13 @@
 
 ## Worker Tasks
 - [ ] Prove the actual Section 5 surjectivity theorem for `PiecewiseLinearSimplexMap`.
-- [ ] Push that surjectivity theorem through the repaired API to obtain the barycenter-cell statement.
-- [ ] Strengthen the current Sperner support from local reduction lemmas to a direct proof of `sperner_exists_fully_labeled_simplex_statement`.
+- [ ] Prove that every Sperner labeling extends to a `PiecewiseLinearSimplexMap` with the expected vertex map.
+- [ ] Use the new statement-level wrappers to push surjectivity and extension existence through the repaired API and obtain the Section 5 barycenter-cell and Section 2 Sperner statements.
 - [ ] Produce the Hall witnesses promised by the new wrapper theorems from the geometric label-count arguments.
 - [ ] Connect the Section 6 lattice-point statements to actual label-count arguments.
 
 ## Completed
+- [x] Reconnected the global Section 5 / Section 2 statement aliases to the proved local geometric reductions, after fixing the universe-polymorphic wrapper issue.
 - [x] Identified a concrete 1-dimensional counterexample showing the current abstract subdivision / vertex-map API is too weak for the Section 2 and Section 5 existence statements.
 - [x] Repaired the geometric interface by adding geometric vertex positions, simplex-cover data, and an actual `PiecewiseLinearSimplexMap`.
 - [x] Added `RentalHarmony/Sperner.lean` with the first reusable geometric infrastructure for the Sperner map.

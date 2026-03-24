@@ -35,5 +35,8 @@
 - The higher-dimensional algorithm in `Section 5` is the least formal part of the paper; it appears repairable, but a Lean development should plan to restate and prove that surjectivity result independently rather than following the paper literally line by line.
 - Current proof frontier:
   the repaired geometric API is now strong enough that the Section 5 statement is meaningful again.
-  The remaining work is to prove the actual surjectivity theorem for those repaired
-  `PiecewiseLinearSimplexMap`s and then feed it into the existing barycenter/facet reductions.
+  The remaining work now splits cleanly into two internal lemmas:
+  prove the actual surjectivity theorem for those repaired `PiecewiseLinearSimplexMap`s, and prove
+  that a Sperner labeling extends to such a piecewise-linear simplex map with the expected vertex
+  images. The paper-facing Section 5 barycenter-cell wrapper and the Section 2 Sperner wrapper are
+  already reduced to those ingredients.
