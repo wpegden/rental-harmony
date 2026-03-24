@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Combination
+import Mathlib.Combinatorics.SimpleGraph.Basic
 import RentalHarmony.PaperDefinitions
 
 /-!
@@ -230,5 +231,155 @@ def ImageContainsPrefixBarycenter (τ : SubdivisionFace T)
 end SubdivisionFace
 
 end GraphData
+
+section GraphStructure
+
+variable {dimension : ℕ} {Vertex : Type u} [Fintype Vertex] [DecidableEq Vertex]
+variable {T : SimplicialSubdivision dimension Vertex}
+variable (φ : PiecewiseLinearSimplexMap T)
+
+/--
+A positive-dimensional vertex of the paper's Section 5 graph.
+
+Such a node is a subdivision face of dimension `k + 1` that subdivides the prefix outer face
+spanned by the first `k + 2` simplex vertices and whose image meets the segment joining the
+successive prefix-face barycenters.
+-/
+structure Section5PositiveNode where
+  level : Fin dimension
+  face : SubdivisionFace T
+  face_dim : face.dim = level.1 + 1
+  subdivides : face.SubdividesPrefixFace (T := T) level.succ
+  meets_segment : face.ImageMeetsPrefixBarycenterSegment (T := T) φ.vertexMap level
+
+/-- The vertices of the Section 5 graph: a special start node and the positive-dimensional faces. -/
+inductive Section5GraphNode
+  | start
+  | positive (_ : Section5PositiveNode φ)
+
+namespace Section5PositiveNode
+
+/--
+The start node is connected to those one-dimensional graph faces that geometrically contain the
+first simplex vertex `e₁`.
+-/
+def IsStartIncident (ν : Section5PositiveNode φ) : Prop :=
+  ν.level.1 = 0 ∧
+    ν.face.ContainsPoint (T := T) (prefixBarycenter (dimension := dimension) 0)
+
+/--
+Horizontal adjacency in the Section 5 graph: two same-level faces are connected when they share a
+codimension-`1` subface whose image meets the corresponding prefix-barycenter segment.
+-/
+def HorizontalAdj (ν μ : Section5PositiveNode φ) : Prop :=
+  ν.level = μ.level ∧
+    ν.face ≠ μ.face ∧
+    ∃ τ : SubdivisionFace T,
+      τ.IsCodimOneSubface ν.face ∧
+      τ.IsCodimOneSubface μ.face ∧
+      τ.ImageMeetsPrefixBarycenterSegment (T := T) φ.vertexMap ν.level
+
+/--
+Vertical adjacency in the Section 5 graph: a `(k + 1)`-dimensional face is connected to an
+incident `k`-dimensional face whose image contains the intermediate barycenter `b_{k+1}`.
+-/
+def VerticalAdj (lower upper : Section5PositiveNode φ) : Prop :=
+  lower.level.1 + 1 = upper.level.1 ∧
+    lower.face.IsCodimOneSubface upper.face ∧
+    lower.face.ImageContainsPrefixBarycenter (T := T) φ.vertexMap lower.level.succ
+
+lemma horizontalAdj_symm {ν μ : Section5PositiveNode φ} :
+    ν.HorizontalAdj (T := T) φ μ → μ.HorizontalAdj (T := T) φ ν := by
+  rintro ⟨hlevel, hne, τ, hτν, hτμ, hseg⟩
+  refine ⟨hlevel.symm, hne.symm, τ, hτμ, hτν, ?_⟩
+  simpa [hlevel] using hseg
+
+lemma not_horizontalAdj_self (ν : Section5PositiveNode φ) :
+    ¬ ν.HorizontalAdj (T := T) φ ν := by
+  rintro ⟨_, hne, _⟩
+  exact hne rfl
+
+lemma not_verticalAdj_self (ν : Section5PositiveNode φ) :
+    ¬ ν.VerticalAdj (T := T) φ ν := by
+  rintro ⟨hlevel, _, _⟩
+  exact Nat.succ_ne_self _ hlevel
+
+lemma isStartIncident_face_dim (ν : Section5PositiveNode φ)
+    (hν : ν.IsStartIncident (T := T) φ) : ν.face.dim = 1 := by
+  rcases hν with ⟨hlevel, _⟩
+  rw [ν.face_dim, hlevel]
+
+end Section5PositiveNode
+
+namespace Section5GraphNode
+
+/-- The adjacency relation on the paper's Section 5 graph. -/
+def Adj : Section5GraphNode φ → Section5GraphNode φ → Prop
+  | .start, .start => False
+  | .start, .positive ν => ν.IsStartIncident (T := T) φ
+  | .positive ν, .start => ν.IsStartIncident (T := T) φ
+  | .positive ν, .positive μ =>
+      ν.HorizontalAdj (T := T) φ μ ∨
+        ν.VerticalAdj (T := T) φ μ ∨
+        μ.VerticalAdj (T := T) φ ν
+
+lemma adj_symm : Symmetric (Adj (T := T) φ) := by
+  intro a b hab
+  cases a with
+  | start =>
+      cases b with
+      | start =>
+          cases hab
+      | positive ν =>
+          exact hab
+  | positive ν =>
+      cases b with
+      | start =>
+          exact hab
+      | positive μ =>
+          rcases hab with h | h | h
+          · exact Or.inl (Section5PositiveNode.horizontalAdj_symm (T := T) (φ := φ) h)
+          · exact Or.inr (Or.inr h)
+          · exact Or.inr (Or.inl h)
+
+lemma not_adj_self (v : Section5GraphNode φ) : ¬ Adj (T := T) φ v v := by
+  cases v with
+  | start =>
+      simp [Adj]
+  | positive ν =>
+      intro h
+      rcases h with h | h | h
+      · exact Section5PositiveNode.not_horizontalAdj_self (T := T) (φ := φ) ν h
+      · exact Section5PositiveNode.not_verticalAdj_self (T := T) (φ := φ) ν h
+      · exact Section5PositiveNode.not_verticalAdj_self (T := T) (φ := φ) ν h
+
+/-- The graph used in the paper's Section 5 trap-door / path-following argument. -/
+def graph : SimpleGraph (Section5GraphNode φ) where
+  Adj := Adj (T := T) φ
+  symm := adj_symm (T := T) (φ := φ)
+  loopless := ⟨fun v => not_adj_self (T := T) (φ := φ) v⟩
+
+@[simp] lemma adj_start_start :
+    ¬ Adj (T := T) φ (.start) (.start) := by
+  simp [Adj]
+
+@[simp] lemma adj_start_positive {ν : Section5PositiveNode φ} :
+    Adj (T := T) φ (.start) (.positive ν) ↔ ν.IsStartIncident (T := T) φ := by
+  rfl
+
+@[simp] lemma adj_positive_start {ν : Section5PositiveNode φ} :
+    Adj (T := T) φ (.positive ν) (.start) ↔ ν.IsStartIncident (T := T) φ := by
+  rfl
+
+lemma adj_positive_positive_iff {ν μ : Section5PositiveNode φ} :
+    Adj (T := T) φ (.positive ν) (.positive μ) ↔
+      ν.HorizontalAdj (T := T) φ μ ∨
+        ν.VerticalAdj (T := T) φ μ ∨
+        μ.VerticalAdj (T := T) φ ν := by
+  rfl
+
+end Section5GraphNode
+
+end GraphStructure
 
 end RentalHarmony

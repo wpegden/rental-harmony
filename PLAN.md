@@ -161,6 +161,10 @@
   The barycenter side of that vocabulary is now started as well:
   the support file contains `prefixBarycenter`, `prefixBarycenterSegment`,
   `SubdivisionFace.SubdividesPrefixFace`, and the corresponding image-intersection predicates.
+- The graph-definition step is now complete as well:
+  `Section5PositiveNode` packages positive-dimensional graph vertices, `Section5GraphNode` adds
+  the special start node, and `Section5GraphNode.graph` is the resulting `SimpleGraph` carrying
+  the paper's start, horizontal, and vertical adjacencies.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -181,8 +185,8 @@
   formalize the Section 5 face-incidence graph after extending the support layer with an explicit
   face-poset / adjacency API.
 - The face-poset / adjacency API is now present in `RentalHarmony/Section5Graph.lean`, so the next
-  concrete proof step is no longer another interface change: it is the actual construction of the
-  Section 5 graph and its path-following lemma.
+  concrete proof step is no longer another interface change: the Section 5 graph itself is now
+  formalized, so the next missing theorem is its degree/parity path-following lemma.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

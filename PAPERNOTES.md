@@ -139,3 +139,13 @@
   `SubdivisionFace.ImageMeetsPrefixBarycenterSegment` package the condition
   `λ(σ) ∩ [b_{k-1}, b_k] ≠ ∅`. So the next missing ingredient is the actual graph definition and
   parity/path-following proof.
+- Formalization note after the latest Section 5 support step:
+  the actual graph `G` is now formalized in `RentalHarmony/Section5Graph.lean`. The Lean object
+  has a special `start` node for `e_1`, positive-dimensional nodes `Section5PositiveNode` for
+  faces subdividing the prefix outer faces with the required segment-intersection witness, and a
+  `SimpleGraph` structure whose edges are exactly the paper's three cases:
+  start-to-edge incidence at `e_1`,
+  same-dimensional adjacency through a shared codimension-`1` face meeting `[b_{k-1}, b_k]`,
+  and vertical adjacency through a codimension-`1` incident face containing `b_k`.
+  So the remaining combinatorial work is no longer another modeling repair: it is the actual
+  degree/parity argument on this graph.
