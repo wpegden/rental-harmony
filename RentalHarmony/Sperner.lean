@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Combination
+import Mathlib.Analysis.Convex.Contractible
 import RentalHarmony.PaperDefinitions
 import Mathlib.Topology.Homotopy.Basic
 import Mathlib.Topology.Homotopy.Contractible
@@ -546,6 +547,291 @@ theorem boundary_contractible_of_nullhomotopic_boundaryExtension
       ContinuousMap.Homotopic (ContinuousMap.id (SimplexBoundary dimension)) φ.toBoundaryMap :=
     ⟨φ.boundaryStraightLineHomotopy⟩
   exact (contractible_iff_id_nullhomotopic (SimplexBoundary dimension)).2 ⟨x, hidφ.trans hx⟩
+
+section BarycenterOmission
+
+/-- The least simplex coordinate of a rent division. -/
+def minSimplexCoord (x : RentDivision (dimension + 1)) : ℝ :=
+  (Finset.univ : Finset (Room (dimension + 1))).inf' Finset.univ_nonempty
+    (fun i : Room (dimension + 1) => fun x : RentDivision (dimension + 1) => x i) x
+
+lemma continuous_minSimplexCoord :
+    Continuous (minSimplexCoord (dimension := dimension)) := by
+  unfold minSimplexCoord
+  refine Continuous.finset_inf' (L := ℝ) (X := RentDivision (dimension + 1))
+    (s := (Finset.univ : Finset (Room (dimension + 1)))) Finset.univ_nonempty ?_
+  intro i hi
+  simpa using ((continuous_apply i).comp continuous_subtype_val)
+
+lemma minSimplexCoord_nonneg (x : RentDivision (dimension + 1)) :
+    0 ≤ minSimplexCoord (dimension := dimension) x := by
+  simpa [minSimplexCoord] using
+    (Finset.le_inf'_iff (H := Finset.univ_nonempty)
+      (f := fun i : Room (dimension + 1) => x i)).2
+      (fun i hi => x.2.1 i)
+
+lemma minSimplexCoord_le (x : RentDivision (dimension + 1)) (i : Room (dimension + 1)) :
+    minSimplexCoord (dimension := dimension) x ≤ x i := by
+  simpa [minSimplexCoord] using
+    (Finset.inf'_le (fun j : Room (dimension + 1) => x j) (Finset.mem_univ i))
+
+lemma minSimplexCoord_eq_zero_of_coord_eq_zero (x : RentDivision (dimension + 1))
+    {i : Room (dimension + 1)} (hx : x i = 0) :
+    minSimplexCoord (dimension := dimension) x = 0 := by
+  have hnonneg := minSimplexCoord_nonneg (dimension := dimension) x
+  have hle : minSimplexCoord (dimension := dimension) x ≤ 0 := by
+    calc
+      minSimplexCoord (dimension := dimension) x ≤ x i :=
+        minSimplexCoord_le (dimension := dimension) x i
+      _ = 0 := hx
+  linarith
+
+lemma eq_barycenter_of_barycenter_coord_le {x : RentDivision (dimension + 1)}
+    (hx : ∀ i : Room (dimension + 1),
+      barycentricRentDivision (dimension + 1) i ≤ x i) :
+    x = barycentricRentDivision (dimension + 1) := by
+  apply Subtype.ext
+  funext i
+  have hnonneg : ∀ j : Room (dimension + 1),
+      0 ≤ x j - barycentricRentDivision (dimension + 1) j := by
+    intro j
+    exact sub_nonneg.mpr (hx j)
+  have hsum : ∑ j, (x j - barycentricRentDivision (dimension + 1) j) = 0 := by
+    rw [Finset.sum_sub_distrib]
+    have hxsum : ∑ j, x j = 1 := x.2.2
+    have hbarysum : ∑ j, barycentricRentDivision (dimension + 1) j = 1 :=
+      (barycentricRentDivision (dimension + 1)).2.2
+    linarith
+  have hzero := (Finset.sum_eq_zero_iff_of_nonneg (s := Finset.univ)
+    (f := fun j => x j - barycentricRentDivision (dimension + 1) j)
+    (fun j hj => hnonneg j)).mp hsum
+  exact sub_eq_zero.mp (hzero i (Finset.mem_univ i))
+
+lemma barycenter_coord_eq_zero_coord (i : Room (dimension + 1)) :
+    barycentricRentDivision (dimension + 1) i =
+      (((barycentricRentDivision (dimension + 1) : RentDivision (dimension + 1)) :
+        RealPoint dimension) 0) := by
+  change ((Fintype.card (Room (dimension + 1)) : ℝ)⁻¹) =
+    ((Fintype.card (Room (dimension + 1)) : ℝ)⁻¹)
+  rfl
+
+lemma minSimplexCoord_lt_barycenter_coord_zero_of_ne (x : RentDivision (dimension + 1))
+    (hx : x ≠ barycentricRentDivision (dimension + 1)) :
+    minSimplexCoord (dimension := dimension) x <
+      (((barycentricRentDivision (dimension + 1) : RentDivision (dimension + 1)) :
+        RealPoint dimension) 0) := by
+  by_contra hm
+  push_neg at hm
+  have hcoords : ∀ i : Room (dimension + 1),
+      barycentricRentDivision (dimension + 1) i ≤ x i := by
+    intro i
+    calc
+      barycentricRentDivision (dimension + 1) i =
+          (((barycentricRentDivision (dimension + 1) : RentDivision (dimension + 1)) :
+            RealPoint dimension) 0) :=
+        barycenter_coord_eq_zero_coord (dimension := dimension) i
+      _ ≤ minSimplexCoord (dimension := dimension) x := hm
+      _ ≤ x i := minSimplexCoord_le (dimension := dimension) x i
+  exact hx (eq_barycenter_of_barycenter_coord_le hcoords)
+
+/-- The denominator in the radial projection away from the simplex barycenter is positive. -/
+lemma barycenterRetractionDenom_pos
+    (x : {x : RentDivision (dimension + 1) // x ≠ barycentricRentDivision (dimension + 1)}) :
+    0 < 1 - (dimension + 1 : ℝ) * minSimplexCoord (dimension := dimension) x.1 := by
+  have hmin :
+      minSimplexCoord (dimension := dimension) x.1 <
+        (((barycentricRentDivision (dimension + 1) : RentDivision (dimension + 1)) :
+          RealPoint dimension) 0) :=
+    minSimplexCoord_lt_barycenter_coord_zero_of_ne (dimension := dimension) x.1 x.2
+  have hmul :
+      (dimension + 1 : ℝ) * minSimplexCoord (dimension := dimension) x.1 < 1 := by
+    have hn : 0 < (dimension + 1 : ℝ) := by positivity
+    have hcard : (Fintype.card (Room (dimension + 1)) : ℝ) = (dimension + 1 : ℝ) := by
+      simp [Room]
+    calc
+      (dimension + 1 : ℝ) * minSimplexCoord (dimension := dimension) x.1 <
+          (dimension + 1 : ℝ) *
+            (((barycentricRentDivision (dimension + 1) : RentDivision (dimension + 1)) :
+              RealPoint dimension) 0) := by
+        gcongr
+      _ = 1 := by
+        change (dimension + 1 : ℝ) * ((Fintype.card (Room (dimension + 1)) : ℝ)⁻¹) = 1
+        rw [hcard]
+        field_simp [Room]
+  linarith
+
+/-- Radial projection from the simplex barycenter to the boundary. -/
+def projectAwayBarycenter
+    (x : {x : RentDivision (dimension + 1) // x ≠ barycentricRentDivision (dimension + 1)}) :
+    SimplexBoundary dimension := by
+  let m := minSimplexCoord (dimension := dimension) x.1
+  let denom : ℝ := 1 - (dimension + 1 : ℝ) * m
+  have hden_pos : 0 < denom := by
+    simpa [denom, m] using barycenterRetractionDenom_pos (dimension := dimension) x
+  have hden_ne : denom ≠ 0 := ne_of_gt hden_pos
+  refine ⟨⟨(fun i => (x.1 i - m) / denom), ?_⟩, ?_⟩
+  · constructor
+    · intro i
+      exact div_nonneg
+        (sub_nonneg.mpr (minSimplexCoord_le (dimension := dimension) x.1 i))
+        hden_pos.le
+    · have hsum_div :
+          (∑ i : Room (dimension + 1), (x.1 i - m) / denom) =
+            (∑ i : Room (dimension + 1), (x.1 i - m)) / denom := by
+          calc
+            ∑ i : Room (dimension + 1), (x.1 i - m) / denom =
+                ∑ i : Room (dimension + 1), (x.1 i - m) * denom⁻¹ := by
+              simp [div_eq_mul_inv]
+            _ = (∑ i : Room (dimension + 1), (x.1 i - m)) * denom⁻¹ := by
+              rw [← Finset.sum_mul]
+            _ = (∑ i : Room (dimension + 1), (x.1 i - m)) / denom := by
+              simp [div_eq_mul_inv]
+      have hsum_const : ∑ i : Room (dimension + 1), m = (dimension + 1 : ℝ) * m := by
+        simp [Room]
+      have hsum_num : ∑ i : Room (dimension + 1), (x.1 i - m) = denom := by
+        rw [Finset.sum_sub_distrib, hsum_const]
+        simp [denom]
+      rw [hsum_div, hsum_num]
+      field_simp [hden_ne]
+  · obtain ⟨i, hi, hmin⟩ :=
+      Finset.exists_mem_eq_inf'
+        (s := (Finset.univ : Finset (Room (dimension + 1))))
+        Finset.univ_nonempty
+        (fun j : Room (dimension + 1) => x.1 j)
+    have hm : m = x.1 i := by
+      simpa [m, minSimplexCoord] using hmin
+    refine ⟨i, ?_⟩
+    change (x.1 i - m) / denom = 0
+    simp [hm, denom]
+
+lemma boundary_ne_barycenter (x : SimplexBoundary dimension) :
+    x.1 ≠ barycentricRentDivision (dimension + 1) := by
+  intro hx
+  rcases x.2 with ⟨i, hi⟩
+  have hpos : 0 < (((barycentricRentDivision (dimension + 1) : RentDivision (dimension + 1)) :
+      RealPoint dimension) i) := by
+    change 0 < ((Fintype.card (Room (dimension + 1)) : ℝ)⁻¹)
+    have hcardNat : 0 < Fintype.card (Room (dimension + 1)) := by
+      simp [Room]
+    have hcard : 0 < (Fintype.card (Room (dimension + 1)) : ℝ) := by
+      exact_mod_cast hcardNat
+    exact inv_pos.mpr hcard
+  have hzero :
+      (((barycentricRentDivision (dimension + 1) : RentDivision (dimension + 1)) :
+        RealPoint dimension) i) = 0 := by
+    simpa [hx] using hi
+  linarith
+
+lemma projectAwayBarycenter_apply_of_boundary (x : SimplexBoundary dimension) :
+    projectAwayBarycenter (dimension := dimension) ⟨x.1, boundary_ne_barycenter x⟩ = x := by
+  rcases x.2 with ⟨i, hi⟩
+  have hmin : minSimplexCoord (dimension := dimension) x.1 = 0 :=
+    minSimplexCoord_eq_zero_of_coord_eq_zero (dimension := dimension) x.1 hi
+  apply Subtype.ext
+  apply Subtype.ext
+  funext j
+  change
+      (((projectAwayBarycenter (dimension := dimension) ⟨x.1, boundary_ne_barycenter x⟩).1 :
+      RentDivision (dimension + 1)) : RealPoint dimension) j =
+      (((x.1 : RentDivision (dimension + 1)) : RealPoint dimension) j)
+  simp [projectAwayBarycenter, hmin]
+  rfl
+
+/-- The radial projection away from the barycenter is continuous on the punctured simplex. -/
+def projectAwayBarycenterContinuous :
+    C({x : RentDivision (dimension + 1) // x ≠ barycentricRentDivision (dimension + 1)},
+      SimplexBoundary dimension) := by
+  let g :
+      {x : RentDivision (dimension + 1) // x ≠ barycentricRentDivision (dimension + 1)} →
+        RealPoint dimension :=
+    fun x i =>
+      (x.1 i - minSimplexCoord (dimension := dimension) x.1) /
+        (1 - (dimension + 1 : ℝ) * minSimplexCoord (dimension := dimension) x.1)
+  have hgcoord :
+      ∀ i : Room (dimension + 1),
+        Continuous fun x :
+          {x : RentDivision (dimension + 1) // x ≠ barycentricRentDivision (dimension + 1)} =>
+            g x i := by
+    intro i
+    have hcoord :
+        Continuous fun x :
+          {x : RentDivision (dimension + 1) // x ≠ barycentricRentDivision (dimension + 1)} =>
+            x.1 i := by
+      have hsub :
+          Continuous fun x :
+            {x : RentDivision (dimension + 1) // x ≠ barycentricRentDivision (dimension + 1)} =>
+              (x.1 : RentDivision (dimension + 1)) :=
+        continuous_subtype_val
+      have hval :
+          Continuous fun x :
+            {x : RentDivision (dimension + 1) // x ≠ barycentricRentDivision (dimension + 1)} =>
+              (((x.1 : RentDivision (dimension + 1)) : RealPoint dimension)) :=
+        continuous_subtype_val.comp hsub
+      simpa using (continuous_apply i).comp hval
+    have hmin :
+        Continuous fun x :
+          {x : RentDivision (dimension + 1) // x ≠ barycentricRentDivision (dimension + 1)} =>
+            minSimplexCoord (dimension := dimension) x.1 :=
+      continuous_minSimplexCoord.comp continuous_subtype_val
+    exact (hcoord.sub hmin).div
+      (continuous_const.sub (continuous_const.mul hmin))
+      (fun x => ne_of_gt (barycenterRetractionDenom_pos (dimension := dimension) x))
+  have hg : Continuous g := by
+    exact continuous_pi hgcoord
+  have hRent :
+      Continuous fun x :
+        {x : RentDivision (dimension + 1) // x ≠ barycentricRentDivision (dimension + 1)} =>
+          ((projectAwayBarycenter (dimension := dimension) x).1 :
+            RentDivision (dimension + 1)) := by
+    simpa [g, projectAwayBarycenter] using
+      (hg.subtype_mk fun x => (projectAwayBarycenter (dimension := dimension) x).1.2)
+  exact ⟨projectAwayBarycenter (dimension := dimension), hRent.subtype_mk fun x =>
+    (projectAwayBarycenter (dimension := dimension) x).2⟩
+
+/-- Compose a face-preserving simplex map with the barycenter-omission retraction. -/
+def omittedBarycenterBoundaryMap (φ : PiecewiseLinearSimplexMap T)
+    (havoid : ∀ x : RentDivision (dimension + 1),
+      φ.toFun x ≠ barycentricRentDivision (dimension + 1)) :
+    C(RentDivision (dimension + 1), SimplexBoundary dimension) :=
+  (projectAwayBarycenterContinuous (dimension := dimension)).comp
+    ⟨fun x => ⟨φ.toFun x, havoid x⟩,
+      (PiecewiseLinearSimplexMap.continuous_toFun (T := T) (φ := φ)).subtype_mk fun x =>
+        havoid x⟩
+
+lemma omittedBarycenterBoundaryMap_comp_inclusion (φ : PiecewiseLinearSimplexMap T)
+    (havoid : ∀ x : RentDivision (dimension + 1),
+      φ.toFun x ≠ barycentricRentDivision (dimension + 1)) :
+    (omittedBarycenterBoundaryMap (dimension := dimension) φ havoid).comp
+        (SimplexBoundary.inclusion (dimension := dimension)) =
+      φ.toBoundaryMap := by
+  apply ContinuousMap.ext
+  intro x
+  simpa [omittedBarycenterBoundaryMap] using
+    projectAwayBarycenter_apply_of_boundary (dimension := dimension) (φ.toBoundaryMap x)
+
+/--
+If a face-preserving simplex self-map omits the barycenter, then the simplex boundary becomes
+contractible.
+-/
+theorem boundary_contractible_of_omits_barycenter (φ : PiecewiseLinearSimplexMap T)
+    (havoid : ∀ x : RentDivision (dimension + 1),
+      φ.toFun x ≠ barycentricRentDivision (dimension + 1)) :
+    ContractibleSpace (SimplexBoundary dimension) := by
+  let F := omittedBarycenterBoundaryMap (dimension := dimension) φ havoid
+  have hF :
+      F.comp (SimplexBoundary.inclusion (dimension := dimension)) = φ.toBoundaryMap :=
+    omittedBarycenterBoundaryMap_comp_inclusion (dimension := dimension) φ havoid
+  have hContract : ContractibleSpace (RentDivision (dimension + 1)) := by
+    refine (convex_stdSimplex ℝ (Room (dimension + 1))).contractibleSpace ?_
+    exact ⟨(barycentricRentDivision (dimension + 1)).1, (barycentricRentDivision (dimension + 1)).2⟩
+  have hNull : F.Nullhomotopic := by
+    have hidNull : (ContinuousMap.id (RentDivision (dimension + 1))).Nullhomotopic :=
+      id_nullhomotopic (RentDivision (dimension + 1))
+    simpa [F] using hidNull.comp_right F
+  exact boundary_contractible_of_nullhomotopic_boundaryExtension
+    (dimension := dimension) (T := T) φ F hF hNull
+
+end BarycenterOmission
 
 /-- A point of the 1-simplex with vanishing second coordinate is the left endpoint. -/
 lemma rentDivision_two_eq_vertex_zero_of_coord1_zero (x : RentDivision 2)

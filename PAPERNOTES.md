@@ -103,8 +103,10 @@
   place, and the canonical Sperner extension theorem has been reproved on top of it. The
   dimension-`1` surjectivity base case and its Section 5 / Section 2 wrappers are now proved, and
   the straight-line face-preserving homotopy to `id` is also formalized, as are the boundary
-  restriction and boundary-contractibility reduction steps. The immediate frontier is the
-  higher-dimensional Section 5 surjectivity proof for those face-preserving simplex self-maps,
-  concretely the omitted-point extension into `SimplexBoundary`, or else the paper's trap-door
-  proof if that extension becomes intractable, followed by the Hall-witness extraction in Sections
-  3 and 4.
+  restriction and boundary-contractibility reduction steps. The barycenter-specific omitted-point
+  map is now formalized as well, and `boundary_contractible_of_omits_barycenter` shows that any
+  face-preserving simplex self-map omitting the barycenter would force `SimplexBoundary dimension`
+  to be contractible. So the remaining higher-dimensional Section 5 choice is now clean: either
+  prove that boundary noncontractible in Lean, or abandon the topological route and formalize the
+  paper's trap-door/path-following proof instead, followed by the Hall-witness extraction in
+  Sections 3 and 4.

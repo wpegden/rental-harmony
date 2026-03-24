@@ -137,10 +137,12 @@
   So the topological route has sharpened:
   the boundary restriction of the map and of the straight-line homotopy are now formalized, and
   `boundary_contractible_of_nullhomotopic_boundaryExtension` packages the contradiction step.
-  What remains is the explicit omitted-point extension
-  `RentDivision (dimension + 1) → SimplexBoundary dimension`, first for positive interior points
-  such as the barycenter, and then to combine that with induction on faces if full surjectivity is
-  still needed beyond the paper's barycenter statement.
+  The barycenter-specific omitted-point extension is now also formalized:
+  `projectAwayBarycenterContinuous` and `boundary_contractible_of_omits_barycenter` reduce any
+  barycenter-omitting face-preserving map to contractibility of `SimplexBoundary dimension`.
+  The remaining choice is now explicit: either prove the boundary noncontractible in Lean and
+  finish the topological contradiction, or abandon the topological route and switch to the paper's
+  trap-door/path-following proof.
 - If the topological route is awkward, switch to the paper's combinatorial path-following proof.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 

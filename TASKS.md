@@ -12,12 +12,12 @@
 ## Worker Tasks
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
-- [ ] Build the explicit continuous map from the simplex to `SimplexBoundary` that arises when a positive interior point is omitted.
-- [ ] Combine that omitted-point map with `boundary_contractible_of_nullhomotopic_boundaryExtension` to finish the higher-dimensional contradiction, then return to full Section 5 surjectivity.
+- [ ] Close the higher-dimensional contradiction: either prove `SimplexBoundary dimension` noncontractible and combine it with `boundary_contractible_of_omits_barycenter`, or switch to the paper's trap-door/path-following proof.
 - [ ] Produce the Hall witnesses promised by the new wrapper theorems from the geometric label-count arguments.
 - [ ] Connect the Section 6 lattice-point statements to actual label-count arguments.
 
 ## Completed
+- [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Added the straight-line homotopy from `id` to any `PiecewiseLinearSimplexMap`, and proved every intermediate map still preserves boundary faces setwise.
 - [x] Proved the dimension-1 Section 5 surjectivity theorem by transporting `PiecewiseLinearSimplexMap` to `unitInterval` and applying the intermediate value theorem.
