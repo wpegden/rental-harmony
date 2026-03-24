@@ -197,6 +197,14 @@
   is not terminal. The support file proves
   `Section5GraphNode.localDegreeHypotheses_of_geometricGenericity` and the direct wrapper
   `Section5GraphNode.exists_terminal_of_geometricGenericity`.
+- The concrete geometric target is now sharper still:
+  `SubdivisionFace.ImageMeetsOpenMilestoneSegment` and
+  `SubdivisionFace.ImageContainsMilestoneAwayFromBoundary` formalize the paper's open-segment and
+  relative-interior-style conditions, and `Section5GraphNode.MilestoneSegmentTransversality`
+  packages them on top of `GeometricGenericity`. The support file already derives
+  `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality`, so the remaining Section 5
+  work is now the actual convex-geometric proof of this transversality package for a suitable
+  milestone chain.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -222,8 +230,10 @@
   paper's perturbed milestone chain. The abstract graph conclusion is now packaged twice:
   once at the degree level by `Section5GraphNode.exists_terminal_of_localDegreeHypotheses`, and
   once at the paper-faithful case-split level by `Section5GraphNode.exists_terminal_of_geometricGenericity`.
-  So the next missing step is now exactly the geometric proof that a suitably generic milestone
-  chain yields `Section5GraphNode.GeometricGenericity`.
+  The new concrete target `Section5GraphNode.MilestoneSegmentTransversality` sharpens this one
+  step further, so the next missing proof is now exactly the geometric claim that a suitably
+  generic milestone chain has open segment crossings and away-from-boundary milestone hits in the
+  sense recorded there.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

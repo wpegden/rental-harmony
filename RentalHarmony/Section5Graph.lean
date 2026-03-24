@@ -253,11 +253,53 @@ def ImageMeetsMilestoneSegment (c : Section5MilestoneChain (dimension := dimensi
     ((x : RealPoint dimension) ∈ c.segment k) ∧
       τ.ImageContains (T := T) φ x
 
+/--
+The image of a subdivision face meets the interior of one milestone segment.
+
+This packages the paper's genericity requirement that intersections with `[b_k, b_{k+1}]` occur
+away from the segment endpoints unless one is in an endpoint case handled separately.
+-/
+def ImageMeetsOpenMilestoneSegment (c : Section5MilestoneChain (dimension := dimension))
+    (τ : SubdivisionFace T) (φ : Vertex → RentDivision (dimension + 1)) (k : Fin dimension) :
+    Prop :=
+  ∃ x : RentDivision (dimension + 1),
+    ((x : RealPoint dimension) ∈ c.segment k) ∧
+      x ≠ c.point k.castSucc ∧
+      x ≠ c.point k.succ ∧
+      τ.ImageContains (T := T) φ x
+
 /-- The image of a subdivision face contains one of the chosen Section 5 milestones. -/
 def ImageContainsMilestone (c : Section5MilestoneChain (dimension := dimension))
     (τ : SubdivisionFace T) (φ : Vertex → RentDivision (dimension + 1))
     (k : Fin (dimension + 1)) : Prop :=
   τ.ImageContains (T := T) φ (c.point k)
+
+/--
+The chosen milestone lies in the image of a face, but not already in the image of any of its
+codimension-`1` subfaces.
+
+This is an image-side surrogate for the paper's relative-interior milestone condition.
+-/
+def ImageContainsMilestoneAwayFromBoundary (c : Section5MilestoneChain (dimension := dimension))
+    (τ : SubdivisionFace T) (φ : Vertex → RentDivision (dimension + 1))
+    (k : Fin (dimension + 1)) : Prop :=
+  τ.ImageContainsMilestone (T := T) c φ k ∧
+    ∀ ρ : SubdivisionFace T, ρ.IsCodimOneSubface τ → ¬ ρ.ImageContainsMilestone (T := T) c φ k
+
+lemma imageMeetsMilestoneSegment_of_imageMeetsOpenMilestoneSegment
+    {c : Section5MilestoneChain (dimension := dimension)} {τ : SubdivisionFace T}
+    {φ : Vertex → RentDivision (dimension + 1)} {k : Fin dimension}
+    (hτ : τ.ImageMeetsOpenMilestoneSegment (T := T) c φ k) :
+    τ.ImageMeetsMilestoneSegment (T := T) c φ k := by
+  rcases hτ with ⟨x, hxseg, -, -, himg⟩
+  exact ⟨x, hxseg, himg⟩
+
+lemma imageContainsMilestone_of_imageContainsMilestoneAwayFromBoundary
+    {c : Section5MilestoneChain (dimension := dimension)} {τ : SubdivisionFace T}
+    {φ : Vertex → RentDivision (dimension + 1)} {k : Fin (dimension + 1)}
+    (hτ : τ.ImageContainsMilestoneAwayFromBoundary (T := T) c φ k) :
+    τ.ImageContainsMilestone (T := T) c φ k :=
+  hτ.1
 
 end SubdivisionFace
 
@@ -504,6 +546,25 @@ structure GeometricGenericity where
         ∀ w : Section5GraphNode c φ,
           Adj (T := T) c φ (.positive ν) w → w = a ∨ w = b
 
+/--
+Concrete milestone-segment genericity package for Section 5.
+
+This strengthens `GeometricGenericity` with explicit open-segment and away-from-boundary
+predicates, so the remaining convex-geometric proof can target the paper's relative-interior /
+transversality language instead of the coarser graph-degree consequences.
+-/
+structure MilestoneSegmentTransversality
+    extends GeometricGenericity (T := T) (c := c) (φ := φ) where
+  open_crossing_of_missing_nextMilestone :
+    ∀ ν : Section5PositiveNode c φ,
+      ¬ ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.succ →
+      ν.face.ImageMeetsOpenMilestoneSegment (T := T) c φ.vertexMap ν.level
+  nextMilestone_awayFromBoundary_of_nonterminal :
+    ∀ ν : Section5PositiveNode c φ,
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.succ →
+      ¬ IsTerminal (T := T) c φ (.positive ν) →
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T) c φ.vertexMap ν.level.succ
+
 def localDegreeHypotheses_of_geometricGenericity
     (hgen : GeometricGenericity (T := T) (c := c) (φ := φ)) :
     LocalDegreeHypotheses (T := T) (c := c) (φ := φ) := by
@@ -516,6 +577,11 @@ def localDegreeHypotheses_of_geometricGenericity
   by_cases hnext : ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.succ
   · exact hgen.two_doors_of_nextMilestone ν hnext hν
   · exact hgen.two_doors_of_missing_nextMilestone ν hnext
+
+def geometricGenericity_of_milestoneSegmentTransversality
+    (htrans : MilestoneSegmentTransversality (T := T) (c := c) (φ := φ)) :
+    GeometricGenericity (T := T) (c := c) (φ := φ) :=
+  htrans.toGeometricGenericity
 
 lemma degree_start_eq_one
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
@@ -601,6 +667,14 @@ theorem exists_terminal_of_geometricGenericity
     ∃ v : Section5GraphNode c φ, v ≠ .start ∧ IsTerminal (T := T) c φ v := by
   exact exists_terminal_of_localDegreeHypotheses (T := T) (c := c) (φ := φ)
     (localDegreeHypotheses_of_geometricGenericity (T := T) (c := c) (φ := φ) hgen)
+
+theorem exists_terminal_of_milestoneSegmentTransversality
+    [Finite (Section5GraphNode c φ)]
+    (htrans : MilestoneSegmentTransversality (T := T) (c := c) (φ := φ)) :
+    ∃ v : Section5GraphNode c φ, v ≠ .start ∧ IsTerminal (T := T) c φ v := by
+  exact exists_terminal_of_geometricGenericity (T := T) (c := c) (φ := φ)
+    (geometricGenericity_of_milestoneSegmentTransversality
+      (T := T) (c := c) (φ := φ) htrans)
 
 end Section5GraphNode
 

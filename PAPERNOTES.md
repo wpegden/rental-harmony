@@ -197,3 +197,14 @@
   `Section5GraphNode.localDegreeHypotheses_of_geometricGenericity` and
   `Section5GraphNode.exists_terminal_of_geometricGenericity`, so the remaining Section 5 work is
   now even sharper: prove that a generic milestone chain satisfies `GeometricGenericity`.
+- Formalization note after the latest geometric-target refinement:
+  the remaining Section 5 goal is now phrased with explicit transversality predicates rather than
+  only casewise graph consequences. `SubdivisionFace.ImageMeetsOpenMilestoneSegment` records that
+  a face image hits a milestone segment away from the segment endpoints, and
+  `SubdivisionFace.ImageContainsMilestoneAwayFromBoundary` records that a milestone lies in a face
+  image but not already in the image of any codimension-`1` subface. These are packaged in
+  `Section5GraphNode.MilestoneSegmentTransversality`, which extends
+  `Section5GraphNode.GeometricGenericity` and already yields
+  `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality`. So the remaining Section 5
+  work is now the actual convex-geometric proof that a suitably perturbed milestone chain satisfies
+  these transversality predicates.
