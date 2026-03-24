@@ -143,7 +143,16 @@
   The remaining choice is now explicit: either prove the boundary noncontractible in Lean and
   finish the topological contradiction, or abandon the topological route and switch to the paper's
   trap-door/path-following proof.
+- Latest status:
+  a direct search through the installed mathlib did not find an immediately usable Brouwer fixed
+  point theorem, no-retraction theorem, or noncontractibility result for spheres / simplex
+  boundaries. So the topological route is now blocked on importing or developing a serious external
+  topological invariant, not on another local project lemma.
 - If the topological route is awkward, switch to the paper's combinatorial path-following proof.
+  That switch is also now clearer in scope:
+  before proving the graph/parity argument, add a support-layer API for lower-dimensional faces and
+  codimension-`1` incidence inside subdivisions, since the current interface only packages
+  full-dimensional facets plus supporting-facet witnesses.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -158,9 +167,11 @@
 - The dimension-`1` surjectivity base case is now proved by transporting the simplex to
   `unitInterval` and applying the intermediate value theorem, so the next geometric step is the
   higher-dimensional argument rather than more interval infrastructure.
-- The new homotopy and boundary-restriction infrastructure shows that higher-dimensional
-  surjectivity can now be attacked as a genuine topological contradiction, not another interface
-  repair.
+- The new homotopy and boundary-restriction infrastructure shows exactly where the higher-
+  dimensional proof now stops:
+  either add a noncontractibility theorem for `SimplexBoundary dimension`, or switch routes and
+  formalize the Section 5 face-incidence graph after extending the support layer with an explicit
+  face-poset / adjacency API.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

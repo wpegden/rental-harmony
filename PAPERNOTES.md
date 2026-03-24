@@ -110,3 +110,19 @@
   prove that boundary noncontractible in Lean, or abandon the topological route and formalize the
   paper's trap-door/path-following proof instead, followed by the Hall-witness extraction in
   Sections 3 and 4.
+- Formalization note after the latest higher-dimensional proof search:
+  the topological route has now been pushed far enough that the next missing step is no longer a
+  local lemma inside this project. A direct search through the installed mathlib for Brouwer fixed
+  point, "no retraction from ball to sphere", or explicit noncontractibility statements for spheres
+  / simplex boundaries did not produce an off-the-shelf theorem that can close
+  `boundary_contractible_of_omits_barycenter`. So, under the current library state, the topological
+  route appears to require a substantial independent development of sphere noncontractibility rather
+  than one more project-specific argument.
+- Formalization note about the alternate Section 5 proof:
+  the paper's higher-dimensional trap-door/path-following proof is not blocked by mathematics, but
+  it does use more combinatorial structure than the current Lean support files expose. The graph
+  `G` in Section 5 ranges over faces of many dimensions and counts incidences through shared
+  codimension-`1` faces. The present `SimplicialSubdivision` interface records full-dimensional
+  facets, geometric barycentric coordinates, and supporting facets, but not an explicit face poset
+  or codimension-`1` adjacency API. So switching to the paper's route is now a real support-layer
+  project, not just a short replacement proof.
