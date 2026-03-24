@@ -151,4 +151,84 @@ end SubdivisionFace
 
 end Faces
 
+section PrefixGeometry
+
+variable {dimension : ℕ}
+
+/-- The `j`-th original vertex inside the prefix face spanned by the first `k + 1` rooms. -/
+def prefixVertex (k : Fin (dimension + 1)) (j : Fin (k.1 + 1)) :
+    RentDivision (dimension + 1) :=
+  stdSimplex.vertex (S := ℝ) (Fin.castLE (Nat.succ_le_of_lt k.2) j)
+
+/--
+The barycenter of the outer face spanned by the first `k + 1` simplex vertices.
+
+This is the paper's `b_k` after translating from the paper's `1`-based indexing to Lean's
+`0`-based `Fin` indexing.
+-/
+def prefixBarycenter (k : Fin (dimension + 1)) : RentDivision (dimension + 1) := by
+  refine
+    ⟨Finset.univ.centerMass (fun _ : Fin (k.1 + 1) => (1 : ℝ))
+      (fun j =>
+        ((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+          RealPoint dimension)), ?_⟩
+  refine (convex_stdSimplex ℝ (Room (dimension + 1))).centerMass_mem ?_ ?_ ?_
+  · intro j hj
+    positivity
+  · have hsum : 0 < ∑ j : Fin (k.1 + 1), (1 : ℝ) := by
+      simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
+        Nat.cast_add, Nat.cast_one, mul_one]
+      exact_mod_cast Nat.succ_pos k.1
+    simpa using hsum
+  · intro j hj
+    exact (prefixVertex (dimension := dimension) k j).2
+
+/-- The segment joining two successive prefix-face barycenters. -/
+def prefixBarycenterSegment (k : Fin dimension) : Set (RealPoint dimension) :=
+  segment ℝ
+    (((prefixBarycenter (dimension := dimension) k.castSucc : RentDivision (dimension + 1)) :
+      RealPoint dimension))
+    (((prefixBarycenter (dimension := dimension) k.succ : RentDivision (dimension + 1)) :
+      RealPoint dimension))
+
+end PrefixGeometry
+
+section GraphData
+
+variable {dimension : ℕ} {Vertex : Type u} [Fintype Vertex] [DecidableEq Vertex]
+variable {T : SimplicialSubdivision dimension Vertex}
+
+namespace SubdivisionFace
+
+/--
+A subdivision face lies in the prefix outer face spanned by the first `k + 1` simplex vertices.
+
+This is the domain-side condition appearing in the paper's Section 5 graph construction.
+-/
+def SubdividesPrefixFace (τ : SubdivisionFace T) (k : Fin (dimension + 1)) : Prop :=
+  ∀ v ∈ τ.carrier, ∀ i : Room (dimension + 1), k.1 < i.1 →
+    (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0
+
+lemma subdividesPrefixFace_of_subface {τ σ : SubdivisionFace T} (hτσ : τ.IsSubface σ)
+    {k : Fin (dimension + 1)} (hσ : σ.SubdividesPrefixFace (T := T) k) :
+    τ.SubdividesPrefixFace (T := T) k := by
+  intro v hv i hi
+  exact hσ v (hτσ hv) i hi
+
+/-- The image of a subdivision face meets one of the paper's barycenter segments. -/
+def ImageMeetsPrefixBarycenterSegment (τ : SubdivisionFace T)
+    (φ : Vertex → RentDivision (dimension + 1)) (k : Fin dimension) : Prop :=
+  ∃ x : RentDivision (dimension + 1),
+    ((x : RealPoint dimension) ∈ prefixBarycenterSegment (dimension := dimension) k) ∧
+      τ.ImageContains (T := T) φ x
+
+/-- The image of a subdivision face contains one of the paper's prefix-face barycenters. -/
+def ImageContainsPrefixBarycenter (τ : SubdivisionFace T)
+    (φ : Vertex → RentDivision (dimension + 1)) (k : Fin (dimension + 1)) : Prop :=
+  τ.ImageContains (T := T) φ (prefixBarycenter (dimension := dimension) k)
+
+end SubdivisionFace
+
+end GraphData
+
 end RentalHarmony

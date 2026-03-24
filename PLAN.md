@@ -158,6 +158,9 @@
   proves closure under taking nonempty subfaces, and packages codimension-`1` incidence. The next
   step is to define the actual graph vertices from Section 5 using these faces and the segments
   `[b_{k-1}, b_k]`, then prove the degree/parity walk lemma.
+  The barycenter side of that vocabulary is now started as well:
+  the support file contains `prefixBarycenter`, `prefixBarycenterSegment`,
+  `SubdivisionFace.SubdividesPrefixFace`, and the corresponding image-intersection predicates.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

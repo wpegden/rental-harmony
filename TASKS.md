@@ -11,7 +11,7 @@
 
 ## Worker Tasks
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
-- [ ] Build the Section 5 graph on top of the new `SubdivisionFace` support layer and prove its path/parity lemma.
+- [ ] Build the Section 5 graph on top of the new `SubdivisionFace` plus prefix-barycenter/segment support, and prove its path/parity lemma.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
@@ -24,6 +24,9 @@
 - [x] Added `RentalHarmony/Section5Graph.lean` with a lower-dimensional face-poset API:
   `SubdivisionFace`, nonempty subface closure, face geometry/image predicates, and codimension-`1`
   incidence lemmas.
+- [x] Added the paper's prefix-face barycenters and segment-intersection predicates in
+  `RentalHarmony/Section5Graph.lean`, so the Section 5 graph can now be stated directly in terms
+  of faces whose images meet the segments `[b_{k-1}, b_k]`.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made

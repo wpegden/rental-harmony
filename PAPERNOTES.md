@@ -132,3 +132,10 @@
   image-containment predicates and codimension-`1` incidence lemmas. This is enough structure to
   begin stating the Section 5 graph `G` faithfully; the remaining work is the actual path/parity
   argument, not another subdivision-interface repair.
+- Formalization note after the next Section 5 support step:
+  the same support file now also contains the paper's prefix-face barycenters and the segment
+  predicates needed for graph vertices. Concretely, `prefixBarycenter` formalizes the barycenter
+  of `conv{e_1, ..., e_k}` in Lean's `0`-based indexing, and `prefixBarycenterSegment` plus
+  `SubdivisionFace.ImageMeetsPrefixBarycenterSegment` package the condition
+  `λ(σ) ∩ [b_{k-1}, b_k] ≠ ∅`. So the next missing ingredient is the actual graph definition and
+  parity/path-following proof.
