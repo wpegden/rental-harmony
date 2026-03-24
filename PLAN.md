@@ -1,0 +1,120 @@
+# Formalization Plan
+
+## Scope
+- Formalize the paper's main theorem (`Theorem~\ref{thm:secret}`) and the two multiple-labeling
+  generalizations from Section 6.
+- Keep the paper's three layers visible in Lean:
+  simplex geometry/topology, combinatorial label counting, and Hall-style matching consequences.
+- Reuse mathlib for standard-simplex facts and Hall's marriage theorem rather than reproving them.
+
+## Core modeling choices
+- Rooms: `Fin n`.
+- Rent divisions: points of `stdSimplex ℝ (Fin n)`.
+  This matches the paper's coordinate model directly and gives a ready-made barycenter.
+- Known preferences: a relation `Accepts : RentDivision n → Fin n → Prop`.
+- Paper assumptions to record explicitly:
+  - every rent division has at least one acceptable room;
+  - free rooms beat positive-price rooms;
+  - indifference among free rooms;
+  - the paper's "one-cent tolerance" should become a separate local-constancy / finite-scale
+    assumption once triangulations are introduced.
+- Keep two geometric interfaces separate:
+  - rent divisions live in `stdSimplex`;
+  - explicit simplices / barycentric facts can use `Affine.Simplex` if that becomes more convenient
+    for subdivision cells.
+
+## Mathlib dependencies to reuse
+- `Mathlib.Analysis.Convex.StdSimplex`
+  - `stdSimplex`, its convexity/compactness facts, `stdSimplex.map`, and
+    `stdSimplex.barycenter`.
+- `Mathlib.LinearAlgebra.AffineSpace.Simplex.*`
+  - useful if we need affine-simplex centroid facts instead of coordinate-wise simplex points.
+- `Mathlib.Combinatorics.Hall.Basic`
+  - Hall's theorem for relations / finite families.
+- `Mathlib.Combinatorics.SimpleGraph.Hall`
+  - optional graph-flavored Hall interface if the matching step is more convenient that way.
+- Basic finite combinatorics from `Fin`, `Fintype`, `Finset`, `Set.ncard`, and injective maps.
+
+## Planned Lean files
+- `RentalHarmony/PaperDefinitions.lean`
+  - basic room/rent/preference objects and paper assumptions.
+- `RentalHarmony/PaperTheorems.lean`
+  - theorem skeletons grouped by paper section.
+- Probable later support files:
+  - `RentalHarmony/Sperner.lean`
+  - `RentalHarmony/Secretive.lean`
+  - `RentalHarmony/Algorithm.lean`
+  - `RentalHarmony/Generalizations.lean`
+
+## Statement prerequisites
+### Section 2: Sperner core
+- Define a finite triangulation interface for the standard simplex.
+- Define Sperner labelings relative to the outer simplex.
+- Define the label-induced map / averaged map on subdivision simplices.
+- Prove a surjectivity theorem for simplex self-maps that preserve faces setwise.
+- Deduce existence of a fully labeled cell from the barycenter preimage.
+
+### Section 3: `n = 3` secretive roommate
+- Formalize the `9 -> 3` label-compression lemma from the paper's first proof.
+- Prove that a cell carrying all three compressed labels yields the two-roommate Hall condition for
+  the two remaining rooms.
+- Keep this combinatorial consequence separate from the geometric existence lemma.
+
+### Section 4: general `n`
+- Formalize the cyclic boundary relabeling turning free-room choices into a Sperner labeling.
+- Prove the key counting lemma:
+  any `k` known roommates exhibit at least `k + 1` labels on the barycenter cell.
+- Feed that counting lemma into Hall's theorem to obtain the secretive-roommate theorem.
+
+### Section 5: algorithmic aspects
+- Treat this as secondary until the main existence statements are in place.
+- Preferred route:
+  prove a reusable face-preserving surjectivity theorem and derive the algorithm later.
+- Fallback route:
+  formalize the paper's graph/path-following proof as a self-contained lemma.
+
+### Section 6: multiple Sperner labelings
+- First theorem:
+  sum label maps into a lattice-point-valued simplex, apply the same barycenter/cell existence
+  result, and extract the convex-hull witness.
+- Second theorem:
+  formalize the weighted-average argument with the `β_ij` counting lemma and again reuse the
+  face-preserving surjectivity theorem.
+
+## Dependency order
+1. simplex/rent-division representation and preference assumptions
+2. Hall-facing combinatorics for assigning rooms once label counts are known
+3. abstract "balanced cell" consequences for Sections 3, 4, and 6
+4. surjectivity / barycenter-preimage theorem for facewise-fixed simplex maps
+5. main secretive-roommate theorem
+6. Sperner and multiple-labeling corollaries
+7. optional algorithmic extraction from Section 5
+
+## Proof roadmap
+### Main theorem
+- Build `n - 1` label maps from the known roommates.
+- Apply the cyclic boundary relabeling from the paper-check notes.
+- Average the maps and find a cell containing a preimage of the barycenter.
+- Prove the label-count growth lemma on that cell.
+- Convert label-count growth into Hall's condition after the secretive roommate chooses a room.
+
+### Surjectivity subproblem
+- First attempt: prove a local theorem for continuous/affine-on-cells maps that preserve each face
+  of the standard simplex setwise.
+- If the topological route is awkward, switch to the paper's combinatorial path-following proof.
+- Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
+
+### Generalizations
+- Reuse the same balanced-cell existence result.
+- Keep the lattice-point and weighted-average arguments finite and combinatorial after that point.
+
+## Immediate next steps
+- Flesh out `RentalHarmony/PaperDefinitions.lean` with the concrete triangulation and label-map API.
+- Replace theorem comments in `RentalHarmony/PaperTheorems.lean` by precise Lean propositions once
+  the triangulation interface is fixed.
+- Start with the Hall-side combinatorics, since mathlib already provides the matching theorem and
+  these lemmas do not depend on the hard surjectivity proof.
+
+## Current input status
+- No proposed axioms.
+- No external theorem or modeling choice currently needs human input.

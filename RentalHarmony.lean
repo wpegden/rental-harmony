@@ -1,1 +1,3 @@
 import RentalHarmony.Basic
+import RentalHarmony.PaperDefinitions
+import RentalHarmony.PaperTheorems
