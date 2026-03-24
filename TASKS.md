@@ -10,7 +10,8 @@
 <!-- SUPERVISOR_TASKS:END -->
 
 ## Worker Tasks
-- [ ] Repair `PiecewiseLinearSimplexMap`: the current interface admits a Lean-checked nonsurjective boundary-preserving step map on the 1-simplex, so Section 5 is false as stated under the present encoding.
+- [ ] Refactor `SimplicialSubdivision` to carry global continuous barycentric-coordinate functions supported on one containing facet.
+- [ ] Redefine `PiecewiseLinearSimplexMap` from boundary-preserving vertex data plus those barycentric coordinates, so `toFun` is a derived center-of-mass map rather than an arbitrary function.
 - [ ] Reprove the canonical Sperner extension for the repaired map interface.
 - [ ] Prove the actual Section 5 surjectivity theorem for the repaired `PiecewiseLinearSimplexMap`.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.

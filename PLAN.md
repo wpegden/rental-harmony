@@ -46,6 +46,10 @@
   existence of some facet-image witness for each point. That permits discontinuous step maps on the
   1-simplex, so the Section 5 surjectivity theorem is false. The map object must be strengthened to
   encode genuine affine-on-cells / continuity data.
+  The current preferred design is to make the subdivision itself carry global continuous
+  barycentric-coordinate functions supported on one containing facet. Then a
+  `PiecewiseLinearSimplexMap` can be reduced back to its boundary-preserving vertex data, and the
+  actual `toFun` is derived as the corresponding finite center of mass in the codomain simplex.
 
 ## Mathlib dependencies to reuse
 - `Mathlib.Analysis.Convex.StdSimplex`
@@ -135,8 +139,10 @@
 - Keep the lattice-point and weighted-average arguments finite and combinatorial after that point.
 
 ## Immediate next steps
-- Repair `PiecewiseLinearSimplexMap` so it encodes actual piecewise-linear / affine-on-cell data,
-  not only pointwise facet-image membership.
+- Repair `PiecewiseLinearSimplexMap` coherently by:
+  adding global continuous barycentric-coordinate data to `SimplicialSubdivision`,
+  redefining the actual `toFun` as the weighted center of mass of the codomain vertex values, and
+  recovering `map_vertex` / `map_mem_facetImage` / continuity as theorems from that data.
 - Rework the new Sperner extension theorem against that repaired map interface; the present proof
   gives the right combinatorial recipe, but it currently targets the too-weak map notion.
 - Re-approach the Section 5 surjectivity theorem only after that repair.

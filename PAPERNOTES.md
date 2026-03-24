@@ -73,6 +73,10 @@
   surjectivity statement is false for that same interface. The immediate frontier is therefore a
   modeling repair:
   strengthen `PiecewiseLinearSimplexMap` so it really represents a piecewise-linear simplex map
-  with enough geometric coherence to imply surjectivity. After that repair, the current extension
-  proof will need to be rechecked or rebuilt against the stronger notion, and only then can the
-  Section 5 / Section 2 wrappers be resumed.
+  with enough geometric coherence to imply surjectivity. The current best repair plan is:
+  let `SimplicialSubdivision` carry global continuous barycentric-coordinate functions
+  `w_v(x)` supported on one containing facet, and define the actual map `toFun` from the vertex
+  data by the corresponding finite center of mass. That rules out the discontinuous step-map
+  counterexample by construction and should make the Sperner extension theorem essentially
+  automatic again. After that repair, the current extension proof will need to be rebuilt against
+  the stronger notion, and only then can the Section 5 / Section 2 wrappers be resumed.
