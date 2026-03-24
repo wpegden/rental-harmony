@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Combination
+import Mathlib.Analysis.Convex.Intrinsic
 import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Combinatorics.SimpleGraph.DegreeSum
 import RentalHarmony.PaperDefinitions
@@ -387,6 +388,131 @@ def segment (c : Section5MilestoneChain (dimension := dimension)) (k : Fin dimen
 end Section5MilestoneChain
 
 end PrefixGeometry
+
+section Avoidance
+
+variable {V P : Type*}
+  [NormedAddCommGroup V] [NormedSpace ℝ V]
+  [MetricSpace P] [NormedAddTorsor V P] [FiniteDimensional ℝ V] [Nonempty P]
+
+/--
+A proper affine subspace of a finite-dimensional normed affine space has empty interior.
+
+This is the basic finite-union avoidance input needed for the Section 5 milestone perturbation.
+-/
+lemma affineSubspace_interior_eq_empty_of_ne_top
+    (Q : AffineSubspace ℝ P) (hQ : Q ≠ ⊤) :
+    interior (Q : Set P) = ∅ := by
+  classical
+  let p : P := Classical.arbitrary P
+  let e : P ≃ᵃⁱ[ℝ] V := AffineIsometryEquiv.constVSub ℝ p
+  let f : P →ᵃ[ℝ] V := e.toAffineEquiv.toAffineMap
+  have hf : Function.Injective f := e.injective
+  by_contra h
+  have hne : (interior (Q : Set P)).Nonempty := Set.nonempty_iff_ne_empty.mpr h
+  have himage :
+      (interior ((Q.map f : AffineSubspace ℝ V) : Set V)).Nonempty := by
+    have : (e.toHomeomorph '' interior (Q : Set P)).Nonempty := hne.image e.toHomeomorph
+    rw [e.toHomeomorph.image_interior] at this
+    simpa [f, AffineSubspace.coe_map] using this
+  have htop :
+      affineSpan ℝ (((Q.map f : AffineSubspace ℝ V) : Set V)) = ⊤ :=
+    (Convex.interior_nonempty_iff_affineSpan_eq_top
+      (s := ((Q.map f : AffineSubspace ℝ V) : Set V))
+      (Q.map f).convex).mp himage
+  have hmaptop : Q.map f = ⊤ := by
+    have htop' : affineSpan ℝ (f '' (Q : Set P)) = ⊤ := by
+      simpa [AffineSubspace.coe_map, f] using htop
+    calc
+      Q.map f = (affineSpan ℝ (Q : Set P)).map f := by rw [AffineSubspace.affineSpan_coe]
+      _ = affineSpan ℝ (f '' (Q : Set P)) := AffineSubspace.map_span (f := f) (s := (Q : Set P))
+    exact htop'
+  have hQtop : Q = ⊤ := by
+    have hcomap := congrArg (fun S : AffineSubspace ℝ V => S.comap f) hmaptop
+    simpa [f, AffineSubspace.comap_map_eq_of_injective hf, AffineSubspace.comap_top]
+      using hcomap
+  exact hQ hQtop
+
+lemma interior_biUnion_finset_affineSubspace_eq_empty
+    (S : Finset (AffineSubspace ℝ P))
+    (hproper : ∀ Q ∈ S, Q ≠ (⊤ : AffineSubspace ℝ P)) :
+    interior (⋃ Q ∈ S, (Q : Set P)) = ∅ := by
+  classical
+  induction S using Finset.induction_on with
+  | empty =>
+      simp
+  | @insert Q S hQnot ih =>
+      have hQempty : interior (Q : Set P) = ∅ :=
+        affineSubspace_interior_eq_empty_of_ne_top Q (hproper Q (by simp))
+      have hSempty : interior (⋃ Q' ∈ S, (Q' : Set P)) = ∅ := by
+        refine ih ?_
+        intro Q' hQ'
+        exact hproper Q' (by simp [hQ'])
+      have hQclosed : IsClosed (Q : Set P) := Q.closed_of_finiteDimensional
+      rw [show (⋃ R ∈ insert Q S, (R : Set P)) = (Q : Set P) ∪ ⋃ R ∈ S, (R : Set P) by
+        simp]
+      rw [interior_union_isClosed_of_interior_empty hQclosed hSempty, hQempty]
+
+lemma exists_mem_open_not_mem_biUnion_affineSubspace
+    {u : Set P} (hu : IsOpen u) (hune : u.Nonempty)
+    (S : Finset (AffineSubspace ℝ P))
+    (hproper : ∀ Q ∈ S, Q ≠ (⊤ : AffineSubspace ℝ P)) :
+    ∃ x, x ∈ u ∧ ∀ Q ∈ S, x ∉ (Q : Set P) := by
+  have hEmpty : interior (⋃ Q ∈ S, (Q : Set P)) = ∅ :=
+    interior_biUnion_finset_affineSubspace_eq_empty S hproper
+  have hnot : ¬ u ⊆ ⋃ Q ∈ S, (Q : Set P) := by
+    intro hsub
+    have hinterior : u ⊆ interior (⋃ Q ∈ S, (Q : Set P)) :=
+      interior_maximal hsub hu
+    rw [hEmpty] at hinterior
+    exact hune.not_subset_empty hinterior
+  simpa [Set.subset_def] using Set.not_subset.mp hnot
+
+section StdSimplexAvoid
+
+variable {dimension : ℕ}
+
+/--
+Inside a smaller standard simplex, any finite union of proper affine subspaces misses some point of
+the relative interior.
+
+This is the smaller-simplex form of the finite-avoidance theorem needed for the Section 5
+milestone-chain construction.
+-/
+theorem exists_mem_smallSimplexInterior_not_mem_biUnion_affineSubspace
+    (S :
+      Finset
+        (AffineSubspace ℝ
+          (affineSpan ℝ (stdSimplex ℝ (Room (dimension + 1)) : Set (RealPoint dimension)))))
+    (hproper : ∀ Q ∈ S, Q ≠ ⊤) :
+    ∃ x :
+      affineSpan ℝ (stdSimplex ℝ (Room (dimension + 1)) : Set (RealPoint dimension)),
+      x ∈ interior
+          (((↑) :
+              affineSpan ℝ (stdSimplex ℝ (Room (dimension + 1)) : Set (RealPoint dimension)) →
+                RealPoint dimension) ⁻¹'
+            (stdSimplex ℝ (Room (dimension + 1)) : Set (RealPoint dimension))) ∧
+        ∀ Q ∈ S, x ∉ (Q : Set _) := by
+  let A : Set (RealPoint dimension) := stdSimplex ℝ (Room (dimension + 1))
+  have hAconv : Convex ℝ A := convex_stdSimplex ℝ (Room (dimension + 1))
+  have hAne : A.Nonempty := by
+    refine ⟨stdSimplex.barycenter, ?_⟩
+    exact (stdSimplex.barycenter : stdSimplex ℝ (Room (dimension + 1))).property
+  have hPreNonempty :
+      (interior (((↑) : affineSpan ℝ A → RealPoint dimension) ⁻¹' A :
+          Set (affineSpan ℝ A))).Nonempty := by
+    rcases hAne.intrinsicInterior hAconv with ⟨x, hx⟩
+    rcases mem_intrinsicInterior.mp hx with ⟨y, hy, rfl⟩
+    exact ⟨y, hy⟩
+  simpa [A] using
+    exists_mem_open_not_mem_biUnion_affineSubspace
+      (u := interior (((↑) : affineSpan ℝ A → RealPoint dimension) ⁻¹' A :
+        Set (affineSpan ℝ A)))
+      isOpen_interior hPreNonempty S hproper
+
+end StdSimplexAvoid
+
+end Avoidance
 
 section GraphData
 

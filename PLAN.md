@@ -218,8 +218,14 @@
   `Section5MilestoneChain.prefixPoint`, which packages every milestone as a point of its ambient
   prefix face. The explicit restriction/padding equivalence
   `PrefixFace.equivRentDivision : PrefixFace k ≃ RentDivision (k + 1)` is now formalized, so the
-  next missing lemma on this route is the finite-union avoidance theorem inside those smaller
+  next missing lemma on this route was the finite-union avoidance theorem inside those smaller
   simplices / prefix faces.
+- That smaller-simplex avoidance step is now formalized as well:
+  `RentalHarmony/Section5Graph.lean` proves that any finite union of proper affine subspaces
+  misses some point of the relative interior of `RentDivision (k + 1)`. The remaining milestone
+  geometry is therefore one notch more specific: replace the finitely many lower-dimensional convex
+  hulls arising from face images by proper affine subspaces of the smaller simplex, then transport
+  the resulting avoided point back through `PrefixFace.equivRentDivision`.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -250,9 +256,10 @@
   generic milestone chain has open segment crossings and away-from-boundary milestone hits in the
   sense recorded there. At the moment this reduces to a missing support theorem about choosing
   points in the relative interior of prefix simplex faces away from finitely many lower-dimensional
-  convex hulls. The new `PrefixFace.equivRentDivision` means this support theorem can now be
-  transported to smaller standard simplices instead of being proved directly in the ambient
-  simplex coordinates.
+  convex hulls. The affine-subspace version of that avoidance theorem is now proved on the smaller
+  simplex side, so the next missing argument is to show that the finitely many forbidden convex
+  hulls arising from the milestone construction sit inside finitely many proper affine subspaces,
+  and then transport the chosen point back through `PrefixFace.equivRentDivision`.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

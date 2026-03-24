@@ -229,3 +229,12 @@
   scratch. So the remaining milestone-chain blocker is no longer face identification; it is the
   actual finite-union avoidance theorem in the relative interior of the smaller simplex, which can
   now be transported back to the ambient prefix face through this equivalence.
+- Formalization note after the latest smaller-simplex step:
+  that affine-subspace avoidance theorem is now proved. `RentalHarmony/Section5Graph.lean`
+  formalizes that a proper affine subspace of a finite-dimensional affine space has empty interior,
+  proves the corresponding finite-union avoidance lemma, and specializes it to the relative
+  interior of the smaller simplex `RentDivision (k + 1)` by working inside the affine-span subtype
+  of `stdSimplex`. So the remaining milestone-chain blocker is now even more concrete: show that
+  the finitely many forbidden lower-dimensional convex hulls in the Section 5 perturbation
+  argument are contained in finitely many proper affine subspaces of the relevant smaller simplex,
+  and then transport the avoided interior point back through `PrefixFace.equivRentDivision`.

@@ -13,10 +13,11 @@
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
 - [ ] Prove the actual milestone-chain geometric/transversality consequences that imply `Section5GraphNode.MilestoneSegmentTransversality`.
 - [ ] Instantiate `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality` from the milestone-chain genericity proof to obtain the Section 5 terminal-node / barycenter-face existence statement.
-- [ ] Prove the remaining prefix-face support theorem needed for milestone perturbations:
-  transport a finite-union avoidance statement to each `PrefixFace k` via the new equivalence
-  `PrefixFace k ≃ RentDivision (k + 1)`, or prove the equivalent relative-interior avoidance lemma
-  directly there.
+- [ ] Upgrade the new smaller-simplex avoidance theorem to the actual milestone perturbation input:
+  prove that the relative interior of `RentDivision (k + 1)` avoids any finite union of convex
+  hulls of at most `k` points, then transport that statement back through
+  `PrefixFace.equivRentDivision` to construct a milestone chain satisfying
+  `Section5GraphNode.MilestoneSegmentTransversality`.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
@@ -62,6 +63,9 @@
 - [x] Built the explicit prefix-face equivalence in `RentalHarmony/Section5Graph.lean`:
   `PrefixFace.restrict`, `PrefixFace.pad`, and `PrefixFace.equivRentDivision` identify
   `PrefixFace k` with `RentDivision (k + 1)`.
+- [x] Proved the finite-union avoidance theorem for proper affine subspaces in finite-dimensional
+  affine spaces, and specialized it to the relative interior of the smaller simplex
+  `RentDivision (k + 1)`.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made
