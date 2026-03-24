@@ -12,7 +12,7 @@
 ## Worker Tasks
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
 - [ ] Prove the actual geometric/genericity consequences that imply `Section5GraphNode.LocalDegreeHypotheses` for a milestone chain.
-- [ ] Combine those local geometric degree lemmas with the new finite-graph parity theorem to obtain the Section 5 terminal-node / barycenter-face existence statement.
+- [ ] Instantiate `Section5GraphNode.exists_terminal_of_localDegreeHypotheses` from the milestone-chain genericity proof to obtain the Section 5 terminal-node / barycenter-face existence statement.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
@@ -43,6 +43,9 @@
   milestone points.
 - [x] Added `Section5GraphNode.LocalDegreeHypotheses` and proved from it that the start node has
   odd degree and each nonterminal positive node has even degree.
+- [x] Connected the local degree package to the finite-graph parity theorem via
+  `Section5GraphNode.exists_terminal_of_localDegreeHypotheses`, so the remaining Section 5 gap is
+  only the geometric proof of `LocalDegreeHypotheses`.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made

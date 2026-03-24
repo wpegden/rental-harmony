@@ -529,6 +529,21 @@ theorem exists_terminal_of_local_degree_lemmas
   exact exists_terminal_of_odd_start_and_nonterminal_even G .start
     (IsTerminal (T := T) c φ) hstart heven
 
+theorem exists_terminal_of_localDegreeHypotheses
+    [Finite (Section5GraphNode c φ)]
+    (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ)) :
+    ∃ v : Section5GraphNode c φ, v ≠ .start ∧ IsTerminal (T := T) c φ v := by
+  classical
+  letI := Fintype.ofFinite (Section5GraphNode c φ)
+  refine exists_terminal_of_local_degree_lemmas (T := T) (c := c) (φ := φ)
+    (odd_degree_start (T := T) (c := c) (φ := φ) hdeg) ?_
+  intro v hv hterminal
+  cases v with
+  | start =>
+      contradiction
+  | positive ν =>
+      exact even_degree_of_not_terminal (T := T) (c := c) (φ := φ) hdeg ν hterminal
+
 end Section5GraphNode
 
 end GraphStructure

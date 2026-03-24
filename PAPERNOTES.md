@@ -181,3 +181,10 @@
   room. The support file then proves the corresponding odd/even graph-degree lemmas from that
   package. So the next missing ingredient is not more graph arithmetic; it is the actual convex-
   geometric proof that a generic milestone chain satisfies those local hypotheses.
+- Formalization note after the latest Section 5 abstraction step:
+  the purely graph-theoretic part is now closed under that interface.
+  `Section5GraphNode.exists_terminal_of_localDegreeHypotheses` combines the local odd/even degree
+  consequences with the finite-graph parity theorem and directly yields a terminal node, i.e. a
+  top-dimensional subdivision face whose image contains the final milestone. So the remaining
+  Section 5 gap is now purely geometric: prove that a suitably generic milestone chain satisfies
+  `LocalDegreeHypotheses`.

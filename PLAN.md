@@ -186,6 +186,10 @@
   doors at every nonterminal room" consequences that the paper's geometric genericity argument is
   supposed to provide. From those hypotheses, the support file already proves the odd/even degree
   lemmas needed by the finite-graph parity theorem.
+- The abstract graph conclusion is now packaged too:
+  `Section5GraphNode.exists_terminal_of_localDegreeHypotheses` combines those odd/even degree
+  lemmas with the parity theorem and yields a terminal top-dimensional face as soon as the
+  milestone-chain geometry supplies `LocalDegreeHypotheses`.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -208,8 +212,10 @@
 - The face-poset / adjacency API is now present in `RentalHarmony/Section5Graph.lean`, so the next
   concrete proof step is no longer another interface change: the Section 5 graph itself is now
   formalized, the finite-graph parity lemma is proved, and the graph is parameterized by the
-  paper's perturbed milestone chain. The next missing step is the actual geometric proof that a
-  suitably generic milestone chain yields `Section5GraphNode.LocalDegreeHypotheses`.
+  paper's perturbed milestone chain. The new theorem
+  `Section5GraphNode.exists_terminal_of_localDegreeHypotheses` already packages the abstract graph
+  conclusion, so the next missing step is now exactly the geometric proof that a suitably generic
+  milestone chain yields `Section5GraphNode.LocalDegreeHypotheses`.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's
