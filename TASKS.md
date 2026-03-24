@@ -10,15 +10,17 @@
 <!-- SUPERVISOR_TASKS:END -->
 
 ## Worker Tasks
-- [ ] Refactor `SimplicialSubdivision` to carry global continuous barycentric-coordinate functions supported on one containing facet.
-- [ ] Redefine `PiecewiseLinearSimplexMap` from boundary-preserving vertex data plus those barycentric coordinates, so `toFun` is a derived center-of-mass map rather than an arbitrary function.
-- [ ] Reprove the canonical Sperner extension for the repaired map interface.
-- [ ] Prove the actual Section 5 surjectivity theorem for the repaired `PiecewiseLinearSimplexMap`.
+- [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
+- [ ] Turn the new barycentric-coordinate data into whatever continuity / facewise-topological lemmas the surjectivity proof needs.
 - [ ] Produce the Hall witnesses promised by the new wrapper theorems from the geometric label-count arguments.
 - [ ] Connect the Section 6 lattice-point statements to actual label-count arguments.
 
 ## Completed
+- [x] Replaced the weak arbitrary-function `PiecewiseLinearSimplexMap` interface by a barycentric-coordinate model where `toFun` is the derived center of mass of the vertex images.
+- [x] Refactored `SimplicialSubdivision` to carry global continuous barycentric-coordinate functions together with a chosen supporting facet.
+- [x] Reproved the canonical Sperner extension for the repaired derived-map interface.
+- [x] Proved the basic derived-map infrastructure for the new interface: vertex interpolation, facet-image witnesses, continuity, and boundary-face preservation.
 - [x] Proved the canonical Sperner extension theorem: every Sperner labeling extends to a `PiecewiseLinearSimplexMap` with vertex map `spernerVertexMap L`.
 - [x] Identified and repaired a fourth geometric interface bug: every subdivision vertex must belong to some facet, and added the corresponding incident-facet helper lemma for Sperner vertices.
 - [x] Proved a reusable convex-combination lemma extracting facet weights from `FacetContainsPoint`.

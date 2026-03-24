@@ -58,6 +58,13 @@
   But `f` is not surjective. So the surjectivity statement is false under the current encoding
   until `PiecewiseLinearSimplexMap` is strengthened to record actual affine-on-cells / continuity
   data, not only pointwise facet-image membership.
+- Formalization note after the coherent repair:
+  the paper-facing interface now rules out that step-map counterexample by construction. A
+  subdivision records global continuous barycentric-coordinate functions together with a chosen
+  supporting facet, and a `PiecewiseLinearSimplexMap` is no longer an arbitrary function but the
+  derived center-of-mass map from its vertex images. The basic interpolation lemmas
+  (`map_vertex`, `map_mem_facetImage`, continuity, boundary-face preservation) and the canonical
+  Sperner extension have all been rebuilt against this stronger interface.
 - `Section 5` also has a minor notation slip: around line 387, "The vertex `e_1` of `Δ_n`" should be `Δ_{n-1}`.
 - `Section 6`, first theorem (around lines 449-463): the proof implicitly upgrades the face `τ` containing `x` to a facet. The hypothesis that `y` is not in the convex hull of any `n` lattice points rules out lower-dimensional faces, since those would map into convex hulls of at most `n` lattice points.
 - `Section 6`, second theorem (around lines 487-490): the counting step should be written explicitly. If fewer than `k_j` indices `i` had `β_ij > 0`, then `∑_i β_ij ≤ (k_j - 1) / (n + 1) < α_j`, contradicting `∑_i β_ij = α_j`.
@@ -69,14 +76,7 @@
 - No fatal mathematical gap found in this pass.
 - The higher-dimensional algorithm in `Section 5` is the least formal part of the paper; it appears repairable, but a Lean development should plan to restate and prove that surjectivity result independently rather than following the paper literally line by line.
 - Current proof frontier:
-  the Sperner extension theorem is now proved for the current weak interface, but the Section 5
-  surjectivity statement is false for that same interface. The immediate frontier is therefore a
-  modeling repair:
-  strengthen `PiecewiseLinearSimplexMap` so it really represents a piecewise-linear simplex map
-  with enough geometric coherence to imply surjectivity. The current best repair plan is:
-  let `SimplicialSubdivision` carry global continuous barycentric-coordinate functions
-  `w_v(x)` supported on one containing facet, and define the actual map `toFun` from the vertex
-  data by the corresponding finite center of mass. That rules out the discontinuous step-map
-  counterexample by construction and should make the Sperner extension theorem essentially
-  automatic again. After that repair, the current extension proof will need to be rebuilt against
-  the stronger notion, and only then can the Section 5 / Section 2 wrappers be resumed.
+  the modeling repair is now complete: the derived-map barycentric-coordinate interface is in
+  place, and the canonical Sperner extension theorem has been reproved on top of it. The immediate
+  frontier is again the actual Section 5 surjectivity proof for those face-preserving simplex
+  self-maps, followed by instantiating the existing Section 5 / Section 2 wrappers.

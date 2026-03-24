@@ -139,161 +139,214 @@ lemma vertexPos_coord_pos_of_label_eq
     (T.vertexPos v).2.1 i
   exact lt_of_le_of_ne hnonneg (Ne.symm hne)
 
-/--
-The simplex point obtained by applying the Sperner vertex map to one facet and one system of
-convex weights.
--/
-def spernerFacetCenterMass
+/-- Any vertex outside the chosen supporting facet receives zero barycentric weight. -/
+lemma baryCoord_eq_zero_of_not_mem_supportingFacet
     {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
-    {T : SimplicialSubdivision dimension Vertex} (L : SpernerLabeling T)
-    (σ : Finset Vertex) (w : Vertex → ℝ)
-    (hw₀ : ∀ v ∈ σ, 0 ≤ w v) (hw₁ : σ.sum w = 1) :
-    RentDivision (dimension + 1) := by
-  refine ⟨σ.centerMass w (fun v =>
-    (((spernerVertexMap L).vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)),
-    ?_⟩
-  exact (convex_stdSimplex ℝ (Room (dimension + 1))).centerMass_mem
-    hw₀ (by simp [hw₁]) (by intro v hv; exact ((spernerVertexMap L).vertexMap v).2)
-
-@[simp] lemma coe_spernerFacetCenterMass
-    {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
-    {T : SimplicialSubdivision dimension Vertex} (L : SpernerLabeling T)
-    (σ : Finset Vertex) (w : Vertex → ℝ)
-    (hw₀ : ∀ v ∈ σ, 0 ≤ w v) (hw₁ : σ.sum w = 1) :
-    ((spernerFacetCenterMass L σ w hw₀ hw₁ : RentDivision (dimension + 1)) :
-      RealPoint dimension) =
-      σ.centerMass w (fun v =>
-        (((spernerVertexMap L).vertexMap v : RentDivision (dimension + 1)) :
-          RealPoint dimension)) :=
-  rfl
+    (T : SimplicialSubdivision dimension Vertex) (x : RentDivision (dimension + 1)) (v : Vertex)
+    (hv : v ∉ T.supportingFacet x) :
+    T.baryCoord v x = 0 := by
+  by_contra hne
+  exact hv (T.baryCoord_supported x v hne)
 
 /--
-If a facet center of mass has vanishing `i`-th coordinate, then any vertex of positive `i`-th
-coordinate must receive zero weight.
+The subdivision's chosen supporting facet really contains the domain point, because the global
+barycentric coordinates reconstruct the point from vertices of that facet.
 -/
-lemma facet_weight_eq_zero_of_coord_zero_of_label_eq
+lemma supportingFacet_contains_point
     {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
-    {T : SimplicialSubdivision dimension Vertex} (L : SpernerLabeling T)
-    {σ : Finset Vertex} {x : RentDivision (dimension + 1)} {w : Vertex → ℝ}
-    (hw₀ : ∀ v ∈ σ, 0 ≤ w v) (hw₁ : σ.sum w = 1)
-    (hwx :
-      σ.centerMass w
+    (T : SimplicialSubdivision dimension Vertex) (x : RentDivision (dimension + 1)) :
+    FacetContainsPoint T (T.supportingFacet x) x := by
+  classical
+  let τ : Finset Vertex := Finset.univ.filter fun v => T.baryCoord v x ≠ 0
+  have hτsubset : τ ⊆ T.supportingFacet x := by
+    intro v hv
+    exact T.baryCoord_supported x v (by simpa [τ] using (Finset.mem_filter.mp hv).2)
+  have hτpos : 0 < ∑ v ∈ τ, T.baryCoord v x := by
+    have hτsum :
+        ∑ v ∈ τ, T.baryCoord v x = ∑ v, T.baryCoord v x := by
+      simpa [τ] using (Finset.sum_filter_ne_zero (s := Finset.univ) (f := fun v => T.baryCoord v x))
+    rw [hτsum, T.baryCoord_sum x]
+    positivity
+  have hτmem :
+      τ.centerMass (fun v => T.baryCoord v x)
+          (fun v => ((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)) ∈
+        convexHull ℝ (facetVertexPoints T (T.supportingFacet x)) := by
+    apply τ.centerMass_mem_convexHull
+    · intro v hv
+      exact T.baryCoord_nonneg x v
+    · exact hτpos
+    · intro v hv
+      exact ⟨v, hτsubset hv, rfl⟩
+  have hτcenter :
+      τ.centerMass (fun v => T.baryCoord v x)
           (fun v => ((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)) =
-        (x : RealPoint dimension))
-    {i : Room (dimension + 1)} (hx₀ : ((x : RealPoint dimension) i) = 0)
-  {v : Vertex} (hvσ : v ∈ σ) (hlabel : L.label v = i) :
-    w v = 0 := by
-  have hcoord := congrArg (fun p : RealPoint dimension => p i) hwx
-  rw [Finset.centerMass_eq_of_sum_1 _ _ hw₁] at hcoord
+        (x : RealPoint dimension) := by
+    calc
+      τ.centerMass (fun v => T.baryCoord v x)
+          (fun v => ((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)) =
+          Finset.univ.centerMass (fun v => T.baryCoord v x)
+            (fun v => ((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)) := by
+              simpa [τ] using
+                (Finset.centerMass_filter_ne_zero
+                  (t := Finset.univ)
+                  (w := fun v => T.baryCoord v x)
+                  (z := fun v =>
+                    ((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)))
+      _ = (x : RealPoint dimension) := T.baryCoord_reconstruct x
+  simpa [FacetContainsPoint, hτcenter] using hτmem
+
+/--
+If the `i`-th coordinate of a simplex point vanishes, then every vertex carrying positive
+barycentric weight at that point also has vanishing `i`-th coordinate.
+-/
+lemma vertexPos_coord_eq_zero_of_baryCoord_ne_zero_of_coord_eq_zero
+    {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
+    (T : SimplicialSubdivision dimension Vertex)
+    {x : RentDivision (dimension + 1)} {i : Room (dimension + 1)}
+    (hx₀ : ((x : RealPoint dimension) i) = 0) {v : Vertex}
+    (hv : T.baryCoord v x ≠ 0) :
+    (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 := by
+  have hcoord := congrArg (fun p : RealPoint dimension => p i) (T.baryCoord_reconstruct x)
+  rw [Finset.centerMass_eq_of_sum_1 _ _ (T.baryCoord_sum x)] at hcoord
   have hcoord' :
-      ∑ u ∈ σ,
-        w u * (((T.vertexPos u : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 := by
-    simpa [Pi.smul_apply, hx₀] using hcoord
+      ∑ u ∈ Finset.univ,
+        T.baryCoord u x * (((T.vertexPos u : RentDivision (dimension + 1)) :
+          RealPoint dimension) i) = 0 := by
+    simpa [Pi.smul_apply, smul_eq_mul, hx₀] using hcoord
   have hnonneg :
-      ∀ u ∈ σ,
-        0 ≤ w u * (((T.vertexPos u : RentDivision (dimension + 1)) : RealPoint dimension) i) := by
+      ∀ u ∈ Finset.univ,
+        0 ≤ T.baryCoord u x * (((T.vertexPos u : RentDivision (dimension + 1)) :
+          RealPoint dimension) i) := by
     intro u hu
-    exact mul_nonneg (hw₀ u hu) ((T.vertexPos u).2.1 i)
+    exact mul_nonneg (T.baryCoord_nonneg x u) ((T.vertexPos u).2.1 i)
   have htermzero :
-      w v * (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 := by
-    exact (Finset.sum_eq_zero_iff_of_nonneg hnonneg).1 hcoord' v hvσ
-  have hpos := vertexPos_coord_pos_of_label_eq L hlabel
+      T.baryCoord v x * (((T.vertexPos v : RentDivision (dimension + 1)) :
+        RealPoint dimension) i) = 0 := by
+    exact (Finset.sum_eq_zero_iff_of_nonneg hnonneg).1 hcoord' v (by simp)
+  have hweightpos : 0 < T.baryCoord v x := lt_of_le_of_ne (T.baryCoord_nonneg x v) (Ne.symm hv)
+  have hcoordnonneg :
+      0 ≤ (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) i) :=
+    (T.vertexPos v).2.1 i
   nlinarith
 
+namespace PiecewiseLinearSimplexMap
+
+variable {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
+variable {T : SimplicialSubdivision dimension Vertex}
+
+/-- Coordinate-wise expansion of the derived center-of-mass map. -/
+theorem toRealPoint_apply (φ : PiecewiseLinearSimplexMap T)
+    (x : RentDivision (dimension + 1)) (i : Room (dimension + 1)) :
+    φ.toRealPoint x i =
+      ∑ v, T.baryCoord v x *
+        (((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension) i) := by
+  rw [PiecewiseLinearSimplexMap.toRealPoint, Finset.centerMass_eq_of_sum_1 _ _ (T.baryCoord_sum x)]
+  simp [Pi.smul_apply, smul_eq_mul]
+
+/-- The derived ambient-vector-valued map is continuous. -/
+theorem continuous_toRealPoint (φ : PiecewiseLinearSimplexMap T) :
+    Continuous φ.toRealPoint := by
+  refine continuous_pi ?_
+  intro i
+  simp_rw [toRealPoint_apply]
+  exact continuous_finset_sum _ fun v hv => (T.continuous_baryCoord v).mul continuous_const
+
+/-- The derived simplex-valued map is continuous. -/
+theorem continuous_toFun (φ : PiecewiseLinearSimplexMap T) :
+    Continuous φ.toFun := by
+  simpa [PiecewiseLinearSimplexMap.toFun] using
+    (Continuous.subtype_mk (continuous_toRealPoint (φ := φ)) fun x => (φ.toFun x).2)
+
+/-- The derived simplex map interpolates its prescribed vertex values. -/
+theorem map_vertex (φ : PiecewiseLinearSimplexMap T) (v : Vertex) :
+    φ.toFun (T.vertexPos v) = φ.vertexMap v := by
+  apply Subtype.ext
+  simpa [PiecewiseLinearSimplexMap.toFun, PiecewiseLinearSimplexMap.toRealPoint,
+    T.baryCoord_vertex] using
+    (Finset.centerMass_ite_eq
+      (t := Finset.univ)
+      (i := v)
+      (z := fun w =>
+        ((φ.vertexMap w : RentDivision (dimension + 1)) : RealPoint dimension))
+      (hi := by simp))
+
 /--
-The weighted image of one domain facet under the Sperner vertex map preserves every vanished
-coordinate of the original point.
+The derived center-of-mass map sends every point to the convex hull of the image of its supporting
+facet.
 -/
-lemma spernerFacetCenterMass_coord_eq_zero_of_coord_eq_zero
-    {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
-    {T : SimplicialSubdivision dimension Vertex} (L : SpernerLabeling T)
-    {σ : Finset Vertex} {x : RentDivision (dimension + 1)} {w : Vertex → ℝ}
-    (hw₀ : ∀ v ∈ σ, 0 ≤ w v) (hw₁ : σ.sum w = 1)
-    (hwx :
-      σ.centerMass w
-          (fun v => ((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)) =
-        (x : RealPoint dimension))
-    {i : Room (dimension + 1)} (hx₀ : ((x : RealPoint dimension) i) = 0) :
-    (((spernerFacetCenterMass L σ w hw₀ hw₁ : RentDivision (dimension + 1)) :
-      RealPoint dimension) i) = 0 := by
-  rw [coe_spernerFacetCenterMass, Finset.centerMass_eq_of_sum_1 _ _ hw₁]
+theorem map_mem_facetImage (φ : PiecewiseLinearSimplexMap T)
+    (x : RentDivision (dimension + 1)) :
+    ∃ σ ∈ T.facets, FacetContainsPoint T σ x ∧ FacetImageContains σ φ.vertexMap (φ.toFun x) := by
+  classical
+  let τ : Finset Vertex := Finset.univ.filter fun v => T.baryCoord v x ≠ 0
+  have hτsubset : τ ⊆ T.supportingFacet x := by
+    intro v hv
+    exact T.baryCoord_supported x v (by simpa [τ] using (Finset.mem_filter.mp hv).2)
+  have hτpos : 0 < ∑ v ∈ τ, T.baryCoord v x := by
+    have hτsum :
+        ∑ v ∈ τ, T.baryCoord v x = ∑ v, T.baryCoord v x := by
+      simpa [τ] using (Finset.sum_filter_ne_zero (s := Finset.univ) (f := fun v => T.baryCoord v x))
+    rw [hτsum, T.baryCoord_sum x]
+    positivity
+  have hτimage :
+      τ.centerMass (fun v => T.baryCoord v x)
+          (fun v => ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ∈
+        convexHull ℝ (facetImagePoints (T.supportingFacet x) φ.vertexMap) := by
+    apply τ.centerMass_mem_convexHull
+    · intro v hv
+      exact T.baryCoord_nonneg x v
+    · exact hτpos
+    · intro v hv
+      exact ⟨v, hτsubset hv, rfl⟩
+  have hτcenter :
+      τ.centerMass (fun v => T.baryCoord v x)
+          (fun v => ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) =
+        ((φ.toFun x : RentDivision (dimension + 1)) : RealPoint dimension) := by
+    calc
+      τ.centerMass (fun v => T.baryCoord v x)
+          (fun v => ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) =
+          Finset.univ.centerMass (fun v => T.baryCoord v x)
+            (fun v => ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) := by
+              simpa [τ] using
+                (Finset.centerMass_filter_ne_zero
+                  (t := Finset.univ)
+                  (w := fun v => T.baryCoord v x)
+                  (z := fun v =>
+                    ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)))
+      _ = φ.toRealPoint x := rfl
+      _ = ((φ.toFun x : RentDivision (dimension + 1)) : RealPoint dimension) := by
+            exact (PiecewiseLinearSimplexMap.coe_toFun (φ := φ) x).symm
+  refine ⟨T.supportingFacet x, T.supportingFacet_mem x, supportingFacet_contains_point T x, ?_⟩
+  simpa [FacetImageContains, hτcenter] using hτimage
+
+/-- The derived center-of-mass map preserves every boundary face of the simplex. -/
+theorem boundary_preserving_toFun (φ : PiecewiseLinearSimplexMap T) :
+    PreservesBoundaryFaces φ.toFun := by
+  intro x i hx₀
+  rw [PiecewiseLinearSimplexMap.coe_toFun, PiecewiseLinearSimplexMap.toRealPoint]
+  rw [Finset.centerMass_eq_of_sum_1 _ _ (T.baryCoord_sum x)]
   rw [show
-      (∑ v ∈ σ,
-          w v •
-            (((spernerVertexMap L).vertexMap v : RentDivision (dimension + 1)) :
-              RealPoint dimension)) i =
-        ∑ v ∈ σ,
-          w v *
-            ((((spernerVertexMap L).vertexMap v : RentDivision (dimension + 1)) :
-              RealPoint dimension) i) by
+      (∑ v ∈ Finset.univ,
+          T.baryCoord v x •
+            (((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension))) i =
+        ∑ v ∈ Finset.univ,
+          T.baryCoord v x *
+            ((((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension) i)) by
       simp [Pi.smul_apply, smul_eq_mul]]
   refine (Finset.sum_eq_zero_iff_of_nonneg ?_).2 ?_
   · intro v hv
-    exact mul_nonneg (hw₀ v hv) (((spernerVertexMap L).vertexMap v).2.1 i)
-  · intro v hvσ
-    by_cases hlabel : L.label v = i
-    · have hwv0 := facet_weight_eq_zero_of_coord_zero_of_label_eq
-        (L := L) hw₀ hw₁ hwx hx₀ hvσ hlabel
-      simp [spernerVertexMap, labeledRoomVertex, hlabel, hwv0]
-    · simp [spernerVertexMap, labeledRoomVertex, hlabel]
-
-/--
-Any point of one subdivision facet has an image point in the corresponding Sperner facet image
-whose zero coordinates are preserved.
--/
-lemma exists_spernerFacetImagePoint_of_facetContains
-    {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
-    {T : SimplicialSubdivision dimension Vertex} (L : SpernerLabeling T)
-    {σ : Finset Vertex} {x : RentDivision (dimension + 1)}
-    (hσx : FacetContainsPoint T σ x) :
-    ∃ y : RentDivision (dimension + 1),
-      (∀ i, ((x : RealPoint dimension) i) = 0 →
-        ((y : RealPoint dimension) i) = 0) ∧
-      FacetImageContains σ (spernerVertexMap L).vertexMap y := by
-  rcases exists_facet_weights T σ x hσx with ⟨w, hw₀, hw₁, hwx⟩
-  refine ⟨spernerFacetCenterMass L σ w hw₀ hw₁, ?_, ?_⟩
-  · intro i hx₀
-    simpa using spernerFacetCenterMass_coord_eq_zero_of_coord_eq_zero
-      (L := L) hw₀ hw₁ hwx hx₀
-  · change
-      ((σ.centerMass w fun v =>
-          (((spernerVertexMap L).vertexMap v : RentDivision (dimension + 1)) :
-            RealPoint dimension)) ∈
-        convexHull ℝ (facetImagePoints σ (spernerVertexMap L).vertexMap))
-    exact σ.centerMass_mem_convexHull hw₀ (by simp [hw₁]) (by
-      intro v hv
-      exact ⟨v, hv, rfl⟩)
-
-/--
-Every simplex point has a Sperner-image point lying in the image of one containing subdivision
-facet and preserving all vanished coordinates.
--/
-lemma exists_spernerMapValue
-    {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
-    (T : SimplicialSubdivision dimension Vertex) (L : SpernerLabeling T)
-    (x : RentDivision (dimension + 1)) :
-    ∃ y : RentDivision (dimension + 1),
-      (∀ i, ((x : RealPoint dimension) i) = 0 →
-        ((y : RealPoint dimension) i) = 0) ∧
-      ∃ σ ∈ T.facets, FacetContainsPoint T σ x ∧
-        FacetImageContains σ (spernerVertexMap L).vertexMap y := by
-  by_cases hvertex : ∃ v, T.vertexPos v = x
-  · let v := Classical.choose hvertex
-    have hvx : T.vertexPos v = x := Classical.choose_spec hvertex
-    refine ⟨(spernerVertexMap L).vertexMap v, ?_, ?_⟩
-    · intro i hx₀
+    exact mul_nonneg (T.baryCoord_nonneg x v) ((φ.vertexMap v).2.1 i)
+  · intro v hv
+    by_cases hv0 : T.baryCoord v x = 0
+    · simp [hv0]
+    · have hvertex0 :=
+          vertexPos_coord_eq_zero_of_baryCoord_ne_zero_of_coord_eq_zero T hx₀ hv0
       have hi_not : i ∉ T.boundaryFace v := by
         intro hi
-        have hne : ((x : RealPoint dimension) i) ≠ 0 := by
-          simpa [hvx] using (T.boundaryFace_exact v i).mp hi
-        exact hne hx₀
-      simpa using (spernerVertexMap L).boundary_preserving v i hi_not
-    · rcases exists_incident_facet_for_sperner_vertex T L v with ⟨σ, hσ, hσx, hσy⟩
-      exact ⟨σ, hσ, by simpa [hvx] using hσx, hσy⟩
-  · rcases T.covers_simplex x with ⟨σ, hσ, hσx⟩
-    rcases exists_spernerFacetImagePoint_of_facetContains (L := L) hσx with
-      ⟨y, hyzero, hyimage⟩
-    exact ⟨y, hyzero, σ, hσ, hσx, hyimage⟩
+        exact ((T.boundaryFace_exact v i).mp hi) hvertex0
+      simp [φ.boundary_preserving v i hi_not]
+
+end PiecewiseLinearSimplexMap
 
 /--
 Paper Section 2: every Sperner labeling admits the piecewise-linear simplex map determined by its
@@ -303,47 +356,7 @@ theorem exists_piecewiseLinearSimplexMap_of_spernerLabeling
     {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
     (T : SimplicialSubdivision dimension Vertex) (L : SpernerLabeling T) :
     ∃ φ : PiecewiseLinearSimplexMap T, φ.vertexMap = (spernerVertexMap L).vertexMap := by
-  classical
-  refine ⟨{
-    vertexMap := (spernerVertexMap L).vertexMap
-    toFun := fun x =>
-      if hvertex : ∃ v, T.vertexPos v = x then
-        (spernerVertexMap L).vertexMap (Classical.choose hvertex)
-      else
-        Classical.choose (exists_spernerMapValue T L x)
-    map_vertex := ?_
-    map_mem_facetImage := ?_
-    boundary_preserving := ?_
-    }, rfl⟩
-  · intro v
-    have hvertex : ∃ u, T.vertexPos u = T.vertexPos v := ⟨v, rfl⟩
-    have hchoose : Classical.choose hvertex = v :=
-      T.vertexPos_injective (Classical.choose_spec hvertex)
-    simp [hvertex, hchoose]
-  · intro x
-    by_cases hvertex : ∃ v, T.vertexPos v = x
-    · let v := Classical.choose hvertex
-      have hvx : T.vertexPos v = x := Classical.choose_spec hvertex
-      rcases exists_incident_facet_for_sperner_vertex T L v with ⟨σ, hσ, hσx, hσy⟩
-      refine ⟨σ, hσ, by simpa [hvx] using hσx, ?_⟩
-      simp [hvertex]
-      simpa using hσy
-    · rcases (Classical.choose_spec (exists_spernerMapValue T L x)).2 with ⟨σ, hσ, hσx, hσy⟩
-      refine ⟨σ, hσ, hσx, ?_⟩
-      simp [hvertex]
-      simpa using hσy
-  · intro x i hx₀
-    by_cases hvertex : ∃ v, T.vertexPos v = x
-    · let v := Classical.choose hvertex
-      have hvx : T.vertexPos v = x := Classical.choose_spec hvertex
-      have hi_not : i ∉ T.boundaryFace v := by
-        intro hi
-        have hne : ((x : RealPoint dimension) i) ≠ 0 := by
-          simpa [hvx] using (T.boundaryFace_exact v i).mp hi
-        exact hne hx₀
-      simp [hvertex]
-      simpa using (spernerVertexMap L).boundary_preserving v i hi_not
-    · simpa [hvertex] using (Classical.choose_spec (exists_spernerMapValue T L x)).1 i hx₀
+  exact ⟨({ toPiecewiseLinearVertexMap := spernerVertexMap L } : PiecewiseLinearSimplexMap T), rfl⟩
 
 /-- Every barycentric coordinate of the simplex barycenter is positive. -/
 lemma barycentricRentDivision_pos {dimension : ℕ} (i : Room (dimension + 1)) :

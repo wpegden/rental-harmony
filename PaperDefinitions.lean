@@ -1,3 +1,4 @@
+import Mathlib.Analysis.Convex.Combination
 import Mathlib.Analysis.Convex.StdSimplex
 import Mathlib.Data.Finset.Card
 
@@ -176,6 +177,22 @@ structure SimplicialSubdivision (dimension : ℕ) (Vertex : Type*) [Fintype Vert
       ((x : RealPoint dimension) ∈
         convexHull ℝ
           (((fun v ↦ ((vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)) '' ↑σ)))
+  baryCoord : Vertex → RentDivision (dimension + 1) → ℝ
+  continuous_baryCoord :
+    ∀ v, Continuous fun x : RentDivision (dimension + 1) => baryCoord v x
+  baryCoord_nonneg : ∀ x v, 0 ≤ baryCoord v x
+  baryCoord_sum : ∀ x, ∑ v, baryCoord v x = 1
+  supportingFacet : RentDivision (dimension + 1) → Finset Vertex
+  supportingFacet_mem : ∀ x, supportingFacet x ∈ facets
+  baryCoord_supported :
+    ∀ x v, baryCoord v x ≠ 0 → v ∈ supportingFacet x
+  baryCoord_vertex :
+    ∀ v w, baryCoord w (vertexPos v) = if v = w then 1 else 0
+  baryCoord_reconstruct :
+    ∀ x,
+      Finset.univ.centerMass (fun v => baryCoord v x)
+        (fun v => ((vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)) =
+          (x : RealPoint dimension)
 
 /-- A Sperner labeling relative to a subdivision of the standard simplex. -/
 structure SpernerLabeling {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
@@ -258,18 +275,44 @@ def FacetImageContainsBarycenter {dimension : ℕ} {Vertex : Type*} [Fintype Ver
 /--
 An actual piecewise-linear self-map of the simplex built from a subdivision and vertex images.
 
-The `map_mem_facetImage` field records the cellwise affine realization needed to connect a
-preimage point to a facet image in the codomain, and `map_vertex` records the intended
-interpolation of the chosen vertex values.
+The ambient subdivision now carries global barycentric-coordinate functions. So the map is no
+longer specified by an arbitrary `toFun`; instead it is derived from the chosen vertex values by
+the corresponding center-of-mass formula.
 -/
 structure PiecewiseLinearSimplexMap {dimension : ℕ} {Vertex : Type*} [Fintype Vertex]
-    [DecidableEq Vertex] (T : SimplicialSubdivision dimension Vertex) where
-  vertexMap : Vertex → RentDivision (dimension + 1)
-  toFun : RentDivision (dimension + 1) → RentDivision (dimension + 1)
-  map_vertex : ∀ v, toFun (T.vertexPos v) = vertexMap v
-  map_mem_facetImage :
-    ∀ x, ∃ σ ∈ T.facets, FacetContainsPoint T σ x ∧ FacetImageContains σ vertexMap (toFun x)
-  boundary_preserving : PreservesBoundaryFaces toFun
+    [DecidableEq Vertex] (T : SimplicialSubdivision dimension Vertex)
+    extends PiecewiseLinearVertexMap T
+
+namespace PiecewiseLinearSimplexMap
+
+variable {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
+variable {T : SimplicialSubdivision dimension Vertex}
+
+/-- The underlying affine combination in the ambient vector space. -/
+def toRealPoint (φ : PiecewiseLinearSimplexMap T)
+    (x : RentDivision (dimension + 1)) : RealPoint dimension :=
+  Finset.univ.centerMass (fun v => T.baryCoord v x)
+    (fun v => ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension))
+
+/-- The simplex-valued map induced by the subdivision barycentric coordinates. -/
+def toFun (φ : PiecewiseLinearSimplexMap T) (x : RentDivision (dimension + 1)) :
+    RentDivision (dimension + 1) := by
+  refine ⟨φ.toRealPoint x, ?_⟩
+  exact (convex_stdSimplex ℝ (Room (dimension + 1))).centerMass_mem
+    (fun v _ => T.baryCoord_nonneg x v)
+    (by
+      rw [T.baryCoord_sum x]
+      positivity)
+    (by
+      intro v hv
+      exact (φ.vertexMap v).2)
+
+@[simp] theorem coe_toFun (φ : PiecewiseLinearSimplexMap T)
+    (x : RentDivision (dimension + 1)) :
+    ((φ.toFun x : RentDivision (dimension + 1)) : RealPoint dimension) = φ.toRealPoint x :=
+  rfl
+
+end PiecewiseLinearSimplexMap
 
 /-- A real point in the scaled simplex `total • Δ_dimension`. -/
 def ScaledSimplexPoint (total dimension : ℕ) :=
