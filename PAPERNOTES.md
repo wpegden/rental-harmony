@@ -33,6 +33,13 @@
   to the prescribed `vertexMap`; without that interpolation field, the desired extension lemma is
   not even stated accurately. These exactness requirements are now part of the paper-facing
   definitions.
+- Formalization note after continuing the extension proof:
+  even with the exact-face repair, the extension lemma is still false unless subdivision vertices
+  have unique geometric positions. A Lean-checkable counterexample uses two distinct interior
+  vertices placed at the same barycentric point of a 1-simplex and labeled `0` and `1`. The new
+  `map_vertex` field then forces any extension map to take the same input point to both simplex
+  vertices simultaneously. The paper-facing subdivision interface therefore also needs
+  `vertexPos` to be injective.
 - `Section 5` also has a minor notation slip: around line 387, "The vertex `e_1` of `Δ_n`" should be `Δ_{n-1}`.
 - `Section 6`, first theorem (around lines 449-463): the proof implicitly upgrades the face `τ` containing `x` to a facet. The hypothesis that `y` is not in the convex hull of any `n` lattice points rules out lower-dimensional faces, since those would map into convex hulls of at most `n` lattice points.
 - `Section 6`, second theorem (around lines 487-490): the counting step should be written explicitly. If fewer than `k_j` indices `i` had `β_ij > 0`, then `∑_i β_ij ≤ (k_j - 1) / (n + 1) < α_j`, contradicting `∑_i β_ij = α_j`.

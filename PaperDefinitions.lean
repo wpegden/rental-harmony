@@ -159,6 +159,7 @@ face of the simplex that contains it.
 structure SimplicialSubdivision (dimension : ℕ) (Vertex : Type*) [Fintype Vertex]
     [DecidableEq Vertex] where
   vertexPos : Vertex → RentDivision (dimension + 1)
+  vertexPos_injective : Function.Injective vertexPos
   boundaryFace : Vertex → Finset (Room (dimension + 1))
   boundaryFace_nonempty : ∀ v, (boundaryFace v).Nonempty
   vertex_boundary :

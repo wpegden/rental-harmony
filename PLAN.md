@@ -33,6 +33,10 @@
   `boundaryFace` must record the exact outer face determined by zero coordinates, not merely a
   superset of allowed labels, and a `PiecewiseLinearSimplexMap` must record its actual vertex
   values. Without those two fields, even the 1-dimensional Section 2 statement is false.
+- Further revision forced by the extension proof:
+  subdivision vertices must have unique geometric positions. Otherwise two distinct interior
+  vertices may occupy the same point and receive different Sperner labels, making any actual
+  extension map impossible at that shared point.
 
 ## Mathlib dependencies to reuse
 - `Mathlib.Analysis.Convex.StdSimplex`
