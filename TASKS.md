@@ -11,15 +11,19 @@
 
 ## Worker Tasks
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
+- [ ] Build the Section 5 graph on top of the new `SubdivisionFace` support layer and prove its path/parity lemma.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
-  `SimplexBoundary dimension`, while the paper's trap-door/path-following route needs new support
-  for lower-dimensional faces and codimension-`1` adjacency in subdivisions.
+  `SimplexBoundary dimension`. The combinatorial route is now the active route, and its remaining
+  blocker is the actual graph/path-following proof rather than missing face-poset definitions.
 - [ ] Produce the Hall witnesses promised by the new wrapper theorems from the geometric label-count arguments.
 - [ ] Connect the Section 6 lattice-point statements to actual label-count arguments.
 
 ## Completed
+- [x] Added `RentalHarmony/Section5Graph.lean` with a lower-dimensional face-poset API:
+  `SubdivisionFace`, nonempty subface closure, face geometry/image predicates, and codimension-`1`
+  incidence lemmas.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made

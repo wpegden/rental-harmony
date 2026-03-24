@@ -126,3 +126,9 @@
   facets, geometric barycentric coordinates, and supporting facets, but not an explicit face poset
   or codimension-`1` adjacency API. So switching to the paper's route is now a real support-layer
   project, not just a short replacement proof.
+- Formalization note after the combinatorial pivot:
+  that missing support layer is now started in `RentalHarmony/Section5Graph.lean`. A
+  `SubdivisionFace` is formalized as a nonempty subset of one facet, together with geometric and
+  image-containment predicates and codimension-`1` incidence lemmas. This is enough structure to
+  begin stating the Section 5 graph `G` faithfully; the remaining work is the actual path/parity
+  argument, not another subdivision-interface repair.

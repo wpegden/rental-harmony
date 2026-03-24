@@ -1,3 +1,4 @@
 import RentalHarmony.Basic
 import RentalHarmony.PaperDefinitions
+import RentalHarmony.Section5Graph
 import RentalHarmony.PaperTheorems

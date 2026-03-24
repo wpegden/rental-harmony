@@ -153,6 +153,11 @@
   before proving the graph/parity argument, add a support-layer API for lower-dimensional faces and
   codimension-`1` incidence inside subdivisions, since the current interface only packages
   full-dimensional facets plus supporting-facet witnesses.
+- This combinatorial pivot is now underway:
+  `RentalHarmony/Section5Graph.lean` introduces `SubdivisionFace` as a nonempty subset of a facet,
+  proves closure under taking nonempty subfaces, and packages codimension-`1` incidence. The next
+  step is to define the actual graph vertices from Section 5 using these faces and the segments
+  `[b_{k-1}, b_k]`, then prove the degree/parity walk lemma.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -172,6 +177,9 @@
   either add a noncontractibility theorem for `SimplexBoundary dimension`, or switch routes and
   formalize the Section 5 face-incidence graph after extending the support layer with an explicit
   face-poset / adjacency API.
+- The face-poset / adjacency API is now present in `RentalHarmony/Section5Graph.lean`, so the next
+  concrete proof step is no longer another interface change: it is the actual construction of the
+  Section 5 graph and its path-following lemma.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's
