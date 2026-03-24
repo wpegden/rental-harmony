@@ -193,6 +193,34 @@ def prefixBarycenterSegment (k : Fin dimension) : Set (RealPoint dimension) :=
     (((prefixBarycenter (dimension := dimension) k.succ : RentDivision (dimension + 1)) :
       RealPoint dimension))
 
+/--
+Section 5 allows the barycenters to be perturbed slightly in order to enforce genericity.
+
+This structure records such a milestone chain: the initial point is still `e₁`, the final point is
+still the true barycenter of the full simplex, and every intermediate point remains in the
+corresponding prefix outer face.
+-/
+structure Section5MilestoneChain where
+  point : Fin (dimension + 1) → RentDivision (dimension + 1)
+  start_eq : point 0 = prefixBarycenter (dimension := dimension) 0
+  terminal_eq :
+    point (Fin.last dimension) =
+      prefixBarycenter (dimension := dimension) (Fin.last dimension)
+  point_subdividesPrefixFace :
+    ∀ k : Fin (dimension + 1), ∀ i : Room (dimension + 1), k.1 < i.1 →
+      (((point k : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0
+
+namespace Section5MilestoneChain
+
+/-- The segment joining two successive milestones. -/
+def segment (c : Section5MilestoneChain (dimension := dimension)) (k : Fin dimension) :
+    Set (RealPoint dimension) :=
+  _root_.segment ℝ
+    (((c.point k.castSucc : RentDivision (dimension + 1)) : RealPoint dimension))
+    (((c.point k.succ : RentDivision (dimension + 1)) : RealPoint dimension))
+
+end Section5MilestoneChain
+
 end PrefixGeometry
 
 section GraphData
@@ -217,17 +245,19 @@ lemma subdividesPrefixFace_of_subface {τ σ : SubdivisionFace T} (hτσ : τ.Is
   intro v hv i hi
   exact hσ v (hτσ hv) i hi
 
-/-- The image of a subdivision face meets one of the paper's barycenter segments. -/
-def ImageMeetsPrefixBarycenterSegment (τ : SubdivisionFace T)
-    (φ : Vertex → RentDivision (dimension + 1)) (k : Fin dimension) : Prop :=
+/-- The image of a subdivision face meets one of the chosen Section 5 milestone segments. -/
+def ImageMeetsMilestoneSegment (c : Section5MilestoneChain (dimension := dimension))
+    (τ : SubdivisionFace T) (φ : Vertex → RentDivision (dimension + 1)) (k : Fin dimension) :
+    Prop :=
   ∃ x : RentDivision (dimension + 1),
-    ((x : RealPoint dimension) ∈ prefixBarycenterSegment (dimension := dimension) k) ∧
+    ((x : RealPoint dimension) ∈ c.segment k) ∧
       τ.ImageContains (T := T) φ x
 
-/-- The image of a subdivision face contains one of the paper's prefix-face barycenters. -/
-def ImageContainsPrefixBarycenter (τ : SubdivisionFace T)
-    (φ : Vertex → RentDivision (dimension + 1)) (k : Fin (dimension + 1)) : Prop :=
-  τ.ImageContains (T := T) φ (prefixBarycenter (dimension := dimension) k)
+/-- The image of a subdivision face contains one of the chosen Section 5 milestones. -/
+def ImageContainsMilestone (c : Section5MilestoneChain (dimension := dimension))
+    (τ : SubdivisionFace T) (φ : Vertex → RentDivision (dimension + 1))
+    (k : Fin (dimension + 1)) : Prop :=
+  τ.ImageContains (T := T) φ (c.point k)
 
 end SubdivisionFace
 
@@ -237,6 +267,7 @@ section GraphStructure
 
 variable {dimension : ℕ} {Vertex : Type u} [Fintype Vertex] [DecidableEq Vertex]
 variable {T : SimplicialSubdivision dimension Vertex}
+variable (c : Section5MilestoneChain (dimension := dimension))
 variable (φ : PiecewiseLinearSimplexMap T)
 
 /--
@@ -244,19 +275,19 @@ A positive-dimensional vertex of the paper's Section 5 graph.
 
 Such a node is a subdivision face of dimension `k + 1` that subdivides the prefix outer face
 spanned by the first `k + 2` simplex vertices and whose image meets the segment joining the
-successive prefix-face barycenters.
+successive Section 5 milestones.
 -/
 structure Section5PositiveNode where
   level : Fin dimension
   face : SubdivisionFace T
   face_dim : face.dim = level.1 + 1
   subdivides : face.SubdividesPrefixFace (T := T) level.succ
-  meets_segment : face.ImageMeetsPrefixBarycenterSegment (T := T) φ.vertexMap level
+  meets_segment : face.ImageMeetsMilestoneSegment (T := T) c φ.vertexMap level
 
 /-- The vertices of the Section 5 graph: a special start node and the positive-dimensional faces. -/
 inductive Section5GraphNode
   | start
-  | positive (_ : Section5PositiveNode φ)
+  | positive (_ : Section5PositiveNode c φ)
 
 namespace Section5PositiveNode
 
@@ -264,49 +295,49 @@ namespace Section5PositiveNode
 The start node is connected to those one-dimensional graph faces that geometrically contain the
 first simplex vertex `e₁`.
 -/
-def IsStartIncident (ν : Section5PositiveNode φ) : Prop :=
+def IsStartIncident (ν : Section5PositiveNode c φ) : Prop :=
   ν.level.1 = 0 ∧
-    ν.face.ContainsPoint (T := T) (prefixBarycenter (dimension := dimension) 0)
+    ν.face.ContainsPoint (T := T) (c.point 0)
 
 /--
 Horizontal adjacency in the Section 5 graph: two same-level faces are connected when they share a
-codimension-`1` subface whose image meets the corresponding prefix-barycenter segment.
+codimension-`1` subface whose image meets the corresponding milestone segment.
 -/
-def HorizontalAdj (ν μ : Section5PositiveNode φ) : Prop :=
+def HorizontalAdj (ν μ : Section5PositiveNode c φ) : Prop :=
   ν.level = μ.level ∧
     ν.face ≠ μ.face ∧
     ∃ τ : SubdivisionFace T,
       τ.IsCodimOneSubface ν.face ∧
       τ.IsCodimOneSubface μ.face ∧
-      τ.ImageMeetsPrefixBarycenterSegment (T := T) φ.vertexMap ν.level
+      τ.ImageMeetsMilestoneSegment (T := T) c φ.vertexMap ν.level
 
 /--
 Vertical adjacency in the Section 5 graph: a `(k + 1)`-dimensional face is connected to an
-incident `k`-dimensional face whose image contains the intermediate barycenter `b_{k+1}`.
+incident `k`-dimensional face whose image contains the intermediate milestone.
 -/
-def VerticalAdj (lower upper : Section5PositiveNode φ) : Prop :=
+def VerticalAdj (lower upper : Section5PositiveNode c φ) : Prop :=
   lower.level.1 + 1 = upper.level.1 ∧
     lower.face.IsCodimOneSubface upper.face ∧
-    lower.face.ImageContainsPrefixBarycenter (T := T) φ.vertexMap lower.level.succ
+    lower.face.ImageContainsMilestone (T := T) c φ.vertexMap lower.level.succ
 
-lemma horizontalAdj_symm {ν μ : Section5PositiveNode φ} :
-    ν.HorizontalAdj (T := T) φ μ → μ.HorizontalAdj (T := T) φ ν := by
+lemma horizontalAdj_symm {ν μ : Section5PositiveNode c φ} :
+    ν.HorizontalAdj (T := T) c φ μ → μ.HorizontalAdj (T := T) c φ ν := by
   rintro ⟨hlevel, hne, τ, hτν, hτμ, hseg⟩
   refine ⟨hlevel.symm, hne.symm, τ, hτμ, hτν, ?_⟩
   simpa [hlevel] using hseg
 
-lemma not_horizontalAdj_self (ν : Section5PositiveNode φ) :
-    ¬ ν.HorizontalAdj (T := T) φ ν := by
+lemma not_horizontalAdj_self (ν : Section5PositiveNode c φ) :
+    ¬ ν.HorizontalAdj (T := T) c φ ν := by
   rintro ⟨_, hne, _⟩
   exact hne rfl
 
-lemma not_verticalAdj_self (ν : Section5PositiveNode φ) :
-    ¬ ν.VerticalAdj (T := T) φ ν := by
+lemma not_verticalAdj_self (ν : Section5PositiveNode c φ) :
+    ¬ ν.VerticalAdj (T := T) c φ ν := by
   rintro ⟨hlevel, _, _⟩
   exact Nat.succ_ne_self _ hlevel
 
-lemma isStartIncident_face_dim (ν : Section5PositiveNode φ)
-    (hν : ν.IsStartIncident (T := T) φ) : ν.face.dim = 1 := by
+lemma isStartIncident_face_dim (ν : Section5PositiveNode c φ)
+    (hν : ν.IsStartIncident (T := T) c φ) : ν.face.dim = 1 := by
   rcases hν with ⟨hlevel, _⟩
   rw [ν.face_dim, hlevel]
 
@@ -337,16 +368,16 @@ end Parity
 namespace Section5GraphNode
 
 /-- The adjacency relation on the paper's Section 5 graph. -/
-def Adj : Section5GraphNode φ → Section5GraphNode φ → Prop
+def Adj : Section5GraphNode c φ → Section5GraphNode c φ → Prop
   | .start, .start => False
-  | .start, .positive ν => ν.IsStartIncident (T := T) φ
-  | .positive ν, .start => ν.IsStartIncident (T := T) φ
+  | .start, .positive ν => ν.IsStartIncident (T := T) c φ
+  | .positive ν, .start => ν.IsStartIncident (T := T) c φ
   | .positive ν, .positive μ =>
-      ν.HorizontalAdj (T := T) φ μ ∨
-        ν.VerticalAdj (T := T) φ μ ∨
-        μ.VerticalAdj (T := T) φ ν
+      ν.HorizontalAdj (T := T) c φ μ ∨
+        ν.VerticalAdj (T := T) c φ μ ∨
+        μ.VerticalAdj (T := T) c φ ν
 
-lemma adj_symm : Symmetric (Adj (T := T) φ) := by
+lemma adj_symm : Symmetric (Adj (T := T) c φ) := by
   intro a b hab
   cases a with
   | start =>
@@ -361,68 +392,68 @@ lemma adj_symm : Symmetric (Adj (T := T) φ) := by
           exact hab
       | positive μ =>
           rcases hab with h | h | h
-          · exact Or.inl (Section5PositiveNode.horizontalAdj_symm (T := T) (φ := φ) h)
+          · exact Or.inl (Section5PositiveNode.horizontalAdj_symm (T := T) (c := c) (φ := φ) h)
           · exact Or.inr (Or.inr h)
           · exact Or.inr (Or.inl h)
 
-lemma not_adj_self (v : Section5GraphNode φ) : ¬ Adj (T := T) φ v v := by
+lemma not_adj_self (v : Section5GraphNode c φ) : ¬ Adj (T := T) c φ v v := by
   cases v with
   | start =>
       simp [Adj]
   | positive ν =>
       intro h
       rcases h with h | h | h
-      · exact Section5PositiveNode.not_horizontalAdj_self (T := T) (φ := φ) ν h
-      · exact Section5PositiveNode.not_verticalAdj_self (T := T) (φ := φ) ν h
-      · exact Section5PositiveNode.not_verticalAdj_self (T := T) (φ := φ) ν h
+      · exact Section5PositiveNode.not_horizontalAdj_self (T := T) (c := c) (φ := φ) ν h
+      · exact Section5PositiveNode.not_verticalAdj_self (T := T) (c := c) (φ := φ) ν h
+      · exact Section5PositiveNode.not_verticalAdj_self (T := T) (c := c) (φ := φ) ν h
 
 /-- The graph used in the paper's Section 5 trap-door / path-following argument. -/
-def graph : SimpleGraph (Section5GraphNode φ) where
-  Adj := Adj (T := T) φ
-  symm := adj_symm (T := T) (φ := φ)
-  loopless := ⟨fun v => not_adj_self (T := T) (φ := φ) v⟩
+def graph : SimpleGraph (Section5GraphNode c φ) where
+  Adj := Adj (T := T) c φ
+  symm := adj_symm (T := T) (c := c) (φ := φ)
+  loopless := ⟨fun v => not_adj_self (T := T) (c := c) (φ := φ) v⟩
 
 @[simp] lemma adj_start_start :
-    ¬ Adj (T := T) φ (.start) (.start) := by
+    ¬ Adj (T := T) c φ (.start) (.start) := by
   simp [Adj]
 
-@[simp] lemma adj_start_positive {ν : Section5PositiveNode φ} :
-    Adj (T := T) φ (.start) (.positive ν) ↔ ν.IsStartIncident (T := T) φ := by
+@[simp] lemma adj_start_positive {ν : Section5PositiveNode c φ} :
+    Adj (T := T) c φ (.start) (.positive ν) ↔ ν.IsStartIncident (T := T) c φ := by
   rfl
 
-@[simp] lemma adj_positive_start {ν : Section5PositiveNode φ} :
-    Adj (T := T) φ (.positive ν) (.start) ↔ ν.IsStartIncident (T := T) φ := by
+@[simp] lemma adj_positive_start {ν : Section5PositiveNode c φ} :
+    Adj (T := T) c φ (.positive ν) (.start) ↔ ν.IsStartIncident (T := T) c φ := by
   rfl
 
-lemma adj_positive_positive_iff {ν μ : Section5PositiveNode φ} :
-    Adj (T := T) φ (.positive ν) (.positive μ) ↔
-      ν.HorizontalAdj (T := T) φ μ ∨
-        ν.VerticalAdj (T := T) φ μ ∨
-        μ.VerticalAdj (T := T) φ ν := by
+lemma adj_positive_positive_iff {ν μ : Section5PositiveNode c φ} :
+    Adj (T := T) c φ (.positive ν) (.positive μ) ↔
+      ν.HorizontalAdj (T := T) c φ μ ∨
+        ν.VerticalAdj (T := T) c φ μ ∨
+        μ.VerticalAdj (T := T) c φ ν := by
   rfl
 
 /--
 The terminal vertices sought in Section 5: top-dimensional subdivision faces whose image contains
 the barycenter of the ambient simplex.
 -/
-def IsTerminal : Section5GraphNode φ → Prop
+def IsTerminal : Section5GraphNode c φ → Prop
   | .start => False
   | .positive ν =>
       ν.face.dim = dimension ∧
-        ν.face.ImageContainsPrefixBarycenter (T := T) φ.vertexMap (Fin.last dimension)
+        ν.face.ImageContainsMilestone (T := T) c φ.vertexMap (Fin.last dimension)
 
 theorem exists_terminal_of_local_degree_lemmas
-    [Fintype (Section5GraphNode φ)] [DecidableRel (graph (T := T) φ).Adj]
-    (hstart : Odd ((graph (T := T) φ).degree .start))
+    [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
+    (hstart : Odd ((graph (T := T) c φ).degree .start))
     (heven :
-      ∀ v : Section5GraphNode φ,
+      ∀ v : Section5GraphNode c φ,
         v ≠ .start →
-        ¬ IsTerminal (T := T) φ v →
-        Even ((graph (T := T) φ).degree v)) :
-    ∃ v : Section5GraphNode φ, v ≠ .start ∧ IsTerminal (T := T) φ v := by
-  let G : SimpleGraph (Section5GraphNode φ) := graph (T := T) φ
+        ¬ IsTerminal (T := T) c φ v →
+        Even ((graph (T := T) c φ).degree v)) :
+    ∃ v : Section5GraphNode c φ, v ≠ .start ∧ IsTerminal (T := T) c φ v := by
+  let G : SimpleGraph (Section5GraphNode c φ) := graph (T := T) c φ
   exact exists_terminal_of_odd_start_and_nonterminal_even G .start
-    (IsTerminal (T := T) φ) hstart heven
+    (IsTerminal (T := T) c φ) hstart heven
 
 end Section5GraphNode
 

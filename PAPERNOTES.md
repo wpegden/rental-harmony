@@ -165,3 +165,12 @@
   graph is too rigid for the local degree lemmas: degeneracies where a segment hits a lower-
   dimensional face are not excluded, so the start/nonterminal odd-even classification is not
   presently derivable from the support-file definitions alone.
+- Formalization note after the latest Section 5 repair:
+  that genericity issue is now surfaced explicitly in the support layer.
+  `RentalHarmony/Section5Graph.lean` introduces `Section5MilestoneChain`, and the graph,
+  adjacency predicates, and terminal-node theorem are all parameterized by that chain rather than
+  the exact prefix barycenters. The start milestone is fixed to `e_1`, the final milestone is
+  fixed to the true barycenter of the full simplex, and only the intermediate milestones are left
+  generic inside their prefix faces. So the remaining Section 5 work is now correctly targeted:
+  prove the local odd/even degree lemmas for this repaired graph, not for the old exact-barycenter
+  object.

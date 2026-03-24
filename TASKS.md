@@ -11,15 +11,15 @@
 
 ## Worker Tasks
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
-- [ ] Repair the Section 5 graph support so the local degree lemmas are stated under the paper's generic-perturbation regime rather than the exact prefix barycenters.
-- [ ] Prove the resulting local Section 5 degree lemmas on the repaired graph: the start node has odd degree, and every nonterminal node has even degree.
+- [ ] Prove the local Section 5 degree lemmas on the repaired milestone-chain graph: the start node has odd degree, and every nonterminal node has even degree.
 - [ ] Combine those local geometric degree lemmas with the new finite-graph parity theorem to obtain the Section 5 terminal-node / barycenter-face existence statement.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
   `SimplexBoundary dimension`. The combinatorial route is now the active route, and its remaining
-  blocker is now sharper: the parity argument is done, but the current exact-barycenter graph still
-  lacks the paper's generic-perturbation input needed to make the local degree lemmas true.
+  blocker is now sharper: the parity argument is done and the graph has been repaired to use a
+  generic milestone chain, but the actual odd/even degree lemmas on that repaired graph are still
+  open.
 - [ ] Produce the Hall witnesses promised by the new wrapper theorems from the geometric label-count arguments.
 - [ ] Connect the Section 6 lattice-point statements to actual label-count arguments.
 
@@ -36,6 +36,10 @@
 - [x] Proved the pure finite-graph parity backbone for the Section 5 combinatorial proof:
   if the start node has odd degree and every nonterminal node has even degree, then a terminal
   node exists.
+- [x] Repaired the Section 5 graph support so it is parameterized by a generic
+  `Section5MilestoneChain` instead of the exact prefix barycenters, keeping the start at `e_1`
+  and the terminal target at the true simplex barycenter while allowing generic intermediate
+  milestone points.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made

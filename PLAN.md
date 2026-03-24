@@ -176,6 +176,11 @@
   lower-dimensional degeneracies. The current Lean graph still uses the exact `prefixBarycenter`
   chain, so before the local degree lemmas can be proved honestly, the support layer must expose a
   generic milestone chain or an equivalent perturbation hypothesis.
+- That support-layer repair is now in place:
+  `RentalHarmony/Section5Graph.lean` introduces `Section5MilestoneChain`, which keeps the start at
+  `e_1` and the terminal milestone at the true simplex barycenter while allowing generic
+  intermediate points that stay inside the corresponding prefix outer faces. The Section 5 graph
+  itself is now parameterized by such a chain.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -197,9 +202,9 @@
   face-poset / adjacency API.
 - The face-poset / adjacency API is now present in `RentalHarmony/Section5Graph.lean`, so the next
   concrete proof step is no longer another interface change: the Section 5 graph itself is now
-  formalized, and the finite-graph parity lemma is proved. The next missing step is a support-file
-  repair: parameterize the graph by the paper's perturbed milestone points (or equivalent
-  genericity hypotheses), and only then prove the local odd/even degree lemmas.
+  formalized, the finite-graph parity lemma is proved, and the graph is parameterized by the
+  paper's perturbed milestone chain. The next missing theorems are now the local odd/even degree
+  lemmas on that repaired graph.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's
