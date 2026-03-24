@@ -170,6 +170,12 @@
   that once the start node is odd and all nonterminal nodes are even, a terminal node must exist.
   So the remaining Section 5 work is no longer an undifferentiated path-following proof; it is the
   local geometric degree analysis needed to instantiate that parity theorem.
+- The next blocker is now precise:
+  the paper's local degree counts are proved only after a generic perturbation of the barycenters
+  so that the relevant segments meet codimension-`1` faces in relative interior points and avoid
+  lower-dimensional degeneracies. The current Lean graph still uses the exact `prefixBarycenter`
+  chain, so before the local degree lemmas can be proved honestly, the support layer must expose a
+  generic milestone chain or an equivalent perturbation hypothesis.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -191,8 +197,9 @@
   face-poset / adjacency API.
 - The face-poset / adjacency API is now present in `RentalHarmony/Section5Graph.lean`, so the next
   concrete proof step is no longer another interface change: the Section 5 graph itself is now
-  formalized, and the finite-graph parity lemma is proved. The next missing theorems are the local
-  degree lemmas that show the start node is odd and every nonterminal node is even.
+  formalized, and the finite-graph parity lemma is proved. The next missing step is a support-file
+  repair: parameterize the graph by the paper's perturbed milestone points (or equivalent
+  genericity hypotheses), and only then prove the local odd/even degree lemmas.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

@@ -155,3 +155,13 @@
   designated start vertex has odd degree and every nonterminal vertex has even degree, then some
   terminal vertex exists. Applied to the Section 5 graph, this reduces the remaining work to the
   local geometric degree lemmas rather than a separate global path-construction formalization.
+- Formalization note after trying to prove those local degree lemmas directly:
+  the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
+  `b_k`, but the paper's degree count is only claimed after a generic perturbation of those
+  barycenters. This is explicit in Section 5: in dimension `2` the proof assumes no subdivision
+  vertex maps to the segment between successive barycenters, and in higher dimensions it assumes
+  that when a codimension-`1` face image meets `[b_k, b_{k+1}]`, it does so through a point in the
+  relative interior of that face. Without such a perturbation/genericity layer, the current Lean
+  graph is too rigid for the local degree lemmas: degeneracies where a segment hits a lower-
+  dimensional face are not excluded, so the start/nonterminal odd-even classification is not
+  presently derivable from the support-file definitions alone.

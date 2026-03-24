@@ -11,13 +11,15 @@
 
 ## Worker Tasks
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
-- [ ] Prove the remaining local Section 5 degree lemmas on `Section5GraphNode.graph`: the start node has odd degree, and every nonterminal node has even degree.
+- [ ] Repair the Section 5 graph support so the local degree lemmas are stated under the paper's generic-perturbation regime rather than the exact prefix barycenters.
+- [ ] Prove the resulting local Section 5 degree lemmas on the repaired graph: the start node has odd degree, and every nonterminal node has even degree.
 - [ ] Combine those local geometric degree lemmas with the new finite-graph parity theorem to obtain the Section 5 terminal-node / barycenter-face existence statement.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
   `SimplexBoundary dimension`. The combinatorial route is now the active route, and its remaining
-  blocker is the actual graph/path-following proof rather than missing face-poset or graph-definition support.
+  blocker is now sharper: the parity argument is done, but the current exact-barycenter graph still
+  lacks the paper's generic-perturbation input needed to make the local degree lemmas true.
 - [ ] Produce the Hall witnesses promised by the new wrapper theorems from the geometric label-count arguments.
 - [ ] Connect the Section 6 lattice-point statements to actual label-count arguments.
 
