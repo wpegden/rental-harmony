@@ -157,6 +157,16 @@ section PrefixGeometry
 
 variable {dimension : ℕ}
 
+/--
+The outer prefix face spanned by the first `k + 1` simplex vertices, bundled as a subtype.
+
+This is the support object needed to compare Section 5 milestone points with smaller standard
+simplices.
+-/
+def PrefixFace (k : Fin (dimension + 1)) :=
+  {x : RentDivision (dimension + 1) //
+    ∀ i : Room (dimension + 1), k.1 < i.1 → ((x : RealPoint dimension) i) = 0}
+
 /-- The `j`-th original vertex inside the prefix face spanned by the first `k + 1` rooms. -/
 def prefixVertex (k : Fin (dimension + 1)) (j : Fin (k.1 + 1)) :
     RentDivision (dimension + 1) :=
@@ -211,6 +221,11 @@ structure Section5MilestoneChain where
       (((point k : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0
 
 namespace Section5MilestoneChain
+
+/-- Every milestone point lies in its prescribed prefix face. -/
+def prefixPoint (c : Section5MilestoneChain (dimension := dimension)) (k : Fin (dimension + 1)) :
+    PrefixFace (dimension := dimension) k :=
+  ⟨c.point k, c.point_subdividesPrefixFace k⟩
 
 /-- The segment joining two successive milestones. -/
 def segment (c : Section5MilestoneChain (dimension := dimension)) (k : Fin dimension) :

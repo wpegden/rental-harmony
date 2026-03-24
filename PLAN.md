@@ -213,6 +213,11 @@
   there is no ready-made theorem in the installed library giving "a finite union of proper convex
   hulls cannot cover the relative interior of a simplex face". So the next proof step is now a
   support theorem of that exact kind, not another graph or parity lemma.
+- That support-theorem route is now started concretely:
+  `RentalHarmony/Section5Graph.lean` defines the bundled subtype `PrefixFace k` and the map
+  `Section5MilestoneChain.prefixPoint`, which packages every milestone as a point of its ambient
+  prefix face. The next missing lemma on this route is the explicit restriction/padding
+  equivalence `PrefixFace k ≃ RentDivision (k + 1)`.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

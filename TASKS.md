@@ -18,6 +18,9 @@
   smaller standard simplex, or prove a direct finite-union avoidance theorem in the affine span of
   that prefix face. Without one of these, the new open-segment / away-from-boundary existence
   proof does not go through in Lean.
+- [ ] Finish the prefix-face support theorem now started in `RentalHarmony/Section5Graph.lean`:
+  extend the new bundled subtype `PrefixFace k` and `Section5MilestoneChain.prefixPoint` to an
+  explicit restriction/padding equivalence with `RentDivision (k + 1)`.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for

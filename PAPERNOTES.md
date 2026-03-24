@@ -217,3 +217,10 @@
   that the relative interior of such a simplex face cannot be covered by finitely many convex hulls
   of at most `k` points. Without one of those support results, the existence of a milestone chain
   satisfying `Section5GraphNode.MilestoneSegmentTransversality` is currently blocked.
+- Formalization note after the latest support-theorem attempt:
+  the prefix-face route is now started in Lean. `RentalHarmony/Section5Graph.lean` defines the
+  bundled subtype `PrefixFace k` for the outer face `conv{e_1, ..., e_{k+1}}`, and
+  `Section5MilestoneChain.prefixPoint` upgrades each milestone to an element of that subtype.
+  The next concrete target is the restriction/padding equivalence `PrefixFace k ≃ RentDivision (k +
+  1)`. My scratch attempt shows the forward restriction map is close but still needs a careful
+  finite-sum reindexing proof.
