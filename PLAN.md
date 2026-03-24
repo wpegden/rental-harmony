@@ -22,6 +22,11 @@
   - rent divisions live in `stdSimplex`;
   - explicit simplices / barycentric facts can use `Affine.Simplex` if that becomes more convenient
     for subdivision cells.
+- Revision forced by proof work:
+  the current abstract subdivision API recording only `facets` and allowed boundary labels is not
+  sufficient for the Section 2 / Section 5 existence theorems. The repaired interface must encode
+  actual geometric realization data for subdivision vertices/cells, or an equivalent covering
+  theorem for affine-on-cell maps.
 
 ## Mathlib dependencies to reuse
 - `Mathlib.Analysis.Convex.StdSimplex`
@@ -111,14 +116,17 @@
 - Keep the lattice-point and weighted-average arguments finite and combinatorial after that point.
 
 ## Immediate next steps
-- Extend the new `RentalHarmony/Sperner.lean` support layer from reduction lemmas to an actual
-  proof of the Section 5 surjectivity / barycenter-cell theorem.
+- Repair `SimplicialSubdivision` / `PiecewiseLinearVertexMap` so the Section 2 and Section 5
+  statements are actually true under the Lean interface.
+- After that repair, extend the new `RentalHarmony/Sperner.lean` support layer to an actual proof
+  of the Section 5 surjectivity / barycenter-cell theorem.
 - Use the resulting barycenter-cell theorem to discharge
-  `sperner_exists_fully_labeled_simplex_statement` via the new local barycenter/facet reductions
+  `sperner_exists_fully_labeled_simplex_statement` via the local barycenter/facet reductions
   already in place.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's
   `k + 1`-labels-for-`k`-agents counting lemma from the geometric cell.
 
 ## Current input status
 - No proposed axioms.
-- No external theorem or modeling choice currently needs human input.
+- No human input is required yet, but the next burst must redesign the geometric interface before
+  the core Section 5 theorem can be proved.
