@@ -58,12 +58,35 @@ structure PreferenceProfile (n : ℕ) where
       ((d : Room n → ℝ) s = 0) →
       (Accepts d r ↔ Accepts d s)
 
+/--
+The paper's third hypothesis: a roommate ignores sufficiently small pricing errors.
+
+This packages the standing preference assumptions together with an explicit
+positive tolerance radius on the normalized rent simplex.
+-/
+structure TolerantPreferenceProfile (n : ℕ) extends PreferenceProfile n where
+  tolerance : ℝ
+  tolerance_pos : 0 < tolerance
+  tolerance_stable :
+    ∀ {d d' : RentDivision n} {r : Room n},
+      dist d d' < tolerance →
+      Accepts d r →
+      Accepts d' r
+
 /-- The rooms acceptable to a roommate at a fixed rent division. -/
 def acceptableRooms {n : ℕ} (P : PreferenceProfile n) (d : RentDivision n) : Set (Room n) :=
   {r | P.Accepts d r}
 
 /-- The known roommates in the secretive-roommate problem. -/
 abbrev KnownPreferences (n known : ℕ) := Fin known → PreferenceProfile n
+
+/-- The known roommates together with the paper's explicit tolerance hypothesis. -/
+abbrev KnownTolerantPreferences (n known : ℕ) := Fin known → TolerantPreferenceProfile n
+
+/-- Forget the tolerance witness and retain only the underlying acceptable-room relation. -/
+abbrev forgetTolerance {n known : ℕ}
+    (prefs : KnownTolerantPreferences n known) : KnownPreferences n known :=
+  fun i ↦ (prefs i).toPreferenceProfile
 
 /-- A finite family of allowed rooms, indexed by agents. -/
 abbrev RoomChoiceFamily (rooms agents : ℕ) := Fin agents → Finset (Room rooms)

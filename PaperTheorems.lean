@@ -95,13 +95,14 @@ def sperner_exists_fully_labeled_simplex_statement (dimension : ℕ) : Prop :=
 
 /--
 Paper Section 2 / Section 5 topological core:
-any continuous simplex self-map that preserves boundary faces setwise is surjective.
+the piecewise-linear face-preserving map built from a simplex subdivision is surjective, stated
+here as every point lying in the image of some facet.
 -/
 def facePreservingMap_surjective_statement (dimension : ℕ) : Prop :=
-  ∀ f : RentDivision (dimension + 1) → RentDivision (dimension + 1),
-    Continuous f →
-    PreservesBoundaryFaces f →
-    Function.Surjective f
+  ∀ {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
+    (T : SimplicialSubdivision dimension Vertex) (φ : PiecewiseLinearVertexMap T)
+    (x : RentDivision (dimension + 1)),
+      ∃ σ ∈ T.facets, FacetImageContains σ φ.vertexMap x
 
 end Section2
 
@@ -121,7 +122,7 @@ def threeRoommates_compressedLabelLemma_statement : Prop :=
 
 /-- Paper Section 3: the three-roommate case of secretive rental harmony. -/
 def threeRoommates_secretiveRentalHarmony_statement : Prop :=
-  ∀ prefs : KnownPreferences 3 2, HasSecretiveEnvyFreeDivision prefs
+  ∀ prefs : KnownTolerantPreferences 3 2, HasSecretiveEnvyFreeDivision (forgetTolerance prefs)
 
 end Section3
 
@@ -129,7 +130,8 @@ section Section4
 
 /-- Paper Theorem 1.1 / Section 4: secretive rental harmony for `rooms` rooms and roommates. -/
 def secretiveRentalHarmony_statement (rooms : ℕ) : Prop :=
-  ∀ prefs : KnownPreferences rooms (rooms - 1), HasSecretiveEnvyFreeDivision prefs
+  ∀ prefs : KnownTolerantPreferences rooms (rooms - 1),
+    HasSecretiveEnvyFreeDivision (forgetTolerance prefs)
 
 end Section4
 

@@ -15,6 +15,8 @@
 
 ## Completed
 - [x] Created root-level `PaperDefinitions.lean` and `PaperTheorems.lean` as the reviewer-facing statement files.
+- [x] Added an explicit tolerance-profile structure so the paper's one-cent hypothesis now appears in the rental-harmony statements.
+- [x] Tightened the surjectivity wrapper to the paper-facing piecewise-linear facet-image formulation.
 - [x] Extended the definition API with Hall conditions, secretive assignments, simplex subdivisions, Sperner labelings, and label-count points.
 - [x] Replaced theorem comments by precise proposition statements and proved the initial Hall-side combinatorial lemmas.
 - [x] Drafted `repo/PLAN.md` from `repo/PAPERNOTES.md`, the paper, and the current mathlib support.
