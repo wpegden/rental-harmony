@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Convex.Combination
 import Mathlib.Combinatorics.SimpleGraph.Basic
+import Mathlib.Combinatorics.SimpleGraph.DegreeSum
 import RentalHarmony.PaperDefinitions
 
 /-!
@@ -311,6 +312,28 @@ lemma isStartIncident_face_dim (ν : Section5PositiveNode φ)
 
 end Section5PositiveNode
 
+section Parity
+
+variable {V : Type*} (G : SimpleGraph V) [Fintype V] [DecidableRel G.Adj]
+
+/--
+Finite-graph parity principle used by the Section 5 walk argument.
+
+If one distinguished start vertex has odd degree and every nonterminal vertex away from the start
+has even degree, then some terminal vertex distinct from the start must exist.
+-/
+theorem exists_terminal_of_odd_start_and_nonterminal_even
+    (start : V) (terminal : V → Prop)
+    (hstart : Odd (G.degree start))
+    (heven : ∀ v, v ≠ start → ¬ terminal v → Even (G.degree v)) :
+    ∃ v, v ≠ start ∧ terminal v := by
+  rcases G.exists_ne_odd_degree_of_exists_odd_degree start hstart with ⟨v, hv, hoddv⟩
+  refine ⟨v, hv, ?_⟩
+  by_contra hterminal
+  exact (Nat.not_even_iff_odd.mpr hoddv) (heven v hv hterminal)
+
+end Parity
+
 namespace Section5GraphNode
 
 /-- The adjacency relation on the paper's Section 5 graph. -/
@@ -377,6 +400,29 @@ lemma adj_positive_positive_iff {ν μ : Section5PositiveNode φ} :
         ν.VerticalAdj (T := T) φ μ ∨
         μ.VerticalAdj (T := T) φ ν := by
   rfl
+
+/--
+The terminal vertices sought in Section 5: top-dimensional subdivision faces whose image contains
+the barycenter of the ambient simplex.
+-/
+def IsTerminal : Section5GraphNode φ → Prop
+  | .start => False
+  | .positive ν =>
+      ν.face.dim = dimension ∧
+        ν.face.ImageContainsPrefixBarycenter (T := T) φ.vertexMap (Fin.last dimension)
+
+theorem exists_terminal_of_local_degree_lemmas
+    [Fintype (Section5GraphNode φ)] [DecidableRel (graph (T := T) φ).Adj]
+    (hstart : Odd ((graph (T := T) φ).degree .start))
+    (heven :
+      ∀ v : Section5GraphNode φ,
+        v ≠ .start →
+        ¬ IsTerminal (T := T) φ v →
+        Even ((graph (T := T) φ).degree v)) :
+    ∃ v : Section5GraphNode φ, v ≠ .start ∧ IsTerminal (T := T) φ v := by
+  let G : SimpleGraph (Section5GraphNode φ) := graph (T := T) φ
+  exact exists_terminal_of_odd_start_and_nonterminal_even G .start
+    (IsTerminal (T := T) φ) hstart heven
 
 end Section5GraphNode
 

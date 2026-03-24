@@ -149,3 +149,9 @@
   and vertical adjacency through a codimension-`1` incident face containing `b_k`.
   So the remaining combinatorial work is no longer another modeling repair: it is the actual
   degree/parity argument on this graph.
+- Formalization note after the latest graph proof step:
+  the parity half of that argument is now isolated cleanly from the geometry.
+  `exists_terminal_of_odd_start_and_nonterminal_even` proves, for any finite graph, that if the
+  designated start vertex has odd degree and every nonterminal vertex has even degree, then some
+  terminal vertex exists. Applied to the Section 5 graph, this reduces the remaining work to the
+  local geometric degree lemmas rather than a separate global path-construction formalization.

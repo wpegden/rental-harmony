@@ -165,6 +165,11 @@
   `Section5PositiveNode` packages positive-dimensional graph vertices, `Section5GraphNode` adds
   the special start node, and `Section5GraphNode.graph` is the resulting `SimpleGraph` carrying
   the paper's start, horizontal, and vertical adjacencies.
+- The parity backbone is now separated cleanly from the geometry:
+  `exists_terminal_of_odd_start_and_nonterminal_even` is a reusable finite-graph lemma stating
+  that once the start node is odd and all nonterminal nodes are even, a terminal node must exist.
+  So the remaining Section 5 work is no longer an undifferentiated path-following proof; it is the
+  local geometric degree analysis needed to instantiate that parity theorem.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -186,7 +191,8 @@
   face-poset / adjacency API.
 - The face-poset / adjacency API is now present in `RentalHarmony/Section5Graph.lean`, so the next
   concrete proof step is no longer another interface change: the Section 5 graph itself is now
-  formalized, so the next missing theorem is its degree/parity path-following lemma.
+  formalized, and the finite-graph parity lemma is proved. The next missing theorems are the local
+  degree lemmas that show the start node is odd and every nonterminal node is even.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

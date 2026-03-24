@@ -11,7 +11,8 @@
 
 ## Worker Tasks
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
-- [ ] Prove the Section 5 graph path/parity lemma on the now-defined `Section5GraphNode` / `Section5GraphNode.graph`.
+- [ ] Prove the remaining local Section 5 degree lemmas on `Section5GraphNode.graph`: the start node has odd degree, and every nonterminal node has even degree.
+- [ ] Combine those local geometric degree lemmas with the new finite-graph parity theorem to obtain the Section 5 terminal-node / barycenter-face existence statement.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
@@ -30,6 +31,9 @@
 - [x] Defined the actual Section 5 graph object in `RentalHarmony/Section5Graph.lean`:
   `Section5PositiveNode`, `Section5GraphNode`, the horizontal/vertical/start adjacency predicates,
   and the resulting `SimpleGraph` `Section5GraphNode.graph`.
+- [x] Proved the pure finite-graph parity backbone for the Section 5 combinatorial proof:
+  if the start node has odd degree and every nonterminal node has even degree, then a terminal
+  node exists.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made
