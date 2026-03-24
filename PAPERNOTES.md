@@ -79,6 +79,15 @@
   either formalize an explicit deformation from the simplex minus the barycenter onto the boundary
   and combine it with noncontractibility of the boundary, or return to the paper's trap-door
   argument.
+- Formalization note after the boundary restriction step:
+  the topological route is now packaged more tightly. The boundary subtype
+  `SimplexBoundary dimension`, the restriction of a face-preserving simplex map to that boundary,
+  and the restricted straight-line homotopy are all formalized. Moreover
+  `boundary_contractible_of_nullhomotopic_boundaryExtension` shows that the whole contradiction
+  reduces to one concrete object: if an omitted positive interior point gives a continuous map from
+  the full simplex into its boundary extending that boundary restriction, then the boundary would
+  be contractible. So the next missing ingredient is the explicit omitted-point extension, not more
+  homotopy bookkeeping.
 - `Section 5` also has a minor notation slip: around line 387, "The vertex `e_1` of `Δ_n`" should be `Δ_{n-1}`.
 - `Section 6`, first theorem (around lines 449-463): the proof implicitly upgrades the face `τ` containing `x` to a facet. The hypothesis that `y` is not in the convex hull of any `n` lattice points rules out lower-dimensional faces, since those would map into convex hulls of at most `n` lattice points.
 - `Section 6`, second theorem (around lines 487-490): the counting step should be written explicitly. If fewer than `k_j` indices `i` had `β_ij > 0`, then `∑_i β_ij ≤ (k_j - 1) / (n + 1) < α_j`, contradicting `∑_i β_ij = α_j`.
@@ -93,7 +102,9 @@
   the modeling repair is now complete: the derived-map barycentric-coordinate interface is in
   place, and the canonical Sperner extension theorem has been reproved on top of it. The
   dimension-`1` surjectivity base case and its Section 5 / Section 2 wrappers are now proved, and
-  the straight-line face-preserving homotopy to `id` is also formalized. The immediate frontier is
-  the higher-dimensional Section 5 surjectivity proof for those face-preserving simplex self-maps,
-  most likely via an omitted-barycenter retraction argument or else the paper's trap-door proof,
-  followed by the Hall-witness extraction in Sections 3 and 4.
+  the straight-line face-preserving homotopy to `id` is also formalized, as are the boundary
+  restriction and boundary-contractibility reduction steps. The immediate frontier is the
+  higher-dimensional Section 5 surjectivity proof for those face-preserving simplex self-maps,
+  concretely the omitted-point extension into `SimplexBoundary`, or else the paper's trap-door
+  proof if that extension becomes intractable, followed by the Hall-witness extraction in Sections
+  3 and 4.

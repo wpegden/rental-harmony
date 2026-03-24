@@ -1,6 +1,7 @@
 import Mathlib.Analysis.Convex.Combination
 import RentalHarmony.PaperDefinitions
 import Mathlib.Topology.Homotopy.Basic
+import Mathlib.Topology.Homotopy.Contractible
 import Mathlib.Topology.Order.IntermediateValue
 
 /-!
@@ -367,6 +368,25 @@ theorem maps_face_to_itself {f : RentDivision (dimension + 1) → RentDivision (
   intro i hi
   exact hf x i (hx i hi)
 
+/-- The topological boundary of the standard simplex, as a subtype. -/
+abbrev SimplexBoundary (dimension : ℕ) :=
+  {x : RentDivision (dimension + 1) // ∃ i : Room (dimension + 1),
+    ((x : RealPoint dimension) i) = 0}
+
+namespace SimplexBoundary
+
+variable {dimension : ℕ}
+
+/-- The inclusion of the simplex boundary into the simplex. -/
+def inclusion : C(SimplexBoundary dimension, RentDivision (dimension + 1)) :=
+  ⟨Subtype.val, continuous_subtype_val⟩
+
+@[simp] theorem inclusion_apply (x : SimplexBoundary dimension) :
+    inclusion x = x :=
+  rfl
+
+end SimplexBoundary
+
 /--
 The straight-line homotopy from the identity map to a face-preserving piecewise-linear simplex map.
 
@@ -458,6 +478,74 @@ theorem homotopicWith_id_boundaryPreserving (φ : PiecewiseLinearSimplexMap T) :
   refine ⟨{ toHomotopy := φ.straightLineHomotopy, prop' := ?_ }⟩
   intro t
   exact φ.straightLineMap_preservesBoundaryFaces t
+
+/-- The restriction of a face-preserving simplex map to the boundary subtype. -/
+def toBoundaryMap (φ : PiecewiseLinearSimplexMap T) :
+    C(SimplexBoundary dimension, SimplexBoundary dimension) := by
+  refine ⟨fun x => ?_, ?_⟩
+  · refine ⟨φ.toFun x.1, ?_⟩
+    rcases x.2 with ⟨i, hi⟩
+    exact ⟨i, φ.boundary_preserving_toFun x.1 i hi⟩
+  · exact
+      ((PiecewiseLinearSimplexMap.continuous_toFun (T := T) (φ := φ)).comp
+        continuous_subtype_val).subtype_mk fun x => by
+          rcases x.2 with ⟨i, hi⟩
+          exact ⟨i, φ.boundary_preserving_toFun x.1 i hi⟩
+
+@[simp] theorem toBoundaryMap_apply (φ : PiecewiseLinearSimplexMap T)
+    (x : SimplexBoundary dimension) :
+    (φ.toBoundaryMap x).1 = φ.toFun x.1 :=
+  rfl
+
+/--
+Restricting the straight-line homotopy to the boundary gives a homotopy from the identity on the
+boundary to the boundary restriction of the map.
+-/
+def boundaryStraightLineHomotopy (φ : PiecewiseLinearSimplexMap T) :
+    ContinuousMap.Homotopy (ContinuousMap.id (SimplexBoundary dimension)) φ.toBoundaryMap where
+  toFun tx := by
+    refine ⟨(φ.straightLineHomotopy (tx.1, tx.2.1)), ?_⟩
+    rcases tx.2.2 with ⟨i, hi⟩
+    exact ⟨i, φ.straightLineMap_preservesBoundaryFaces tx.1 tx.2.1 i hi⟩
+  continuous_toFun := by
+    let g : unitInterval × SimplexBoundary dimension →
+        unitInterval × RentDivision (dimension + 1) :=
+      fun tx => (tx.1, tx.2.1)
+    have hg : Continuous g := by
+      exact continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)
+    exact (φ.straightLineHomotopy.continuous.comp hg).subtype_mk fun tx => by
+      rcases tx.2.2 with ⟨i, hi⟩
+      exact ⟨i, φ.straightLineMap_preservesBoundaryFaces tx.1 tx.2.1 i hi⟩
+  map_zero_left := by
+    intro x
+    apply Subtype.ext
+    simp
+  map_one_left := by
+    intro x
+    apply Subtype.ext
+    simp [toBoundaryMap]
+
+/--
+Topological reduction of the surjectivity contradiction:
+once a face-preserving simplex map extends to a nullhomotopic map into the boundary, the boundary
+itself must be contractible.
+-/
+theorem boundary_contractible_of_nullhomotopic_boundaryExtension
+    (φ : PiecewiseLinearSimplexMap T)
+    (F : C(RentDivision (dimension + 1), SimplexBoundary dimension))
+    (hF : F.comp (SimplexBoundary.inclusion (dimension := dimension)) = φ.toBoundaryMap)
+    (hNull : F.Nullhomotopic) :
+    ContractibleSpace (SimplexBoundary dimension) := by
+  have hBoundaryNull :
+      (F.comp (SimplexBoundary.inclusion (dimension := dimension))).Nullhomotopic :=
+    hNull.comp_left (SimplexBoundary.inclusion (dimension := dimension))
+  have hφNull : φ.toBoundaryMap.Nullhomotopic := by
+    simpa [hF] using hBoundaryNull
+  rcases hφNull with ⟨x, hx⟩
+  have hidφ :
+      ContinuousMap.Homotopic (ContinuousMap.id (SimplexBoundary dimension)) φ.toBoundaryMap :=
+    ⟨φ.boundaryStraightLineHomotopy⟩
+  exact (contractible_iff_id_nullhomotopic (SimplexBoundary dimension)).2 ⟨x, hidφ.trans hx⟩
 
 /-- A point of the 1-simplex with vanishing second coordinate is the left endpoint. -/
 lemma rentDivision_two_eq_vertex_zero_of_coord1_zero (x : RentDivision 2)

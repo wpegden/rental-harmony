@@ -135,8 +135,12 @@
 - The straight-line homotopy from `id` to such a map is now formalized in
   `RentalHarmony/Sperner.lean`, and every intermediate map still preserves every coordinate face.
   So the topological route has sharpened:
-  it remains to formalize an explicit retraction from the simplex minus the barycenter to the
-  boundary, and then supply the contradiction showing the simplex boundary is not contractible.
+  the boundary restriction of the map and of the straight-line homotopy are now formalized, and
+  `boundary_contractible_of_nullhomotopic_boundaryExtension` packages the contradiction step.
+  What remains is the explicit omitted-point extension
+  `RentDivision (dimension + 1) → SimplexBoundary dimension`, first for positive interior points
+  such as the barycenter, and then to combine that with induction on faces if full surjectivity is
+  still needed beyond the paper's barycenter statement.
 - If the topological route is awkward, switch to the paper's combinatorial path-following proof.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
@@ -152,8 +156,9 @@
 - The dimension-`1` surjectivity base case is now proved by transporting the simplex to
   `unitInterval` and applying the intermediate value theorem, so the next geometric step is the
   higher-dimensional argument rather than more interval infrastructure.
-- The new homotopy infrastructure shows that higher-dimensional surjectivity can now be attacked as
-  a genuine topological contradiction, not another interface repair.
+- The new homotopy and boundary-restriction infrastructure shows that higher-dimensional
+  surjectivity can now be attacked as a genuine topological contradiction, not another interface
+  repair.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's
