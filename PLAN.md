@@ -190,6 +190,13 @@
   `Section5GraphNode.exists_terminal_of_localDegreeHypotheses` combines those odd/even degree
   lemmas with the parity theorem and yields a terminal top-dimensional face as soon as the
   milestone-chain geometry supplies `LocalDegreeHypotheses`.
+- The next abstraction layer is now in place as well:
+  `Section5GraphNode.GeometricGenericity` splits the paper's local Section 5 reasoning into the
+  two geometric cases actually used in the manuscript:
+  the next milestone is absent from the current face image, or it lies in that image and the face
+  is not terminal. The support file proves
+  `Section5GraphNode.localDegreeHypotheses_of_geometricGenericity` and the direct wrapper
+  `Section5GraphNode.exists_terminal_of_geometricGenericity`.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -212,10 +219,11 @@
 - The face-poset / adjacency API is now present in `RentalHarmony/Section5Graph.lean`, so the next
   concrete proof step is no longer another interface change: the Section 5 graph itself is now
   formalized, the finite-graph parity lemma is proved, and the graph is parameterized by the
-  paper's perturbed milestone chain. The new theorem
-  `Section5GraphNode.exists_terminal_of_localDegreeHypotheses` already packages the abstract graph
-  conclusion, so the next missing step is now exactly the geometric proof that a suitably generic
-  milestone chain yields `Section5GraphNode.LocalDegreeHypotheses`.
+  paper's perturbed milestone chain. The abstract graph conclusion is now packaged twice:
+  once at the degree level by `Section5GraphNode.exists_terminal_of_localDegreeHypotheses`, and
+  once at the paper-faithful case-split level by `Section5GraphNode.exists_terminal_of_geometricGenericity`.
+  So the next missing step is now exactly the geometric proof that a suitably generic milestone
+  chain yields `Section5GraphNode.GeometricGenericity`.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

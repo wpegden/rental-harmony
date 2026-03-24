@@ -466,6 +466,57 @@ structure LocalDegreeHypotheses where
         ∀ w : Section5GraphNode c φ,
           Adj (T := T) c φ (.positive ν) w → w = a ∨ w = b
 
+/--
+Casewise local-genericity hypotheses matching the paper's Section 5 discussion.
+
+The paper distinguishes two local situations for a positive graph node `ν`.
+If the next milestone `c_{k+1}` is not in the image of `ν.face`, then the segment
+`[c_k, c_{k+1}]` should cross the image through exactly two doors.
+If `c_{k+1}` is in the image of `ν.face`, then either `ν` is already terminal or there are again
+exactly two continuation doors, now with one door arising from the milestone endpoint.
+This structure records those two geometric cases abstractly, before converting them into the
+graph-theoretic degree package `LocalDegreeHypotheses`.
+-/
+structure GeometricGenericity where
+  start_neighbor : Section5PositiveNode c φ
+  start_adj :
+    Adj (T := T) c φ .start (.positive start_neighbor)
+  start_unique :
+    ∀ w : Section5GraphNode c φ,
+      Adj (T := T) c φ .start w → w = .positive start_neighbor
+  two_doors_of_missing_nextMilestone :
+    ∀ ν : Section5PositiveNode c φ,
+      ¬ ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.succ →
+      ∃ a b : Section5GraphNode c φ,
+        a ≠ b ∧
+        Adj (T := T) c φ (.positive ν) a ∧
+        Adj (T := T) c φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode c φ,
+          Adj (T := T) c φ (.positive ν) w → w = a ∨ w = b
+  two_doors_of_nextMilestone :
+    ∀ ν : Section5PositiveNode c φ,
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.succ →
+      ¬ IsTerminal (T := T) c φ (.positive ν) →
+      ∃ a b : Section5GraphNode c φ,
+        a ≠ b ∧
+        Adj (T := T) c φ (.positive ν) a ∧
+        Adj (T := T) c φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode c φ,
+          Adj (T := T) c φ (.positive ν) w → w = a ∨ w = b
+
+def localDegreeHypotheses_of_geometricGenericity
+    (hgen : GeometricGenericity (T := T) (c := c) (φ := φ)) :
+    LocalDegreeHypotheses (T := T) (c := c) (φ := φ) := by
+  refine
+    { start_neighbor := hgen.start_neighbor
+      start_adj := hgen.start_adj
+      start_unique := hgen.start_unique
+      nonterminal_two_neighbors := ?_ }
+  intro ν hν
+  by_cases hnext : ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.succ
+  · exact hgen.two_doors_of_nextMilestone ν hnext hν
+  · exact hgen.two_doors_of_missing_nextMilestone ν hnext
+
 lemma degree_start_eq_one
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
     (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ)) :
@@ -543,6 +594,13 @@ theorem exists_terminal_of_localDegreeHypotheses
       contradiction
   | positive ν =>
       exact even_degree_of_not_terminal (T := T) (c := c) (φ := φ) hdeg ν hterminal
+
+theorem exists_terminal_of_geometricGenericity
+    [Finite (Section5GraphNode c φ)]
+    (hgen : GeometricGenericity (T := T) (c := c) (φ := φ)) :
+    ∃ v : Section5GraphNode c φ, v ≠ .start ∧ IsTerminal (T := T) c φ v := by
+  exact exists_terminal_of_localDegreeHypotheses (T := T) (c := c) (φ := φ)
+    (localDegreeHypotheses_of_geometricGenericity (T := T) (c := c) (φ := φ) hgen)
 
 end Section5GraphNode
 

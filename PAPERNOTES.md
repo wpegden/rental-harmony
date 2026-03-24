@@ -188,3 +188,12 @@
   top-dimensional subdivision face whose image contains the final milestone. So the remaining
   Section 5 gap is now purely geometric: prove that a suitably generic milestone chain satisfies
   `LocalDegreeHypotheses`.
+- Formalization note after the latest case-split repair:
+  the support layer now exposes a more paper-faithful local target than `LocalDegreeHypotheses`.
+  `Section5GraphNode.GeometricGenericity` separates the two local situations used in Section 5:
+  either the next milestone is absent from the current face image and the milestone segment crosses
+  through two doors, or the next milestone lies in the current face image and the face is either
+  terminal or again has two continuation doors. The support file proves both
+  `Section5GraphNode.localDegreeHypotheses_of_geometricGenericity` and
+  `Section5GraphNode.exists_terminal_of_geometricGenericity`, so the remaining Section 5 work is
+  now even sharper: prove that a generic milestone chain satisfies `GeometricGenericity`.
