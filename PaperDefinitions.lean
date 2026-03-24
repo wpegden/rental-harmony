@@ -158,10 +158,19 @@ outer labels allowed at that vertex.
 -/
 structure SimplicialSubdivision (dimension : ℕ) (Vertex : Type*) [Fintype Vertex]
     [DecidableEq Vertex] where
+  vertexPos : Vertex → RentDivision (dimension + 1)
   boundaryFace : Vertex → Finset (Room (dimension + 1))
   boundaryFace_nonempty : ∀ v, (boundaryFace v).Nonempty
+  vertex_boundary :
+    ∀ v i, i ∉ boundaryFace v →
+      ((vertexPos v : Room (dimension + 1) → ℝ) i = 0)
   facets : Finset (Finset Vertex)
   facet_card : ∀ σ ∈ facets, σ.card = dimension + 1
+  covers_simplex :
+    ∀ x : RentDivision (dimension + 1), ∃ σ ∈ facets,
+      ((x : RealPoint dimension) ∈
+        convexHull ℝ
+          (((fun v ↦ ((vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)) '' ↑σ)))
 
 /-- A Sperner labeling relative to a subdivision of the standard simplex. -/
 structure SpernerLabeling {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
@@ -214,6 +223,17 @@ structure PiecewiseLinearVertexMap {dimension : ℕ} {Vertex : Type*} [Fintype V
     ∀ v i, i ∉ T.boundaryFace v →
       ((vertexMap v : Room (dimension + 1) → ℝ) i = 0)
 
+/-- The point set given by the vertices of one facet in the domain subdivision. -/
+def facetVertexPoints {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
+    (T : SimplicialSubdivision dimension Vertex) (σ : Finset Vertex) : Set (RealPoint dimension) :=
+  (fun v ↦ ((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)) '' ↑σ
+
+/-- A point lies in the geometric simplex spanned by one subdivision facet. -/
+def FacetContainsPoint {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
+    (T : SimplicialSubdivision dimension Vertex) (σ : Finset Vertex)
+    (x : RentDivision (dimension + 1)) : Prop :=
+  ((x : RealPoint dimension) ∈ convexHull ℝ (facetVertexPoints T σ))
+
 /-- The point set given by the image of one facet under a vertex map. -/
 def facetImagePoints {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
     (σ : Finset Vertex) (φ : Vertex → RentDivision (dimension + 1)) : Set (RealPoint dimension) :=
@@ -229,6 +249,20 @@ def FacetImageContains {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [Deci
 def FacetImageContainsBarycenter {dimension : ℕ} {Vertex : Type*} [Fintype Vertex]
     [DecidableEq Vertex] (σ : Finset Vertex) (φ : Vertex → RentDivision (dimension + 1)) : Prop :=
   FacetImageContains σ φ (barycentricRentDivision (dimension + 1))
+
+/--
+An actual piecewise-linear self-map of the simplex built from a subdivision and vertex images.
+
+The `map_mem_facetImage` field records the cellwise affine realization needed to connect a
+preimage point to a facet image in the codomain.
+-/
+structure PiecewiseLinearSimplexMap {dimension : ℕ} {Vertex : Type*} [Fintype Vertex]
+    [DecidableEq Vertex] (T : SimplicialSubdivision dimension Vertex) where
+  vertexMap : Vertex → RentDivision (dimension + 1)
+  toFun : RentDivision (dimension + 1) → RentDivision (dimension + 1)
+  map_mem_facetImage :
+    ∀ x, ∃ σ ∈ T.facets, FacetContainsPoint T σ x ∧ FacetImageContains σ vertexMap (toFun x)
+  boundary_preserving : PreservesBoundaryFaces toFun
 
 /-- A real point in the scaled simplex `total • Δ_dimension`. -/
 def ScaledSimplexPoint (total dimension : ℕ) :=

@@ -14,16 +14,15 @@
 - `Section 5`: the 2-dimensional path-following proof is believable after the stated generic perturbation, but the higher-dimensional argument is only a sketch. For a formal proof, one should either:
   make the graph/parity argument explicit in all dimensions, including the degree counts for the graph `G`; or
   replace this section by a separate topological surjectivity lemma already available in mathlib, if that is allowed by the project style.
-- Formalization note after theorem stating / early proof work:
-  the current abstract `SimplicialSubdivision` / `PiecewiseLinearVertexMap` API in Lean is too weak
-  for the Section 2 and Section 5 existence statements. A concrete counterexample exists already in
-  dimension `1`: take two subdivision vertices, let both have `boundaryFace = {0}`, let the unique
-  facet be the whole `2`-element vertex set, and map both vertices to the simplex vertex `e_0`.
-  This satisfies the present `boundary_preserving` field, but no facet image contains the
-  barycenter and no Sperner labeling can be fully labeled. So the paper statements are currently
-  encoded against an interface that omits essential triangulation / piecewise-linear hypotheses.
-  The next repair must strengthen the geometric interface rather than continue searching for a
-  proof of the present statement.
+- Formalization note after early proof work:
+  the first abstract Lean interface for `SimplicialSubdivision` / `PiecewiseLinearVertexMap` was
+  too weak for the Section 2 and Section 5 existence statements. A concrete counterexample existed
+  already in dimension `1`: take two subdivision vertices, let both have `boundaryFace = {0}`, let
+  the unique facet be the whole `2`-element vertex set, and map both vertices to the simplex
+  vertex `e_0`. This satisfied the old `boundary_preserving` field, but no facet image contained
+  the barycenter and no Sperner labeling could be fully labeled. The interface has now been
+  repaired by adding geometric vertex positions, simplex-cover data, and an actual
+  `PiecewiseLinearSimplexMap` with a cellwise image-realization field.
 - `Section 5` also has a minor notation slip: around line 387, "The vertex `e_1` of `Δ_n`" should be `Δ_{n-1}`.
 - `Section 6`, first theorem (around lines 449-463): the proof implicitly upgrades the face `τ` containing `x` to a facet. The hypothesis that `y` is not in the convex hull of any `n` lattice points rules out lower-dimensional faces, since those would map into convex hulls of at most `n` lattice points.
 - `Section 6`, second theorem (around lines 487-490): the counting step should be written explicitly. If fewer than `k_j` indices `i` had `β_ij > 0`, then `∑_i β_ij ≤ (k_j - 1) / (n + 1) < α_j`, contradicting `∑_i β_ij = α_j`.
@@ -34,7 +33,7 @@
 ## Open Questions
 - No fatal mathematical gap found in this pass.
 - The higher-dimensional algorithm in `Section 5` is the least formal part of the paper; it appears repairable, but a Lean development should plan to restate and prove that surjectivity result independently rather than following the paper literally line by line.
-- Current Lean-interface blocker:
-  before the Section 5 theorem can be proved, the subdivision / PL-map API must be strengthened to
-  encode actual simplex geometry (or an equivalent covering / realization theorem). With the
-  present abstract data alone, the stated existence theorem is false.
+- Current proof frontier:
+  the repaired geometric API is now strong enough that the Section 5 statement is meaningful again.
+  The remaining work is to prove the actual surjectivity theorem for those repaired
+  `PiecewiseLinearSimplexMap`s and then feed it into the existing barycenter/facet reductions.

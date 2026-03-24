@@ -10,14 +10,15 @@
 <!-- SUPERVISOR_TASKS:END -->
 
 ## Worker Tasks
-- [ ] Repair the geometric interface: strengthen `SimplicialSubdivision` / `PiecewiseLinearVertexMap` so the Section 2 and Section 5 existence statements become true.
-- [ ] Re-state and prove the actual Section 5 surjectivity / barycenter-cell theorem for the repaired piecewise-linear map interface.
+- [ ] Prove the actual Section 5 surjectivity theorem for `PiecewiseLinearSimplexMap`.
+- [ ] Push that surjectivity theorem through the repaired API to obtain the barycenter-cell statement.
 - [ ] Strengthen the current Sperner support from local reduction lemmas to a direct proof of `sperner_exists_fully_labeled_simplex_statement`.
 - [ ] Produce the Hall witnesses promised by the new wrapper theorems from the geometric label-count arguments.
 - [ ] Connect the Section 6 lattice-point statements to actual label-count arguments.
 
 ## Completed
 - [x] Identified a concrete 1-dimensional counterexample showing the current abstract subdivision / vertex-map API is too weak for the Section 2 and Section 5 existence statements.
+- [x] Repaired the geometric interface by adding geometric vertex positions, simplex-cover data, and an actual `PiecewiseLinearSimplexMap`.
 - [x] Added `RentalHarmony/Sperner.lean` with the first reusable geometric infrastructure for the Sperner map.
 - [x] Proved the local geometric reductions: a facet-covering hypothesis gives a barycenter cell, and a barycenter cell for the Sperner map gives a fully labeled facet.
 - [x] Added Hall-side wrapper theorems reducing the rental-harmony statements to secretive Hall witnesses.

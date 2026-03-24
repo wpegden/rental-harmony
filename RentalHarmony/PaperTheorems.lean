@@ -96,14 +96,12 @@ def sperner_exists_fully_labeled_simplex_statement (dimension : ℕ) : Prop :=
 
 /--
 Paper Section 2 / Section 5 topological core:
-the piecewise-linear face-preserving map built from a simplex subdivision is surjective, stated
-here as every point lying in the image of some facet.
+the piecewise-linear face-preserving map built from a simplex subdivision is surjective.
 -/
 def facePreservingMap_surjective_statement (dimension : ℕ) : Prop :=
   ∀ {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
-    (T : SimplicialSubdivision dimension Vertex) (φ : PiecewiseLinearVertexMap T)
-    (x : RentDivision (dimension + 1)),
-      ∃ σ ∈ T.facets, FacetImageContains σ φ.vertexMap x
+    (T : SimplicialSubdivision dimension Vertex) (φ : PiecewiseLinearSimplexMap T),
+      Function.Surjective φ.toFun
 
 end Section2
 
@@ -171,12 +169,12 @@ end HallReductions
 section Section5
 
 /--
-Paper Section 5: a face-preserving piecewise-linear vertex map has a facet whose image contains the
-barycenter of the ambient simplex.
+Paper Section 5: a face-preserving piecewise-linear map has a subdivision facet whose image
+contains the barycenter of the ambient simplex.
 -/
 def exists_barycenterPreimageCell_of_facePreservingMap_statement (dimension : ℕ) : Prop :=
   ∀ {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
-    (T : SimplicialSubdivision dimension Vertex) (φ : PiecewiseLinearVertexMap T),
+    (T : SimplicialSubdivision dimension Vertex) (φ : PiecewiseLinearSimplexMap T),
       ∃ σ ∈ T.facets, FacetImageContainsBarycenter σ φ.vertexMap
 
 end Section5
@@ -184,17 +182,18 @@ end Section5
 section GeometricReductions
 
 /--
-Paper Section 5 reduces to the stronger statement that every point lies in the image of some
-facet.
+Paper Section 5 reduces to surjectivity of the actual piecewise-linear simplex map.
 -/
-theorem facetImageContainsBarycenter_of_surjectiveOnFacets
+theorem facetImageContainsBarycenter_of_surjective
     {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
-    (T : SimplicialSubdivision dimension Vertex) (φ : PiecewiseLinearVertexMap T)
-    (h : ∀ x : RentDivision (dimension + 1),
-      ∃ σ ∈ T.facets, FacetImageContains σ φ.vertexMap x) :
+    (T : SimplicialSubdivision dimension Vertex) (φ : PiecewiseLinearSimplexMap T)
+    (h : Function.Surjective φ.toFun) :
     ∃ σ ∈ T.facets, FacetImageContainsBarycenter σ φ.vertexMap := by
-  simpa [FacetImageContainsBarycenter] using
-    h (barycentricRentDivision (dimension + 1))
+  rcases h (barycentricRentDivision (dimension + 1)) with ⟨x, hx⟩
+  rcases φ.map_mem_facetImage x with ⟨σ, hσ, -, himage⟩
+  refine ⟨σ, hσ, ?_⟩
+  dsimp [FacetImageContainsBarycenter]
+  simpa [hx] using himage
 
 /--
 Paper Section 2: a barycenter-containing facet for the Sperner label map is automatically fully
@@ -209,17 +208,17 @@ theorem fullyLabeledFacet_exists_of_barycenterPreimage
   exact ⟨σ, hσfacet, fullyLabeledFacet_of_barycenter_mem_spernerImage L σ hσbary⟩
 
 /--
-If the Sperner vertex map covers every point of the simplex by some facet image, then one facet is
+If the Sperner vertex map extends to a surjective piecewise-linear simplex map, then one facet is
 fully labeled.
 -/
-theorem fullyLabeledFacet_exists_of_surjectiveOnFacets
+theorem fullyLabeledFacet_exists_of_surjective
     {dimension : ℕ} {Vertex : Type*} [Fintype Vertex] [DecidableEq Vertex]
     (T : SimplicialSubdivision dimension Vertex) (L : SpernerLabeling T)
-    (h : ∀ x : RentDivision (dimension + 1),
-      ∃ σ ∈ T.facets, FacetImageContains σ (spernerVertexMap L).vertexMap x) :
+    (φ : PiecewiseLinearSimplexMap T) (hvertex : φ.vertexMap = (spernerVertexMap L).vertexMap)
+    (h : Function.Surjective φ.toFun) :
     ∃ σ ∈ T.facets, FullyLabeledFacet σ L.label :=
   fullyLabeledFacet_exists_of_barycenterPreimage T L
-    (facetImageContainsBarycenter_of_surjectiveOnFacets T (spernerVertexMap L) h)
+    (by simpa [hvertex] using facetImageContainsBarycenter_of_surjective T φ h)
 
 end GeometricReductions
 

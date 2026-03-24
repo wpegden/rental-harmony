@@ -27,6 +27,8 @@
   sufficient for the Section 2 / Section 5 existence theorems. The repaired interface must encode
   actual geometric realization data for subdivision vertices/cells, or an equivalent covering
   theorem for affine-on-cell maps.
+  This repair is now in place via geometric vertex positions, simplex-cover data, and an actual
+  `PiecewiseLinearSimplexMap`.
 
 ## Mathlib dependencies to reuse
 - `Mathlib.Analysis.Convex.StdSimplex`
@@ -116,10 +118,10 @@
 - Keep the lattice-point and weighted-average arguments finite and combinatorial after that point.
 
 ## Immediate next steps
-- Repair `SimplicialSubdivision` / `PiecewiseLinearVertexMap` so the Section 2 and Section 5
-  statements are actually true under the Lean interface.
-- After that repair, extend the new `RentalHarmony/Sperner.lean` support layer to an actual proof
-  of the Section 5 surjectivity / barycenter-cell theorem.
+- Extend the repaired geometric interface to an actual proof of the Section 5 surjectivity theorem
+  for `PiecewiseLinearSimplexMap`.
+- Then derive the barycenter-cell theorem through the new surjectivity-to-cell reduction already
+  available in `PaperTheorems.lean`.
 - Use the resulting barycenter-cell theorem to discharge
   `sperner_exists_fully_labeled_simplex_statement` via the local barycenter/facet reductions
   already in place.
@@ -128,5 +130,4 @@
 
 ## Current input status
 - No proposed axioms.
-- No human input is required yet, but the next burst must redesign the geometric interface before
-  the core Section 5 theorem can be proved.
+- No human input is required at the moment.
