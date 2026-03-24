@@ -36,10 +36,12 @@
 - Basic finite combinatorics from `Fin`, `Fintype`, `Finset`, `Set.ncard`, and injective maps.
 
 ## Planned Lean files
-- `RentalHarmony/PaperDefinitions.lean`
-  - basic room/rent/preference objects and paper assumptions.
-- `RentalHarmony/PaperTheorems.lean`
-  - theorem skeletons grouped by paper section.
+- `PaperDefinitions.lean`
+  - reviewer-facing statement file for room/rent/preference objects and the subdivision API.
+- `PaperTheorems.lean`
+  - reviewer-facing statement file for the paper's theorem propositions and first Hall lemmas.
+- `RentalHarmony/PaperDefinitions.lean` and `RentalHarmony/PaperTheorems.lean`
+  - thin library wrappers importing the root statement files.
 - Probable later support files:
   - `RentalHarmony/Sperner.lean`
   - `RentalHarmony/Secretive.lean`
@@ -109,11 +111,11 @@
 - Keep the lattice-point and weighted-average arguments finite and combinatorial after that point.
 
 ## Immediate next steps
-- Flesh out `RentalHarmony/PaperDefinitions.lean` with the concrete triangulation and label-map API.
-- Replace theorem comments in `RentalHarmony/PaperTheorems.lean` by precise Lean propositions once
-  the triangulation interface is fixed.
-- Start with the Hall-side combinatorics, since mathlib already provides the matching theorem and
-  these lemmas do not depend on the hard surjectivity proof.
+- Prove the newly stated Hall-based reduction lemmas from the geometric hypotheses produced by the
+  Sperner/barycenter cell arguments.
+- Build the concrete triangulation and piecewise-linear map API behind `SimplicialSubdivision` and
+  `PiecewiseLinearVertexMap`.
+- Start the geometric side with barycenter-containing facets and face-preserving surjectivity.
 
 ## Current input status
 - No proposed axioms.
