@@ -29,6 +29,10 @@
   theorem for affine-on-cell maps.
   This repair is now in place via geometric vertex positions, simplex-cover data, and an actual
   `PiecewiseLinearSimplexMap`.
+- Further revision forced by the extension proof:
+  `boundaryFace` must record the exact outer face determined by zero coordinates, not merely a
+  superset of allowed labels, and a `PiecewiseLinearSimplexMap` must record its actual vertex
+  values. Without those two fields, even the 1-dimensional Section 2 statement is false.
 
 ## Mathlib dependencies to reuse
 - `Mathlib.Analysis.Convex.StdSimplex`

@@ -153,8 +153,8 @@ def HasSecretiveEnvyFreeDivision {rooms : ℕ}
 /--
 An abstract subdivision of the standard `dimension`-simplex.
 
-For theorem stating we record only the full-dimensional facets and, for each vertex, the set of
-outer labels allowed at that vertex.
+For theorem stating we record the full-dimensional facets and, for each vertex, the exact outer
+face of the simplex that contains it.
 -/
 structure SimplicialSubdivision (dimension : ℕ) (Vertex : Type*) [Fintype Vertex]
     [DecidableEq Vertex] where
@@ -164,6 +164,9 @@ structure SimplicialSubdivision (dimension : ℕ) (Vertex : Type*) [Fintype Vert
   vertex_boundary :
     ∀ v i, i ∉ boundaryFace v →
       ((vertexPos v : Room (dimension + 1) → ℝ) i = 0)
+  boundaryFace_exact :
+    ∀ v i, i ∈ boundaryFace v ↔
+      ((vertexPos v : Room (dimension + 1) → ℝ) i ≠ 0)
   facets : Finset (Finset Vertex)
   facet_card : ∀ σ ∈ facets, σ.card = dimension + 1
   covers_simplex :
@@ -254,12 +257,14 @@ def FacetImageContainsBarycenter {dimension : ℕ} {Vertex : Type*} [Fintype Ver
 An actual piecewise-linear self-map of the simplex built from a subdivision and vertex images.
 
 The `map_mem_facetImage` field records the cellwise affine realization needed to connect a
-preimage point to a facet image in the codomain.
+preimage point to a facet image in the codomain, and `map_vertex` records the intended
+interpolation of the chosen vertex values.
 -/
 structure PiecewiseLinearSimplexMap {dimension : ℕ} {Vertex : Type*} [Fintype Vertex]
     [DecidableEq Vertex] (T : SimplicialSubdivision dimension Vertex) where
   vertexMap : Vertex → RentDivision (dimension + 1)
   toFun : RentDivision (dimension + 1) → RentDivision (dimension + 1)
+  map_vertex : ∀ v, toFun (T.vertexPos v) = vertexMap v
   map_mem_facetImage :
     ∀ x, ∃ σ ∈ T.facets, FacetContainsPoint T σ x ∧ FacetImageContains σ vertexMap (toFun x)
   boundary_preserving : PreservesBoundaryFaces toFun

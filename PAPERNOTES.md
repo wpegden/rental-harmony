@@ -23,6 +23,16 @@
   the barycenter and no Sperner labeling could be fully labeled. The interface has now been
   repaired by adding geometric vertex positions, simplex-cover data, and an actual
   `PiecewiseLinearSimplexMap` with a cellwise image-realization field.
+- Formalization note after attempting the Sperner extension lemma:
+  the repaired interface still needed two more exactness fields. First, `boundaryFace` cannot be
+  merely a superset of the allowable labels; it must be the exact outer face determined by the
+  zero coordinates of the subdivision vertex. Otherwise a 1-simplex with the two genuine boundary
+  vertices `e_0, e_1` but `boundaryFace = {0,1}` at both ends admits the constant label `0`, which
+  is a Lean-checkable counterexample to the current Section 2 statement. Second,
+  `PiecewiseLinearSimplexMap` must remember that its underlying map sends each subdivision vertex
+  to the prescribed `vertexMap`; without that interpolation field, the desired extension lemma is
+  not even stated accurately. These exactness requirements are now part of the paper-facing
+  definitions.
 - `Section 5` also has a minor notation slip: around line 387, "The vertex `e_1` of `Δ_n`" should be `Δ_{n-1}`.
 - `Section 6`, first theorem (around lines 449-463): the proof implicitly upgrades the face `τ` containing `x` to a facet. The hypothesis that `y` is not in the convex hull of any `n` lattice points rules out lower-dimensional faces, since those would map into convex hulls of at most `n` lattice points.
 - `Section 6`, second theorem (around lines 487-490): the counting step should be written explicitly. If fewer than `k_j` indices `i` had `β_ij > 0`, then `∑_i β_ij ≤ (k_j - 1) / (n + 1) < α_j`, contradicting `∑_i β_ij = α_j`.
