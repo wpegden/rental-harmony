@@ -1080,10 +1080,18 @@
   `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_boundaryEntry`, and
   `chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_boundaryEntry`
   now discharge the first route-changed entrance-face gap. The next exact frontier is therefore no
-  longer the entrance-face theorem itself, but the second local bridge
+  longer the entrance-face theorem itself, but the second local bridge. A fresh direct proof
+  attempt shows that the current support-layer statement
   `ChosenMilestoneChainNextMilestoneAmbientFacetFreshPrefixVertexSpec.
-  exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier`, after which Lean can already
-  reassemble the same-level continuation package.
+  exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier`
+  is itself stronger than the manuscript's local geometry: the new lemma
+  `not_exists_freshPrefixVertex_in_ambientFacet_of_topDim` records the same top-dimensional
+  impossibility already seen for ambient-facet prefix extension, while the statement as written
+  also lacks any hypothesis about the entrance carrier meeting the milestone segment. So the next
+  exact repair is not "prove the existing fresh-prefix-vertex spec as is", but to replace it by a
+  below-top-dimensional / entrance-carrier continuation theorem, either still phrased through a
+  fresh prefix vertex or directly as a same-level coface theorem through the entrance carrier.
+  After that repair, Lean can already reassemble the same-level continuation package.
 
 ## Current input status
 - No proposed axioms.

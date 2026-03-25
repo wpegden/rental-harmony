@@ -4770,6 +4770,19 @@ lemma no_freshAmbientFacetVertex_of_topDim
   have hEq := ambientFacet_eq_of_topDim (T := T) (φ := φ) ν hσ hνσ hνdim
   exact hvν (by simpa [hEq] using hvσ)
 
+lemma not_exists_freshPrefixVertex_in_ambientFacet_of_topDim
+    (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    {σ : Finset Vertex}
+    (hσ : σ ∈ T.facets)
+    (hνσ : ν.face.carrier ⊆ σ)
+    (hνdim : ν.face.dim = dimension) :
+    ¬ ∃ v ∈ σ, v ∉ ν.face.carrier ∧
+        (SubdivisionFace.singleton (T := T) v).SubdividesPrefixFace (T := T) ν.level.succ := by
+  intro hv
+  rcases hv with ⟨v, hvσ, hvν, _⟩
+  exact no_freshAmbientFacetVertex_of_topDim (T := T) (φ := φ) ν hσ hνσ hνdim
+    ⟨v, hvσ, hvν⟩
+
 lemma exists_freshAmbientFacetVertex_of_lt_topDim
     (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
     {σ : Finset Vertex}

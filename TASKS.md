@@ -18,17 +18,32 @@
   `chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_boundaryEntry`
   expose that result as the actual next-milestone entrance package for the chosen chain.
 - [ ] Route-changed next-milestone continuation frontier:
-  with the entrance-face theorem now available, the first exact unresolved local bridge is
+  with the entrance-face theorem now available, the direct next candidate was
   `ChosenMilestoneChainNextMilestoneAmbientFacetFreshPrefixVertexSpec.
   exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier`.
-  Once that fresh current-prefix ambient-facet vertex exists, Lean already converts it into
+  A fresh proof attempt now shows that this support-layer statement is itself stronger than the
+  manuscript's local geometry. The new lemma
+  `not_exists_freshPrefixVertex_in_ambientFacet_of_topDim`
+  records the exact top-dimensional obstruction in the same language: even the fresh-prefix-vertex
+  witness is impossible there, matching the existing
+  `not_exists_sameLevelPrefixFace_in_ambientFacet_of_topDim`. More importantly, the paper's lines
+  395--396 argue from how the segment enters through the entrance carrier, whereas the current
+  fresh-prefix-vertex spec only assumes
+  `ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.succ` and does not mention the
+  segment/image data at all. So the exact next task is to repair this second bridge to a
+  below-top-dimensional / entrance-carrier theorem:
+  either a revised fresh-prefix-vertex statement with the needed low-dimensional entrance
+  hypotheses, or a direct same-level coface/horizontal-continuation theorem through the entrance
+  carrier itself.
+  Once such a corrected second bridge exists, Lean already converts it into
   `ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec` via
   `chosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec_of_freshPrefixVertex`, and
   then into the manuscript-faithful same-level continuation theorem via
   `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_prefixExtension`.
-  So the next concrete job is to prove the fresh-prefix-vertex theorem from the Section 5 face
-  geometry, and only after that decide how to feed the resulting same-level continuation package
-  back into the below-top-dimensional direct route.
+  So the next concrete job is to replace the overstrong current second bridge by the correct
+  below-top-dimensional entrance-carrier continuation theorem, and only after that decide how to
+  feed the resulting same-level continuation package back into the below-top-dimensional direct
+  route.
 - [ ] Exact higher-dimensional deleted-spur frontier:
   prove the two fields of
   `Section5GraphNode.ChosenMilestoneChainDeletedSpurNoEscapeSpec`.

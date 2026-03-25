@@ -1240,3 +1240,17 @@
   produce a fresh current-prefix ambient-facet vertex for the resulting entrance carrier, i.e.
   `ChosenMilestoneChainNextMilestoneAmbientFacetFreshPrefixVertexSpec.
   exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier`.
+- Formalization note after the direct fresh-prefix-vertex attempt:
+  that second bridge now appears to be another support-layer strengthening rather than the exact
+  manuscript theorem. The new lemma
+  `not_exists_freshPrefixVertex_in_ambientFacet_of_topDim`
+  records the first precise obstruction in the theorem's own language: as in the older
+  fixed-carrier branch, top-dimensional ambient facets leave no room for any fresh vertex outside
+  `ν.face.carrier`. More importantly, paper lines 395--396 argue from how the segment
+  `[b_{k-1}, b_k]` enters through the entrance carrier, whereas the current fresh-prefix-vertex
+  spec only assumes that carrier subdivides the current prefix face and says nothing about the
+  segment/image geometry. So the present theorem is not yet the manuscript-faithful second local
+  bridge. The next repair should be to replace it by a below-top-dimensional / entrance-carrier
+  continuation statement, either still routed through a fresh prefix vertex with the missing
+  hypotheses added, or directly as existence of a second same-level coface through the entrance
+  carrier.
