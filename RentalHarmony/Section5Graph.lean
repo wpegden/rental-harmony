@@ -5539,6 +5539,67 @@ theorem
   · simpa [μ] using hρμ
 
 /--
+Horizontal adjacency from a same-level coface across one entrance carrier.
+-/
+lemma horizontalAdj_of_sameLevelCoface_meets_segment
+    {ν μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hμne : μ ≠ ν)
+    (hlevel : μ.level = ν.level)
+    (hρμ : ρ.toSubdivisionFace.IsCodimOneSubface μ.face)
+    (hρmeets :
+      ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level) :
+    ν.HorizontalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ := by
+  refine ⟨hlevel.symm, ?_, ρ.toSubdivisionFace, ρ.isCodimOneSubface, ?_, hρmeets⟩
+  · intro hface
+    exact hμne <|
+      Section5PositiveNode.ext (c := chosenMilestoneChain (φ := φ)) (φ := φ) hlevel hface.symm
+  · simpa using hρμ
+
+/--
+Manuscript-faithful same-level coface continuation through an entrance carrier.
+
+This matches the paper's edge definition more closely than a fresh-vertex statement: the next
+face should simply be another same-level coface across the entrance codimension-`1` face.
+-/
+structure ChosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec where
+  exists_sameLevelCoface_of_entranceCarrier :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face},
+      ν.face.dim < dimension →
+      ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        μ ≠ ν ∧
+        μ.level = ν.level ∧
+        ρ.toSubdivisionFace.IsCodimOneSubface μ.face
+
+def chosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec_of_prefixExtension
+    (hext :
+      ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν ρ _hνdim hρmeets
+  rcases
+      exists_sameLevelCarrierContinuationCandidate_of_codimOneSubface_meets_segment_of_lt_topDim_of_prefixExtension
+        (T := T) (φ := φ) hext hρmeets with
+    ⟨μ, hμ⟩
+  have hρμ : ρ.toSubdivisionFace.IsCodimOneSubface μ.face := by
+    rcases hμ with ⟨_, hlevel, hsubset⟩
+    constructor
+    · simpa using hsubset
+    · calc
+        ρ.carrier.card + 1 = ν.face.carrier.card := ρ.card
+        _ = ν.level.1 + 2 := by rw [ν.face.card_eq_dim_succ, ν.face_dim]
+        _ = μ.level.1 + 2 := by simpa [hlevel]
+        _ = μ.face.carrier.card := by rw [μ.face.card_eq_dim_succ, μ.face_dim]
+  exact
+    ⟨μ, hμ.1, hμ.2.1, hρμ⟩
+
+/--
 Manuscript-faithful second local bridge for the next-milestone branch.
 
 Once an entrance codimension-`1` face is known to meet `[b_{k-1}, b_k]`, the paper's trap-door
@@ -5555,17 +5616,32 @@ structure ChosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec where
       ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
         ν.HorizontalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ
 
+def chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_cofaceContinuation
+    (hcoface :
+      ChosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν ρ hνdim hρmeets
+  rcases hcoface.exists_sameLevelCoface_of_entranceCarrier ν hνdim hρmeets with
+    ⟨μ, hμne, hlevel, hρμ⟩
+  exact
+    ⟨μ,
+      horizontalAdj_of_sameLevelCoface_meets_segment
+        (T := T) (φ := φ) hμne hlevel hρμ hρmeets⟩
+
 def chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_prefixExtension
     (hext :
       ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec
         (T := T) (φ := φ)) :
     ChosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec
       (T := T) (φ := φ) := by
-  refine ⟨?_⟩
-  intro ν ρ _hνdim hρmeets
   exact
-    exists_sameLevelHorizontalAdj_of_codimOneSubface_meets_segment_of_lt_topDim_of_prefixExtension
-      (T := T) (φ := φ) hext hρmeets
+    chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_cofaceContinuation
+      (T := T) (φ := φ)
+      (chosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec_of_prefixExtension
+        (T := T) (φ := φ) hext)
 
 /--
 Route-changed next-milestone continuation package.

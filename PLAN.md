@@ -1105,6 +1105,20 @@
   theorem directly from the Section 5 face/segment geometry, and only afterward to revisit how
   that same-level continuation should be converted into the below-top-dimensional level-descent
   theorem.
+- That local continuation target is now sharpened one step further to match the paper's actual
+  edge definition. The new structure
+  `ChosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec`
+  asks directly for a distinct same-level coface across the entrance codimension-`1` face whose
+  image meets `[b_{k-1}, b_k]`, and
+  `horizontalAdj_of_sameLevelCoface_meets_segment` turns that coface immediately into the
+  corrected horizontal-continuation theorem. The support wrapper
+  `chosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec_of_prefixExtension`
+  shows that the older ambient-facet prefix-extension package still implies this coface theorem,
+  while
+  `chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_cofaceContinuation`
+  and the rerouted same-level continuation wrapper factor the route through this more
+  manuscript-faithful intermediate step. So the exact remaining local gap is now the direct proof
+  of the entrance-carrier same-level coface theorem, not the horizontal-adjacency corollary.
 
 ## Current input status
 - No proposed axioms.

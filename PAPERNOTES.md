@@ -1268,3 +1268,19 @@
   to prove the corrected entrance-carrier continuation theorem itself directly from the Section 5
   trap-door geometry, and only then to decide how that same-level continuation interacts with the
   below-top-dimensional descent package.
+- Formalization note after sharpening the continuation theorem to a coface theorem:
+  the corrected second bridge can be stated even closer to paper lines 388--396. The new
+  structure
+  `ChosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec`
+  asks for a distinct same-level coface across the entrance codimension-`1` face whose image meets
+  `[b_{k-1}, b_k]`; this is exactly the paper's graph-edge language. The theorem
+  `horizontalAdj_of_sameLevelCoface_meets_segment` then makes the corrected horizontal
+  continuation theorem immediate, and the route
+  `chosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec_of_prefixExtension`
+  ->
+  `chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_cofaceContinuation`
+  ->
+  `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_entranceCarrierContinuation`
+  shows that the older ambient-facet prefix-extension package is only a stronger sufficient proof
+  strategy for this more faithful statement. Consequently the precise remaining local gap is now
+  the direct proof of that same-level coface theorem from the Section 5 trap-door geometry.

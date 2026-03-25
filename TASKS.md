@@ -38,13 +38,17 @@
   an entrance carrier meeting `[b_{k-1}, b_k]`. The wrapper
   `chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_prefixExtension`
   shows that the older ambient-facet prefix-extension package is only a stronger sufficient route
-  to this theorem, and the main continuation theorem has been rerouted through the corrected
-  interface via
+  to this theorem. The new intermediate structure
+  `ChosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec`
+  sharpens the exact remaining local geometry again to the paper's edge definition itself:
+  produce a distinct same-level coface across the entrance carrier. The wrappers
+  `chosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec_of_prefixExtension`,
+  `chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_cofaceContinuation`, and
   `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_entranceCarrierContinuation`.
-  So the next concrete job is no longer to prove the overstrong fresh-prefix-vertex theorem, but
-  to prove the corrected entrance-carrier continuation theorem directly from the Section 5 face
-  geometry and then decide how that same-level continuation should feed the below-top-dimensional
-  direct route.
+  So the next concrete job is no longer to prove the overstrong fresh-prefix-vertex theorem, nor
+  even the horizontal-adjacency statement directly, but to prove the corrected entrance-carrier
+  same-level coface theorem from the Section 5 face geometry and then decide how the resulting
+  same-level continuation should feed the below-top-dimensional direct route.
 - [ ] Exact higher-dimensional deleted-spur frontier:
   prove the two fields of
   `Section5GraphNode.ChosenMilestoneChainDeletedSpurNoEscapeSpec`.
