@@ -271,3 +271,12 @@
   which case several codimension-`1` subfaces can also meet that segment and there is no abstract
   reason for exactly two doors. So the remaining rest spec also appears to require an explicit
   transversality / nondegeneracy input on higher-dimensional face images.
+- [x] Isolated that higher-dimensional degeneracy as its own minimal contract in
+  `RentalHarmony/Section5Graph.lean`. The new
+  `Section5GraphNode.ChosenMilestoneChainOpenCrossingSpec` packages exactly the open-crossing
+  two-door claim, while `Section5GraphNode.ChosenMilestoneChainPositiveLevelSpec` keeps the
+  remaining positive-level continuation fields. The theorem
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''`
+  now shows that the downstream barycenter-cell conclusion already follows from
+  `PositiveFaceLowerPrefixReflection`, the level-`0` boundary contract, this new open-crossing
+  contract, and the positive-level continuation package.

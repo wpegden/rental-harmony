@@ -558,3 +558,12 @@
   such a degenerate configuration there is no reason for exactly two doors to survive. So the
   higher-dimensional rest package also needs a genuine transversality / nondegeneracy hypothesis on
   face images, not merely the existing combinatorial face-inclusion data.
+- Following that diagnosis, the Lean support layer now isolates the open-crossing branch as its own
+  minimal contract. `Section5GraphNode.ChosenMilestoneChainOpenCrossingSpec` records exactly the
+  missing higher-dimensional transversality claim for faces whose images meet the open milestone
+  segment, while `Section5GraphNode.ChosenMilestoneChainPositiveLevelSpec` keeps the separate
+  positive-level continuation data. The theorem
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''`
+  shows that once those two inputs are supplied alongside
+  `PositiveFaceLowerPrefixReflection` and the level-`0` boundary contract, the downstream Section 5
+  parity argument again reaches a barycenter-containing facet with no further hidden blockers.

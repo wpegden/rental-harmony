@@ -450,6 +450,14 @@
   additional transversality / nondegeneracy hypothesis. Therefore the next support-layer question is
   no longer about lower-boundary interval geometry, but about imposing or isolating the minimal
   higher-dimensional transversality input needed for `ChosenMilestoneChainGraphLocalRestSpec`.
+- That higher-dimensional input is now isolated explicitly as
+  `Section5GraphNode.ChosenMilestoneChainOpenCrossingSpec`, while the still-separate positive-level
+  continuation data is packaged as `Section5GraphNode.ChosenMilestoneChainPositiveLevelSpec`. The
+  wrapper `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''`
+  confirms that the full downstream Section 5 barycenter-cell pipeline now closes under four
+  explicit internal contracts only: lower-prefix reflection, the normalized level-`0` boundary
+  model, the open-crossing transversality input, and the remaining positive-level continuation
+  package.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

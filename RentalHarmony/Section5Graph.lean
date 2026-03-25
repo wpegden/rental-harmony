@@ -2456,6 +2456,70 @@ structure ChosenMilestoneChainGraphLocalRestSpec where
         ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
           Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
 
+/--
+Minimal higher-dimensional transversality input for the open-crossing branch.
+
+The current abstract face-image API does not rule out a positive face collapsing onto the
+milestone segment, so the paper's "two continuation doors" claim for open crossings has to be
+supplied separately at this stage.
+-/
+structure ChosenMilestoneChainOpenCrossingSpec where
+  two_doors_of_missing_nextMilestone_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+/--
+Remaining positive-level continuation input once the level-`0` boundary model and open-crossing
+transversality are separated out.
+-/
+structure ChosenMilestoneChainPositiveLevelSpec where
+  two_doors_of_missing_nextMilestone_positiveLevel_of_extraNeighbor :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      (∃ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        w ≠ .positive ν ∧
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w) →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+  two_doors_of_nextMilestone_awayFromBoundary :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+def chosenMilestoneChainGraphLocalRestSpec_of_openCrossing_and_positiveLevel
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (hpositive : ChosenMilestoneChainPositiveLevelSpec (T := T) (φ := φ)) :
+    ChosenMilestoneChainGraphLocalRestSpec (T := T) (φ := φ) := by
+  refine
+    { two_doors_of_missing_nextMilestone_openCrossing :=
+        hopen.two_doors_of_missing_nextMilestone_openCrossing
+      two_doors_of_missing_nextMilestone_positiveLevel_of_extraNeighbor :=
+        hpositive.two_doors_of_missing_nextMilestone_positiveLevel_of_extraNeighbor
+      two_doors_of_nextMilestone_awayFromBoundary :=
+        hpositive.two_doors_of_nextMilestone_awayFromBoundary }
+
 structure ChosenMilestoneChainGraphLocalSpec where
   start_neighbor : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ
   start_adj :
@@ -2860,6 +2924,20 @@ theorem exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'
     (T := T) (φ := φ) hreflect
     (chosenMilestoneChainGraphLocalSpec_of_levelZeroBoundary_and_rest
       (T := T) (φ := φ) hzero hrest)
+
+theorem exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (hpositive : ChosenMilestoneChainPositiveLevelSpec (T := T) (φ := φ)) :
+    ∃ σ ∈ T.facets, FacetImageContainsBarycenter σ φ.vertexMap := by
+  exact exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'
+    (T := T) (φ := φ) hreflect hzero
+    (chosenMilestoneChainGraphLocalRestSpec_of_openCrossing_and_positiveLevel
+      (T := T) (φ := φ) hopen hpositive)
 
 end Section5GraphNode
 
