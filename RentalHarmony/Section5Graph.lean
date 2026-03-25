@@ -1253,11 +1253,18 @@ codimension-`1` subfaces.
 
 This is an image-side surrogate for the paper's relative-interior milestone condition.
 -/
+def ImageContainsPointAwayFromBoundary (τ : SubdivisionFace T)
+    (φ : Vertex → RentDivision (dimension + 1)) (x : RentDivision (dimension + 1)) : Prop :=
+  τ.ImageContains (T := T) φ x ∧
+    ∀ ρ : SubdivisionFace T, ρ.IsCodimOneSubface τ → ¬ ρ.ImageContains (T := T) φ x
+
+/--
+Specialization of `ImageContainsPointAwayFromBoundary` to milestone points.
+-/
 def ImageContainsMilestoneAwayFromBoundary (c : Section5MilestoneChain (dimension := dimension))
     (τ : SubdivisionFace T) (φ : Vertex → RentDivision (dimension + 1))
     (k : Fin (dimension + 1)) : Prop :=
-  τ.ImageContainsMilestone (T := T) c φ k ∧
-    ∀ ρ : SubdivisionFace T, ρ.IsCodimOneSubface τ → ¬ ρ.ImageContainsMilestone (T := T) c φ k
+  τ.ImageContainsPointAwayFromBoundary (T := T) φ (c.point k)
 
 lemma imageMeetsMilestoneSegment_of_imageMeetsOpenMilestoneSegment
     {c : Section5MilestoneChain (dimension := dimension)} {τ : SubdivisionFace T}
@@ -4533,6 +4540,78 @@ structure TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData where
       ρ' = ρ
   huniqFacet :
     ∀ σ ∈ T.facets, ρ.carrier ⊆ σ → σ = ν.face.carrier
+
+/--
+Internal surrogate for paper lines 389--391 in the codimension-`1` face language used here.
+
+Whenever a codimension-`1` face image meets `[b_k, b_{k+1}]`, one can choose a point on that
+segment that already lies away from the boundary of the codimension-`1` face image.
+-/
+structure ChosenMilestoneChainCodimOneFaceSegmentInteriorWitnessSpec where
+  exists_pointAwayFromBoundary_of_codimOne_face_meets_segment :
+    ∀ {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face},
+      ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ x : RentDivision (dimension + 1),
+        ((x : RealPoint dimension) ∈ (chosenMilestoneChain (φ := φ)).segment ν.level) ∧
+        ρ.toSubdivisionFace.ImageContainsPointAwayFromBoundary (T := T) φ.vertexMap x
+
+/--
+Image-side segment-escape principle needed to rule out the packaged top-dimensional obstruction.
+
+If a top-dimensional face has a boundary-only unique lower-milestone carrier and that carrier
+already contains a segment point away from its own boundary, then the ambient top-dimensional face
+must either contain the next milestone or meet the open segment.
+-/
+structure ChosenMilestoneChainTopDimBoundaryCarrierEscapeSpec where
+  openCrossing_or_contains_upper_of_pointAwayFromBoundary_on_boundaryOnlyUniqueCarrier :
+    ∀ {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ},
+      ν.face.dim = dimension →
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face} →
+      (∀ {ρ' : SubdivisionFace.CarrierCodimOneSubface ν.face},
+        ρ'.toSubdivisionFace.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+        ρ' = ρ) →
+      (∀ σ ∈ T.facets, ρ.carrier ⊆ σ → σ = ν.face.carrier) →
+      {x : RentDivision (dimension + 1)} →
+      ((x : RealPoint dimension) ∈ (chosenMilestoneChain (φ := φ)).segment ν.level) →
+      ρ.toSubdivisionFace.ImageContainsPointAwayFromBoundary (T := T) φ.vertexMap x →
+      ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level ∨
+        ν.face.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ
+
+theorem not_boundaryOnlyUniqueCarrierCounterexampleData_of_segmentInteriorWitness_and_escape
+    (hwitness :
+      ChosenMilestoneChainCodimOneFaceSegmentInteriorWitnessSpec
+        (T := T) (φ := φ))
+    (hescape :
+      ChosenMilestoneChainTopDimBoundaryCarrierEscapeSpec
+        (T := T) (φ := φ))
+    (hdata :
+      TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ)) :
+    False := by
+  have hρseg :
+      hdata.ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap hdata.ν.level := by
+    refine ⟨chosenMilestoneChain (φ := φ).point hdata.ν.level.castSucc, ?_, ?_⟩
+    · exact left_mem_segment ℝ
+        (((chosenMilestoneChain (φ := φ)).point hdata.ν.level.castSucc :
+            RentDivision (dimension + 1)) : RealPoint dimension)
+        (((chosenMilestoneChain (φ := φ)).point hdata.ν.level.succ :
+            RentDivision (dimension + 1)) : RealPoint dimension)
+    · simpa [SubdivisionFace.ImageContainsMilestone] using hdata.hρmil
+  rcases
+      hwitness.exists_pointAwayFromBoundary_of_codimOne_face_meets_segment hρseg with
+    ⟨x, hxseg, hxρ⟩
+  rcases
+      hescape.openCrossing_or_contains_upper_of_pointAwayFromBoundary_on_boundaryOnlyUniqueCarrier
+        hdata.hνdim hdata.huniqueCarrier hdata.huniqFacet hxseg hxρ with
+    hopen | hupper
+  · exact hdata.hclosed hopen
+  · exact hdata.hupper hupper
 
 theorem not_topDimNoOpenCrossingDoorSpec_of_boundaryOnlyUniqueCarrierCounterexampleData
     (hdata :

@@ -40,7 +40,15 @@
   now package this as exact compatible counterexample data for the current interface: if such data
   can actually arise from the intended genericity assumptions, then
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec` is too strong
-  as stated.
+  as stated. The new internal specs
+  `ChosenMilestoneChainCodimOneFaceSegmentInteriorWitnessSpec` and
+  `ChosenMilestoneChainTopDimBoundaryCarrierEscapeSpec` now isolate the exact local geometric input
+  missing from Lean's current support layer: a codimension-`1` face meeting `[b_k,b_{k+1}]`
+  should carry a segment point away from its own boundary, and such a point on a boundary-only
+  unique carrier of a top-dimensional face should force either an open crossing or containment of
+  `b_{k+1}`. Their combined theorem
+  `not_boundaryOnlyUniqueCarrierCounterexampleData_of_segmentInteriorWitness_and_escape`
+  shows that this witness-plus-escape pair is precisely what would kill the packaged obstruction.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,

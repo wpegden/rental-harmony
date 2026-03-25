@@ -843,3 +843,14 @@
   So the paper-facing mismatch is now completely explicit in Lean: unless the intended generic
   perturbation rules out this boundary-only unique-carrier configuration, the corrected
   top-dimensional door theorem is still too strong.
+- The missing geometric repair is now isolated as closely as possible to paper lines 389--396.
+  Lean now packages two internal specs:
+  `ChosenMilestoneChainCodimOneFaceSegmentInteriorWitnessSpec`, which treats the paper's
+  "there is a point in the relative interior of `τ` mapping into `[b_k,b_{k+1}]`" sentence as an
+  image-side boundary-avoidance witness on codimension-`1` face images, and
+  `ChosenMilestoneChainTopDimBoundaryCarrierEscapeSpec`, which isolates the remaining top-dimensional
+  segment-crossing claim needed to turn such a witness on a boundary-only unique carrier into
+  either an open crossing or containment of `b_{k+1}`. The combined theorem
+  `not_boundaryOnlyUniqueCarrierCounterexampleData_of_segmentInteriorWitness_and_escape`
+  shows that this witness-plus-escape pair is exactly the missing local geometric statement needed
+  to eliminate the packaged obstruction.

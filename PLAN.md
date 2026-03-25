@@ -764,6 +764,15 @@
   frontier is now binary rather than diffuse:
   either derive from the intended genericity hypotheses that such data cannot occur, or revise the
   theorem statement before returning to the below-top-dimensional branch.
+- The missing local geometry is now isolated more sharply as a two-step paper-faithful interface.
+  `ChosenMilestoneChainCodimOneFaceSegmentInteriorWitnessSpec` packages lines 389--391 as an
+  image-side surrogate: when a codimension-`1` face meets `[b_k,b_{k+1}]`, it already contains a
+  segment point away from its own boundary. `ChosenMilestoneChainTopDimBoundaryCarrierEscapeSpec`
+  then isolates the remaining top-dimensional segment-crossing statement: on a boundary-only unique
+  lower-milestone carrier, such a point forces either an open crossing of the ambient top-dimensional
+  face or containment of `b_{k+1}`. The theorem
+  `not_boundaryOnlyUniqueCarrierCounterexampleData_of_segmentInteriorWitness_and_escape`
+  proves that exactly this witness-plus-escape package rules out the current obstruction.
 
 ## Current input status
 - No proposed axioms.
