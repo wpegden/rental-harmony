@@ -404,3 +404,11 @@
   `chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_reflection_and_fixedCarrierContinuation_and_uniqueness`.
   After reflection is fixed, the no-open-crossing branch is now explicitly parameterized by only
   two local inputs: fixed-carrier continuation existence and fixed-carrier uniqueness.
+- [x] Thread the monolithic filtered wrapper through the same sharper split via
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_reflection_and_fixedCarrierContinuation_and_uniqueness`.
+  The whole no-open-crossing wrapper chain is now explicit from reflection down to the old
+  filtered theorem.
+- [ ] Direct support search for the new primary theorem turns up nothing: there is still no lemma
+  extending a normalized codimension-`1` prefix-face carrier to a same-level prefix-face coface.
+  So the exact remaining existence gap is now a fixed-carrier same-level continuation theorem, not
+  carrier construction or door translation.

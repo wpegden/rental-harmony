@@ -601,6 +601,10 @@
   given carrier. The carrier-continuation wrapper has been rethreaded through this sharper split,
   leaving exactly fixed-carrier existence plus fixed-carrier uniqueness as the no-open-crossing
   local inputs after reflection.
+- The filtered wrapper itself is now also routed through this sharper split, so the remaining
+  dependency chain is fully explicit. A direct repo search still finds no theorem extending a
+  codimension-`1` prefix-face carrier to a same-level prefix-face coface, which is exactly the
+  content now isolated in `ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec`.
 
 ## Current input status
 - No proposed axioms.

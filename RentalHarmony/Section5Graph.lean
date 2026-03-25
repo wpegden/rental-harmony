@@ -2910,6 +2910,25 @@ def
   exact (huniq.candidate_unique_of_not_openCrossing ν hρsub hρmil
     (μ₁ := μ) (μ₂ := μ') hμ hμ').symm
 
+def
+    chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_reflection_and_fixedCarrierContinuation_and_uniqueness
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hexists :
+      ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec
+        (T := T) (φ := φ))
+    (huniq :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_existence_and_uniqueness
+    (T := T) (φ := φ)
+    (chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierContinuation
+      (T := T) (φ := φ) hreflect hexists)
+    huniq
+
 lemma isCodimOneSubface_of_sameLevelCarrierContinuationCandidate
     {ν μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
     {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}

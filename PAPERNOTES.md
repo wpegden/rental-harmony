@@ -675,3 +675,7 @@
   genuinely remaining existence input is not “find a carrier and a continuation,” but only “find a
   same-level continuation through this fixed carrier,” formalized as
   `ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec`.
+- The wrapper chain has been updated to reflect that sharper split all the way back to the older
+  filtered theorem. A direct search of the current repo still finds no theorem extending a fixed
+  codimension-`1` prefix-face carrier to a same-level prefix-face coface, so the present
+  existence blocker is now isolated exactly at that fixed-carrier continuation step.
