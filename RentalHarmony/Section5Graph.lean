@@ -1845,6 +1845,25 @@ lemma adj_positive_positive_iff {ν μ : Section5PositiveNode c φ} :
         μ.VerticalAdj (T := T) c φ ν := by
   rfl
 
+lemma not_adj_positive_start_of_level_pos {ν : Section5PositiveNode c φ}
+    (hk : 0 < ν.level.1) :
+    ¬ Adj (T := T) c φ (.positive ν) .start := by
+  rw [adj_positive_start]
+  intro hν
+  exact (Nat.ne_of_gt hk) hν.1
+
+lemma level_relation_of_adj_positive_positive
+    {ν μ : Section5PositiveNode c φ}
+    (hadj : Adj (T := T) c φ (.positive ν) (.positive μ)) :
+    ν.level = μ.level ∨
+      ν.level.1 + 1 = μ.level.1 ∨
+      μ.level.1 + 1 = ν.level.1 := by
+  rw [adj_positive_positive_iff] at hadj
+  rcases hadj with hhor | hupper | hlower
+  · exact Or.inl hhor.1
+  · exact Or.inr <| Or.inl hupper.1
+  · exact Or.inr <| Or.inr hlower.1
+
 /--
 The terminal vertices sought in Section 5: top-dimensional subdivision faces whose image contains
 the barycenter of the ambient simplex.
@@ -6220,6 +6239,54 @@ theorem twoNeighborSpec_of_not_terminal_belowTopDim_positive_of_alternativeSpecs
             (Nat.eq_zero_of_not_pos hk) hnext
             (chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
               (T := T) (φ := φ) (ν := ξ) hnext hopenξ)
+
+theorem
+    exists_two_distinct_positiveNeighbors_of_not_terminal_positiveLevel_belowTopDim_of_alternativeSpecs
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    {ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ξ.level.1)
+    (hξdim : ξ.face.dim < dimension)
+    (hξterm :
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ)) :
+    ∃ α β : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      α ≠ β ∧
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive α) ∧
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive β) ∧
+      ∀ ζ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive ζ) →
+          ζ = α ∨ ζ = β := by
+  rcases
+      twoNeighborSpec_of_not_terminal_belowTopDim_positive_of_alternativeSpecs
+        (T := T) (φ := φ) hzero hopen halt haway hξdim hξterm with
+    ⟨a, b, hab, ha, hb, hall⟩
+  have haneStart : a ≠ .start := by
+    intro hEq
+    exact
+      not_adj_positive_start_of_level_pos
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hk
+        (by simpa [hEq] using ha)
+  have hbneStart : b ≠ .start := by
+    intro hEq
+    exact
+      not_adj_positive_start_of_level_pos
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hk
+        (by simpa [hEq] using hb)
+  rcases a with _ | α
+  · exact False.elim (haneStart rfl)
+  rcases b with _ | β
+  · exact False.elim (hbneStart rfl)
+  refine ⟨α, β, ?_, ha, hb, ?_⟩
+  · intro hEq
+    apply hab
+    simpa [hEq]
+  · intro ζ hζ
+    specialize hall (.positive ζ) hζ
+    simpa using hall
 
 theorem
     not_adj_counterexampleNode_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData

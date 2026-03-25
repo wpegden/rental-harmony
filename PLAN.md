@@ -209,6 +209,16 @@
   now discharges the positive-level missing-next/no-open-crossing branch from the existing
   large-lower-prefix carrier API via
   `exists_lowerLevel_positive_of_missingNextMilestone_positiveLevel_of_not_openCrossing_of_largeLowerPrefixCarrierSpec`.
+  The new graph-interface lemmas `not_adj_positive_start_of_level_pos`,
+  `level_relation_of_adj_positive_positive`, and
+  `exists_two_distinct_positiveNeighbors_of_not_terminal_positiveLevel_belowTopDim_of_alternativeSpecs`
+  further show that the remaining positive-level next/open branches already have two distinct
+  positive continuation neighbors; the unresolved issue is purely selecting one of smaller level.
+  After testing that route, the first exact positive-level subcase that still does not crystallize
+  from the current API is
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim`,
+  because `ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec` currently gives only two
+  unlabeled doors and no lower-level choice principle.
   So the sharpest current direct-route frontier is now the trio of remaining local subcases:
   the level-`0` base case, the positive-level next-milestone branch, and the positive-level
   open-crossing branch.

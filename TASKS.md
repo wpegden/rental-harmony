@@ -44,6 +44,16 @@
   `chosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplit`:
   the positive-level missing-next/no-open-crossing branch is already discharged by
   `exists_lowerLevel_positive_of_missingNextMilestone_positiveLevel_of_not_openCrossing_of_largeLowerPrefixCarrierSpec`.
+  The new support lemmas `not_adj_positive_start_of_level_pos`,
+  `level_relation_of_adj_positive_positive`, and
+  `exists_two_distinct_positiveNeighbors_of_not_terminal_positiveLevel_belowTopDim_of_alternativeSpecs`
+  show that in the remaining positive-level branches the current API already yields two distinct
+  positive neighbors and only lacks a way to choose one with smaller level.
+  After the latest proof search, the first exact subcase that still does not crystallize from the
+  current API is
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim`:
+  `ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec` supplies two unlabeled continuation
+  doors, but no current theorem identifies either door as a lower-level positive node.
   So the exact remaining direct-route subcases are:
   the level-`0` base case, the positive-level next-milestone branch, and the positive-level
   open-crossing branch.

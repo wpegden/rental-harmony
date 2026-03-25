@@ -294,6 +294,16 @@
   the positive-level missing-next/no-open-crossing branch is already discharged from the existing
   large-lower-prefix carrier API by
   `exists_lowerLevel_positive_of_missingNextMilestone_positiveLevel_of_not_openCrossing_of_largeLowerPrefixCarrierSpec`.
+  The new support lemmas `not_adj_positive_start_of_level_pos`,
+  `level_relation_of_adj_positive_positive`, and
+  `exists_two_distinct_positiveNeighbors_of_not_terminal_positiveLevel_belowTopDim_of_alternativeSpecs`
+  make the residual positive-level gap more precise: in the remaining next-milestone and
+  open-crossing branches, Lean already gets two distinct positive continuation neighbors and only
+  lacks a theorem selecting one of smaller level. The first exact subcase that still fails to
+  crystallize from the current API is
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim`,
+  because `ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec` supplies only two unlabeled
+  continuation doors.
   So the exact remaining direct-route local subcases are now the level-`0` base case, the
   positive-level next-milestone branch, and the positive-level open-crossing branch.
 - Formalization note after trying to prove those local degree lemmas directly:
