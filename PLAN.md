@@ -662,6 +662,17 @@
   this multiplicity statement is already sufficient to produce two distinct vertical graph doors.
   So the remaining top-dimensional work is no longer general graph bookkeeping; it is the
   geometric multiplicity theorem for lower-milestone codimension-`1` subfaces.
+- That top-dimensional multiplicity theorem has now been reduced one step further. The reflection
+  layer already provides the first normalized lower-prefix carrier by
+  `exists_lowerMilestoneCarrier_of_reflection`, so the genuinely remaining local input is now
+  `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierSpec`: given one such carrier
+  in a top-dimensional positive face that misses the next milestone, produce a second distinct
+  lower-prefix codimension-`1` carrier containing the same lower milestone. The new reductions
+  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec_of_reflection_and_secondCarrier`
+  and
+  `exists_two_distinct_verticalNeighbors_of_reflection_and_topDimLowerMilestoneSecondCarrier`
+  show that this sharper second-carrier theorem is exactly what remains before the top-dimensional
+  branch reaches the two-door target.
 
 ## Current input status
 - No proposed axioms.

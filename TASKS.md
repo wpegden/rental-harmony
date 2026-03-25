@@ -12,12 +12,19 @@
 ## Worker Tasks
 - [ ] Finish the split positive-level lower-milestone door support.
   Top-dimensional branch:
-  prove `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec`.
-  The new constructor
+  prove `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierSpec`.
+  Reflection now supplies the first normalized lower-prefix carrier automatically via
+  `exists_lowerMilestoneCarrier_of_reflection`, and the new reduction
+  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec_of_reflection_and_secondCarrier`
+  shows that the remaining top-dimensional gap is only to produce a second distinct such carrier.
+  The constructors
   `verticalNeighborOfCodimOneSubfaceContainsLowerMilestone`
-  and theorem
+  and theorems
+  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec_of_reflection_and_secondCarrier`,
+  `exists_two_distinct_verticalNeighbors_of_reflection_and_topDimLowerMilestoneSecondCarrier`,
+  and
   `exists_two_distinct_verticalNeighbors_of_topDimLowerMilestoneCarrierMultiplicity`
-  already reduce that multiplicity statement to two distinct vertical doors.
+  then reduce that second-carrier theorem to two distinct vertical doors.
   Below-top-dimensional branch:
   finish
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec`
@@ -485,3 +492,11 @@
   vertical graph neighbors via
   `verticalNeighborOfCodimOneSubfaceContainsLowerMilestone` and
   `exists_two_distinct_verticalNeighbors_of_topDimLowerMilestoneCarrierMultiplicity`.
+- [x] Sharpened that top-dimensional gap once more: reflection now yields the first normalized
+  lower-prefix carrier automatically via `exists_lowerMilestoneCarrier_of_reflection`, and the new
+  contract `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierSpec` isolates only
+  the missing second carrier. The theorem
+  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec_of_reflection_and_secondCarrier`
+  rebuilds the older multiplicity package from this sharper input, and
+  `exists_two_distinct_verticalNeighbors_of_reflection_and_topDimLowerMilestoneSecondCarrier`
+  lands directly at the two-vertical-door target.

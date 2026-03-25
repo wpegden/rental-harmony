@@ -738,3 +738,16 @@
   pair of distinct carriers to two distinct vertical doors. So the remaining top-dimensional gap
   is exactly the geometric multiplicity of lower-milestone codimension-`1` carriers, not another
   graph-theoretic conversion lemma.
+- That top-dimensional gap is now sharper still. The reflection contract already gives one
+  normalized lower-prefix codimension-`1` carrier via
+  `exists_lowerMilestoneCarrier_of_reflection`, so the true remaining local theorem is not
+  “produce both carriers at once” but only
+  `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierSpec`: starting from one
+  lower-prefix carrier in a top-dimensional positive face missing the next milestone, produce a
+  second distinct lower-prefix codimension-`1` carrier that also contains the lower milestone. The
+  new reductions
+  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec_of_reflection_and_secondCarrier`
+  and
+  `exists_two_distinct_verticalNeighbors_of_reflection_and_topDimLowerMilestoneSecondCarrier`
+  show that this second-carrier theorem is exactly the remaining top-dimensional input before the
+  graph already has two distinct vertical doors.
