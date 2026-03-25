@@ -47,6 +47,11 @@ lemma card_le (τ : SubdivisionFace T) : τ.carrier.card ≤ dimension + 1 := by
     τ.carrier.card ≤ σ.card := Finset.card_le_card hτσ
     _ = dimension + 1 := T.facet_card σ hσ
 
+lemma card_eq_dim_succ (τ : SubdivisionFace T) : τ.carrier.card = τ.dim + 1 := by
+  unfold dim
+  symm
+  exact Nat.sub_add_cancel (Nat.succ_le_of_lt τ.card_pos)
+
 lemma exists_facet_superset (τ : SubdivisionFace T) :
     ∃ σ ∈ T.facets, τ.carrier ⊆ σ :=
   τ.subset_facet
@@ -1029,6 +1034,16 @@ lemma card_milestoneForbiddenFamily_member_le {k : Fin (dimension + 1)}
   have hτprops := Finset.mem_filter.mp τ.2
   exact (τ.1.card_prefixImageVertices_le φ hτprops.2.1).trans hτprops.2.2
 
+lemma prefixImageVertices_mem_milestoneForbiddenFamily {k : Fin (dimension + 1)}
+    (τ : SubdivisionFace T) (hτ : τ.SubdividesPrefixFace (T := T) k)
+    (hcard : τ.carrier.card ≤ k.1) :
+    τ.prefixImageVertices φ hτ ∈ milestoneForbiddenFamily (T := T) (φ := φ) k := by
+  classical
+  unfold milestoneForbiddenFamily
+  refine Finset.mem_image.mpr ?_
+  refine ⟨⟨τ, by simp [milestoneForbiddenFaces, hτ, hcard]⟩, by simp, ?_⟩
+  simp
+
 /--
 At every prefix level, one can choose a milestone point avoiding the actual lower-dimensional
 Section 5 forbidden family at that level.
@@ -1097,6 +1112,26 @@ noncomputable def chosenPrefixMilestonePoint (k : Fin (dimension + 1)) :
     Classical.choose (exists_prefixMilestonePoint_avoiding_forbiddenFamily
       (T := T) (φ := φ) k)
 
+lemma chosenPrefixMilestonePoint_spec {k : Fin (dimension + 1)}
+    (hk0 : k ≠ 0) (hklast : k ≠ Fin.last dimension) :
+    PrefixFace.smallPoint (dimension := dimension) (k := k)
+        (chosenPrefixMilestonePoint (φ := φ) k) ∈
+          interior
+            (((↑) :
+                affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1)) →
+                  RealPoint k.1) ⁻¹'
+              (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))) ∧
+      ∀ t ∈ milestoneForbiddenFamily (T := T) (φ := φ) k,
+        (((chosenPrefixMilestonePoint (φ := φ) k).1 :
+            RentDivision (dimension + 1)) : RealPoint dimension) ∉
+          convexHull ℝ
+            ((fun z : PrefixFace (dimension := dimension) k =>
+                ((z.1 : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+              (t : Set _)) := by
+  simpa [chosenPrefixMilestonePoint, hk0, hklast] using
+    (Classical.choose_spec
+      (exists_prefixMilestonePoint_avoiding_forbiddenFamily (T := T) (φ := φ) k))
+
 /-- The Section 5 milestone chain with fixed endpoints and chosen intermediate avoiding points. -/
 noncomputable def chosenMilestoneChain : Section5MilestoneChain (dimension := dimension) where
   point k := (chosenPrefixMilestonePoint (T := T) (φ := φ) k).1
@@ -1114,6 +1149,30 @@ noncomputable def chosenMilestoneChain : Section5MilestoneChain (dimension := di
   point_subdividesPrefixFace := by
     intro k i hi
     exact (chosenPrefixMilestonePoint (T := T) (φ := φ) k).2 i hi
+
+@[simp] lemma chosenMilestoneChain_point (k : Fin (dimension + 1)) :
+    (chosenMilestoneChain (φ := φ)).point k =
+      (chosenPrefixMilestonePoint (φ := φ) k).1 :=
+  rfl
+
+lemma imagePoints_eq_prefixImageVertices {k : Fin (dimension + 1)}
+    (τ : SubdivisionFace T) (hτ : τ.SubdividesPrefixFace (T := T) k) :
+    τ.imagePoints φ.vertexMap =
+      (fun z : PrefixFace (dimension := dimension) k =>
+        ((z.1 : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+          ((τ.prefixImageVertices φ hτ : Finset (PrefixFace (dimension := dimension) k)) : Set
+            (PrefixFace (dimension := dimension) k)) := by
+  classical
+  ext x
+  constructor
+  · rintro ⟨v, hv, rfl⟩
+    refine ⟨SubdivisionFace.prefixImageVertex (T := T) φ τ hτ v hv, ?_, by simp⟩
+    exact Finset.mem_image.mpr ⟨⟨v, hv⟩, by simp, by simp⟩
+  · rintro ⟨z, hz, rfl⟩
+    rcases Finset.mem_image.mp hz with ⟨v, hvmem, hvz⟩
+    rcases v with ⟨v, hv⟩
+    refine ⟨v, hv, ?_⟩
+    simpa using congrArg Subtype.val hvz
 
 end MilestoneFamilies
 
@@ -1295,6 +1354,60 @@ def IsTerminal : Section5GraphNode c φ → Prop
   | .positive ν =>
       ν.face.dim = dimension ∧
         ν.face.ImageContainsMilestone (T := T) c φ.vertexMap (Fin.last dimension)
+
+theorem chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
+    {ν : Section5PositiveNode (c := chosenMilestoneChain (φ := φ)) φ}
+    (hcontains :
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hν : ¬ IsTerminal (c := chosenMilestoneChain (φ := φ)) φ (.positive ν)) :
+    ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+      (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ := by
+  refine ⟨hcontains, ?_⟩
+  intro ρ hρ hρcontains
+  have hk0 : ν.level.succ ≠ 0 := by
+    intro hk
+    exact Fin.succ_ne_zero ν.level hk
+  have hklast : ν.level.succ ≠ Fin.last dimension := by
+    intro hk
+    apply hν
+    refine ⟨?_, by simpa [hk] using hcontains⟩
+    have hval : ν.level.1 + 1 = dimension := by
+      exact congrArg Fin.val hk
+    rw [ν.face_dim]
+    simpa using hval
+  have hρsub :
+      ρ.SubdividesPrefixFace (T := T) ν.level.succ :=
+    SubdivisionFace.subdividesPrefixFace_of_subface (T := T) hρ.1 ν.subdivides
+  have hρcard : ρ.carrier.card ≤ ν.level.succ.1 := by
+    have hfacecard : ν.face.carrier.card = ν.level.succ.1 + 1 := by
+      rw [ν.face.card_eq_dim_succ, ν.face_dim]
+      simp
+    have hρeq : ρ.carrier.card + 1 = ν.level.succ.1 + 1 := by
+      calc
+        ρ.carrier.card + 1 = ν.face.carrier.card := hρ.2
+        _ = ν.level.succ.1 + 1 := hfacecard
+    exact le_of_eq (Nat.add_right_cancel hρeq)
+  have hρmem :
+      ρ.prefixImageVertices φ hρsub ∈
+        milestoneForbiddenFamily (T := T) (φ := φ) ν.level.succ :=
+    prefixImageVertices_mem_milestoneForbiddenFamily (T := T) (φ := φ) ρ hρsub hρcard
+  have hspec :=
+    chosenPrefixMilestonePoint_spec (T := T) (φ := φ) hk0 hklast
+  have havoid := hspec.2 _ hρmem
+  have hmil :
+      ((((chosenMilestoneChain (φ := φ)).point ν.level.succ :
+          RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun z : PrefixFace (dimension := dimension) ν.level.succ =>
+              ((z.1 : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            ((ρ.prefixImageVertices φ hρsub : Finset
+                (PrefixFace (dimension := dimension) ν.level.succ)) : Set
+                (PrefixFace (dimension := dimension) ν.level.succ)))) := by
+    simpa [SubdivisionFace.ImageContainsMilestone, SubdivisionFace.ImageContains,
+      chosenMilestoneChain_point,
+      imagePoints_eq_prefixImageVertices (T := T) (φ := φ) ρ hρsub] using hρcontains
+  exact havoid hmil
 
 /--
 Local degree data expected from the geometric genericity analysis in Section 5.

@@ -252,6 +252,12 @@
   `chosenPrefixMilestonePoint` and `chosenMilestoneChain` provide the concrete milestone chain with
   fixed endpoints and chosen intermediate prefix-face points. The remaining Section 5 work is now
   purely the final transversality proof for that specific chain.
+- The first half of that final proof is now done:
+  `chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal` proves the
+  `ImageContainsMilestoneAwayFromBoundary` clause for every nonterminal positive graph node in the
+  concrete chain. So the remaining Section 5 milestone work is now the complementary open-segment
+  clause together with the short graph-genericity packaging needed to build a full
+  `Section5GraphNode.MilestoneSegmentTransversality` witness for `chosenMilestoneChain`.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -284,7 +290,9 @@
   points in the relative interior of prefix simplex faces away from finitely many lower-dimensional
   convex hulls. That smaller-simplex convex-hull avoidance theorem is now proved, so the next
   missing argument is the proof that the concrete chain `chosenMilestoneChain` witnesses
-  `Section5GraphNode.MilestoneSegmentTransversality`.
+  `Section5GraphNode.MilestoneSegmentTransversality`. The away-from-boundary half of that claim is
+  now formalized; the remaining blocker is the open-segment half and the resulting final
+  packaging into the terminal-node / surjectivity wrappers.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

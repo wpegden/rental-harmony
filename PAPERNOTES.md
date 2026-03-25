@@ -273,3 +273,13 @@
   So the remaining Section 5 blocker is now exactly the final geometric proof that this concrete
   chain satisfies the open-segment and away-from-boundary clauses of
   `Section5GraphNode.MilestoneSegmentTransversality`.
+- Formalization note after the latest transversality step:
+  one half of that final concrete milestone proof is now complete.
+  `chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal` shows that whenever a
+  nonterminal positive graph node contains its next milestone, that milestone is not already in
+  the image of any codimension-`1` subface. This is exactly the paper's "milestone in relative
+  interior rather than on a boundary door" condition for the vertical case. So the remaining
+  Section 5 blocker is now narrower than before: prove the complementary open-segment crossing
+  statement for faces missing the next milestone, then package the resulting concrete chain into a
+  full `Section5GraphNode.MilestoneSegmentTransversality` witness and push it through the already
+  formalized terminal-node / parity wrappers.
