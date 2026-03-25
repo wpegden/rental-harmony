@@ -22,6 +22,13 @@
   `affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary` now sharpens that endpoint
   case further: away-from-boundary at `b_k` already forces the image vertices of `σ` to form an
   affine-independent simplex, and
+  the companion carrier-indexed theorems
+  `affineIndependent_carrierImage_of_imageContainsPointAwayFromBoundary` and
+  `affineIndependent_carrierImage_of_imageContainsMilestoneAwayFromBoundary`
+  put the same fact in the exact indexing format needed for local face-wise simplex arguments.
+  The stronger barycentric-coordinate / affine-basis packaging was tested but is not part of the
+  checked frontier yet; the surviving Lean reduction is still the affine-independence step itself.
+  Consequently,
   `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry`
   reduces the remaining local geometry to the affine-simplex entry statement
   `ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec.

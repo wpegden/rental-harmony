@@ -3298,6 +3298,79 @@ theorem affineIndependent_image_of_imageContainsPointAwayFromBoundary
       exact ⟨w, hsρ hw, rfl⟩) hsconv
   exact hxaway.2 ρ hρ hρx
 
+theorem image_injective_on_carrier_of_imageContainsPointAwayFromBoundary
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)}
+    (hxaway : τ.ImageContainsPointAwayFromBoundary (T := T) φ x) :
+    Set.InjOn
+      (fun v : Vertex => ((φ v : RentDivision (dimension + 1)) : RealPoint dimension))
+      (τ.carrier : Set Vertex) := by
+  classical
+  let pfun : Vertex → RealPoint dimension := fun v =>
+    ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)
+  intro u hu v hv huv
+  by_contra huvne
+  have hτcard : 1 < τ.carrier.card := by
+    rw [Finset.one_lt_card]
+    exact ⟨u, hu, v, hv, huvne⟩
+  have hvu : v ≠ u := by
+    intro h
+    exact huvne h.symm
+  let ρ : SubdivisionFace T :=
+    τ.ofSubset (τ.carrier.erase u) (Finset.erase_subset _ _) (by
+      apply Finset.card_pos.mp
+      rw [Finset.card_erase_of_mem hu]
+      exact Nat.sub_pos_of_lt hτcard)
+  have hρ : ρ.IsCodimOneSubface τ := τ.erase_isCodimOneSubface hu hτcard
+  have hxconv :
+      (x : RealPoint dimension) ∈ convexHull ℝ (pfun '' (τ.carrier : Set Vertex)) := by
+    simpa [SubdivisionFace.ImageContains, SubdivisionFace.imagePoints, pfun] using hxaway.1
+  have hsubset :
+      pfun '' (τ.carrier : Set Vertex) ⊆ pfun '' ((τ.carrier.erase u : Finset Vertex) : Set Vertex) := by
+    intro y hy
+    rcases hy with ⟨w, hw, rfl⟩
+    by_cases hwu : w = u
+    · subst hwu
+      refine ⟨v, Finset.mem_erase.mpr ⟨hvu, hv⟩, ?_⟩
+      simpa [pfun] using huv.symm
+    · exact ⟨w, Finset.mem_erase.mpr ⟨hwu, hw⟩, rfl⟩
+  have hρx : ρ.ImageContains (T := T) φ x := by
+    change
+      ((x : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun w : Vertex =>
+              ((φ w : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            ((τ.carrier.erase u : Finset Vertex) : Set Vertex)))
+    exact convexHull_mono hsubset hxconv
+  exact hxaway.2 ρ hρ hρx
+
+theorem affineIndependent_carrierImage_of_imageContainsPointAwayFromBoundary
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)}
+    (hxaway : τ.ImageContainsPointAwayFromBoundary (T := T) φ x) :
+    AffineIndependent ℝ
+      (fun v : (τ.carrier : Set Vertex) =>
+        ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)) := by
+  classical
+  let pfun : Vertex → RealPoint dimension := fun v =>
+    ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)
+  let e :
+      (τ.carrier : Set Vertex) ↪
+        (((τ.carrier.image pfun : Finset (RealPoint dimension)) : Set (RealPoint dimension))) :=
+    ⟨fun v => ⟨pfun v, Finset.mem_image_of_mem _ v.property⟩, by
+      intro u v huv
+      have hEq :
+          pfun (u : Vertex) = pfun (v : Vertex) := by
+        simpa [pfun] using congrArg Subtype.val huv
+      apply Subtype.ext
+      exact
+        image_injective_on_carrier_of_imageContainsPointAwayFromBoundary
+          (T := T) (τ := τ) (φ := φ) (x := x) hxaway
+          u.property v.property hEq⟩
+  simpa [e, pfun] using
+    (affineIndependent_image_of_imageContainsPointAwayFromBoundary
+      (T := T) (τ := τ) (φ := φ) (x := x) hxaway).comp_embedding e
+
 theorem affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary
     {c : Section5MilestoneChain (dimension := dimension)} {τ : SubdivisionFace T}
     {φ : Vertex → RentDivision (dimension + 1)} {k : Fin (dimension + 1)}
@@ -3308,6 +3381,16 @@ theorem affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary
             Finset (RealPoint dimension)) : Set (RealPoint dimension)) =>
         (y : RealPoint dimension)) :=
   affineIndependent_image_of_imageContainsPointAwayFromBoundary
+    (T := T) hτ
+
+theorem affineIndependent_carrierImage_of_imageContainsMilestoneAwayFromBoundary
+    {c : Section5MilestoneChain (dimension := dimension)} {τ : SubdivisionFace T}
+    {φ : Vertex → RentDivision (dimension + 1)} {k : Fin (dimension + 1)}
+    (hτ : τ.ImageContainsMilestoneAwayFromBoundary (T := T) c φ k) :
+    AffineIndependent ℝ
+      (fun v : (τ.carrier : Set Vertex) =>
+        ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)) :=
+  affineIndependent_carrierImage_of_imageContainsPointAwayFromBoundary
     (T := T) hτ
 
 theorem not_exists_smaller_support_of_pair_of_mem_openSegment

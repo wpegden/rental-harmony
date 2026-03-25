@@ -269,7 +269,12 @@
   The new theorem
   `affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary` now sharpens that endpoint
   case further: the away-from-boundary hypothesis at `b_k` already forces the image vertices of
-  `σ` to be affine independent, and
+  `σ` to be affine independent, while the companion carrier-indexed lemmas
+  `affineIndependent_carrierImage_of_imageContainsPointAwayFromBoundary` and
+  `affineIndependent_carrierImage_of_imageContainsMilestoneAwayFromBoundary`
+  put the same reduction in the exact local-face format needed for later simplex-entry work. A
+  first attempt to package this as a full affine-basis / barycentric-coordinate API was not kept:
+  the checked support layer still stops at affine independence itself. Thus
   `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry`
   reduces the remaining first bridge to the affine-simplex entry theorem
   `ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec.

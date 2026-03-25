@@ -185,8 +185,15 @@
   the new theorem
   `affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary` shows that the
   away-from-boundary hypothesis at `b_k` already forces the image vertices of `σ` to form an
-  affine-independent simplex. So the remaining next-milestone entrance geometry is no longer a
-  completely general convex-hull question. The reduction
+  affine-independent simplex. The companion carrier-indexed lemmas
+  `affineIndependent_carrierImage_of_imageContainsPointAwayFromBoundary` and
+  `affineIndependent_carrierImage_of_imageContainsMilestoneAwayFromBoundary`
+  make the same fact available with the face carrier as the index set, which is the format needed
+  for local simplex-entry arguments. A first stronger attempt to build a barycentric-coordinate /
+  affine-basis interface on top of this was not retained in the checked support layer, so the
+  durable frontier still treats affine independence itself as the last proved step. Thus the
+  remaining next-milestone entrance geometry is no longer a completely general convex-hull
+  question. The reduction
   `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry`
   packages the first unresolved bridge as the more explicit simplex-entry statement
   `ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec.
