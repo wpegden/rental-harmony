@@ -1106,3 +1106,15 @@
   positive room" in the abstract; it is specifically to show terminal existence from a strictly
   lower-level positive continuation node. The low-dimensional residual issue remains exactly the
   special case where the continuation could still be `.start`.
+- Formalization note after the latest stuck-recovery route change:
+  the manuscript's higher-dimensional paragraph around lines 383--396 does not actually state the
+  current Lean frontier
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitLowerMilestoneSpec.contains_lowerMilestone_of_nextMilestone_not_terminal_belowTopDim`.
+  What it describes is that the segment `[b_{k-1}, b_k]` ends inside `λ(σ)` and therefore meets
+  the boundary of `σ` in a codimension-`1` face in the same trap-door sense as the 2-dimensional
+  picture. That matches Lean's predicate
+  `ImageContainsMilestoneAwayFromBoundary` and suggests an entrance-face / same-level
+  continuation witness, but it does not by itself imply that the whole face `σ` already contains
+  the lower milestone `b_{k-1}`. So the present next-milestone lower-containment field should now
+  be regarded as a strong sufficient reformulation of the paper's geometry, not clearly as the
+  exact statement the manuscript justifies.

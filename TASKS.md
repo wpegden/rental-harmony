@@ -74,6 +74,16 @@
   `exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec`, etc.)
   already assume lower-milestone containment and therefore cannot derive it from the
   next-milestone away-from-boundary hypotheses.
+  The latest route-change experiment sharpens this further: paper lines 383--396 and the raw Lean
+  definition of `ImageContainsMilestoneAwayFromBoundary` point more naturally to an entrance
+  codimension-`1` face / same-level continuation witness for the segment ending at `b_k`, not to
+  the stronger claim that the whole face already contains `b_{k-1}`. So
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitLowerMilestoneSpec.contains_lowerMilestone_of_nextMilestone_not_terminal_belowTopDim`
+  now looks like a sufficient strengthening of the manuscript's geometry rather than its exact
+  local statement. If no new geometric bridge upgrades away-from-boundary to lower-milestone
+  containment, the next correction should be to replace this next-milestone field by a more
+  paper-faithful entrance-door / same-level continuation theorem and rework the direct route from
+  that statement instead.
   The exact remaining direct-route subcases are therefore:
   the level-`0` base case, the positive-level next-milestone lower-milestone-containment branch,
   and the positive-level open-crossing lower-milestone-containment branch.

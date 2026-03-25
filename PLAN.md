@@ -236,6 +236,16 @@
   direct-route frontier is now the trio of remaining local
   subcases: the level-`0` base case, the positive-level next-milestone lower-milestone-containment
   branch, and the positive-level open-crossing lower-milestone-containment branch.
+  The latest stuck-recovery route change also suggests that this frontier may be slightly too
+  strong. Reading the manuscript's higher-dimensional trap-door paragraph together with the raw
+  Lean definition of `ImageContainsMilestoneAwayFromBoundary`, the next-milestone branch appears
+  to describe a segment ending inside `λ(σ)` and hence a unique entrance codimension-`1` face,
+  i.e. a same-level continuation witness, rather than immediate lower-milestone containment of
+  `σ` itself. So if no new geometry upgrades away-from-boundary to lower containment, the next
+  repair may be to replace
+  `contains_lowerMilestone_of_nextMilestone_not_terminal_belowTopDim`
+  by a more paper-exact entrance-door / same-level continuation theorem and then rebuild the
+  below-top-dimensional continuation argument from that interface.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:
