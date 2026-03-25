@@ -166,6 +166,21 @@
   designated start vertex has odd degree and every nonterminal vertex has even degree, then some
   terminal vertex exists. Applied to the Section 5 graph, this reduces the remaining work to the
   local geometric degree lemmas rather than a separate global path-construction formalization.
+- Formalization note after the latest next-milestone route change:
+  the first manuscript-faithful entrance-face bridge now splits cleanly into a proved subcase and
+  one exact remaining local theorem. The new theorem
+  `exists_codimOneSubface_meets_segment_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec`
+  shows that if the next-milestone branch also contains the lower milestone `b_{k-1}`, then the
+  existing large-lower-prefix carrier API already produces a codimension-`1` face meeting
+  `[b_{k-1}, b_k]`. Consequently
+  `chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_endpointEntrance`
+  reduces the full next-milestone entrance theorem to the precise complementary endpoint-entry
+  case, formalized as
+  `ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec.
+  exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
+  This matches the paper's trap-door picture more closely: the unresolved geometry is now exactly
+  the claim that when the segment ends inside `λ(σ)` at `b_k` and `σ` does not already contain
+  `b_{k-1}`, the segment must still enter through some codimension-`1` face.
 - Formalization note after the latest higher-dimensional obstruction reduction:
   in the range `2 < dimension`, the current Section 5 development now reduces pure terminal
   existence to one explicit direct-route theorem:

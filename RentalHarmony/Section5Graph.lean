@@ -4199,6 +4199,59 @@ In the higher-dimensional trap-door paragraph, the next-milestone branch is desc
 segment ending inside the image of the current face. In the current Lean model, the closest local
 statement is the existence of a codimension-`1` subface whose image still meets the same segment.
 -/
+theorem exists_codimOneSubface_meets_segment_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
+    (hlarge :
+      FaceLocalLargeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    (hlower :
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc) :
+    ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+      ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level := by
+  rcases
+      exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hlarge hk hlower with
+    ⟨μ, hμ⟩
+  rcases hμ with ⟨hlevel, hμν, hμmil⟩
+  have hsucc : μ.level.succ = ν.level.castSucc := by
+    apply Fin.ext
+    exact hlevel
+  let ρ : SubdivisionFace.CarrierCodimOneSubface ν.face :=
+    SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface hμν
+  refine ⟨ρ, ?_⟩
+  refine ⟨(chosenMilestoneChain (φ := φ)).point ν.level.castSucc, ?_, ?_⟩
+  · exact left_mem_segment ℝ
+      ((((chosenMilestoneChain (φ := φ)).point ν.level.castSucc :
+          RentDivision (dimension + 1)) : RealPoint dimension))
+      ((((chosenMilestoneChain (φ := φ)).point ν.level.succ :
+          RentDivision (dimension + 1)) : RealPoint dimension))
+  · simpa [SubdivisionFace.ImageContainsMilestone, hsucc, ρ,
+      SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface_carrier] using hμmil
+
+/--
+Endpoint-entry subcase of the route-changed next-milestone branch.
+
+Once lower-milestone containment is separated off, the remaining local statement matches the
+manuscript's "segment ending inside the face" picture: the upper milestone lies away from the
+boundary and the lower milestone is not already contained by the whole face.
+-/
+structure ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec where
+  exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim < dimension →
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
+      ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+        ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+
 structure ChosenMilestoneChainNextMilestoneEntranceFaceSpec where
   exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary :
     ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
@@ -4210,6 +4263,27 @@ structure ChosenMilestoneChainNextMilestoneEntranceFaceSpec where
       ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
         ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
           (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+
+def chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_endpointEntrance
+    (hlarge :
+      FaceLocalLargeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hendpoint :
+      ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneEntranceFaceSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hνdim haway hνterm
+  by_cases hlower :
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc
+  · exact
+      exists_codimOneSubface_meets_segment_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
+        (T := T) (φ := φ) hlarge hk hlower
+  · exact
+      hendpoint.exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone
+        ν hk hνdim haway hlower hνterm
 
 /--
 Ambient-facet prefix-extension theorem in the current-prefix next-milestone branch.

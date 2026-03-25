@@ -10,6 +10,19 @@
 <!-- SUPERVISOR_TASKS:END -->
 
 ## Worker Tasks
+- [ ] Route-changed next-milestone entrance frontier:
+  `exists_codimOneSubface_meets_segment_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec`
+  now discharges the lower-milestone-present subcase of the entrance-face theorem from the
+  existing large-lower-prefix carrier API, and
+  `chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_endpointEntrance`
+  reduces the full next-milestone entrance package to one exact complementary local bridge:
+  `ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec.
+  exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
+  So the first unresolved route-changed next-milestone theorem is no longer the whole entrance-face
+  package, but specifically the endpoint-entry case where `b_k` lies away from the boundary of
+  `λ(σ)` and `σ` does not already contain `b_{k-1}`. After that, the second bridge remains
+  `ChosenMilestoneChainNextMilestoneAmbientFacetFreshPrefixVertexSpec.
+  exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier`.
 - [ ] Exact higher-dimensional deleted-spur frontier:
   prove the two fields of
   `Section5GraphNode.ChosenMilestoneChainDeletedSpurNoEscapeSpec`.

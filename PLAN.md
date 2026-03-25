@@ -258,6 +258,17 @@
   continuation theorem for the next-milestone-away-from-boundary branch. So the next route-change
   plan is concrete: prove one or both of these local bridge theorems from the existing Section 5
   face geometry, and then refactor the below-top-dimensional direct route to consume same-level
+  continuation. The latest reduction sharpens the first bridge further:
+  `exists_codimOneSubface_meets_segment_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec`
+  now settles the lower-milestone-present part of the next-milestone entrance theorem from the
+  already available large-lower-prefix carrier API, and
+  `chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_endpointEntrance`
+  reduces the full entrance package to the exact complementary endpoint-entry theorem
+  `ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec.
+  exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
+  So the current first local route-change frontier is the codimension-`1` entrance-face existence
+  theorem specifically for the case where `b_k` lies away from the boundary of `λ(σ)` but
+  `σ` does not already contain `b_{k-1}`.
   continuation rather than overstrong lower-milestone containment in that branch.
   The second bridge is now reduced further too. The theorem
   `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex_of_entranceCarrier` and the
