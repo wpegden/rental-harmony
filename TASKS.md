@@ -12,7 +12,7 @@
 ## Worker Tasks
 - [ ] Finish the split positive-level lower-milestone door support.
   Top-dimensional branch:
-  prove `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierSpec`.
+  prove `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec`.
   Reflection now supplies the first normalized lower-prefix carrier automatically via
   `exists_lowerMilestoneCarrier_of_reflection`, and the new reduction
   `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec_of_reflection_and_secondCarrier`
@@ -31,8 +31,13 @@
   `faceSubdividesLowerPrefix_of_reflection_and_topDimLowerMilestoneSecondCarrier`
   show that any successful second-carrier proof already forces the entire top-dimensional face to
   subdivide the lower prefix face. So the remaining top-dimensional content is now explicitly
-  image-side: once every vertex of `ν.face` lies in the lower prefix face, prove that the lower
-  milestone lies in the image of a second codimension-`1` subface besides the reflected one.
+  image-side. The current sharp local target is the new one-vertex-drop contract:
+  inside a codimension-`1` face image already carrying a point `x`, shrink a supporting vertex set
+  by one more vertex while keeping `x` in the same image convex hull. The reductions
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop`,
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec_of_supportShrink`, and
+  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec_of_boundaryPointMultiplicity`
+  then recover the milestone-specific second-carrier theorem and hence the top-dimensional door.
   Below-top-dimensional branch:
   finish
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec`
@@ -534,4 +539,8 @@
   codimension-`1` subface by one additional vertex. This sharper frontier is packaged as
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec`, and
   `chosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec_of_supportShrink`
-  derives the point-level multiplicity contract from it.
+  derives the point-level multiplicity contract from it. The support file now lowers the frontier
+  once more to the exact one-step Carathéodory move:
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec`, and
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop`
+  shows that this one-vertex-drop theorem already implies the older support-shrink contract.

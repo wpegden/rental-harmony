@@ -711,6 +711,15 @@
   `chosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec_of_supportShrink` reduces
   the earlier point-on-two-face-images contract to it. So the next proof search should target this
   support-shrink existence theorem rather than the two-face conclusion directly.
+- That support-shrink theorem is now reduced once more to the exact local support-pruning step.
+  `ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec` asks: inside a fixed
+  codimension-`1` face image already carrying a point `x`, and for any supporting vertex set
+  inside that face, remove one additional vertex while keeping `x` in the same image convex hull.
+  The new reduction
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop`
+  shows that iterating this one-step drop recovers the full support-shrink contract. So the
+  remaining top-dimensional proof search should now target this single-vertex support-reduction
+  lemma.
 
 ## Current input status
 - No proposed axioms.

@@ -791,3 +791,11 @@
   the earlier point-on-two-face-images contract from it. So the genuine remaining top-dimensional
   content is now the sharp support-shrinking lemma inside one codimension-`1` face image, not yet
   another graph or carrier-construction step.
+- The support-shrinking frontier is now reduced one step further to the exact local support-drop
+  move. `ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec` asks that whenever
+  a point `x` lies in the image convex hull of a finite support `s` inside a fixed codimension-`1`
+  subface image, one can replace `s` by a strictly smaller support `s'` with
+  `s'.card + 1 ≤ s.card` while keeping `x` in the same image convex hull. The reduction
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop` shows
+  that iterating this one-step drop recovers the older support-shrink contract, so the remaining
+  top-dimensional blocker is now exactly this local convex-support pruning lemma.

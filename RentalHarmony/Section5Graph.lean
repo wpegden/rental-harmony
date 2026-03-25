@@ -2979,6 +2979,65 @@ structure ChosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec 
                 ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
               (s : Set Vertex)))
 
+structure ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec where
+  exists_smaller_support_in_codimOneSubface_of_point_of_positiveLevel_topDim_of_faceSubdividesLowerPrefix :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      (x : RentDivision (dimension + 1)),
+      0 < ν.level.1 →
+      ν.face.dim = dimension →
+      ν.face.SubdividesPrefixFace (T := T) ν.level.castSucc →
+      {ρ₁ : SubdivisionFace.CarrierCodimOneSubface ν.face} →
+      {s : Finset Vertex} →
+      s ⊆ ρ₁.carrier →
+      ((x : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (s : Set Vertex))) →
+      ∃ s' : Finset Vertex,
+        s' ⊆ s ∧
+        s'.card + 1 ≤ s.card ∧
+        ((x : RealPoint dimension) ∈
+          convexHull ℝ
+            ((fun v : Vertex =>
+                ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+              (s' : Set Vertex)))
+
+def chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop
+    (hdrop :
+      ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν x hk hνdim hνsub ρ₁ hρ₁x
+  have hρ₁carrier :
+      ((x : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (ρ₁.carrier : Set Vertex))) := by
+    simpa [SubdivisionFace.ImageContains, SubdivisionFace.imagePoints,
+      SubdivisionFace.CarrierCodimOneSubface.toSubdivisionFace_carrier] using hρ₁x
+  rcases hdrop with ⟨hdrop⟩
+  rcases hdrop ν x hk hνdim hνsub (by intro v hv; exact hv) hρ₁carrier with
+    ⟨s, hs, hcard, himg⟩
+  have hρ₁card : ρ₁.carrier.card = ν.level.succ.1 := by
+    have hcard' : ρ₁.carrier.card + 1 = ν.level.succ.1 + 1 := by
+      calc
+        ρ₁.carrier.card + 1 = ν.face.carrier.card := ρ₁.card
+        _ = ν.face.dim + 1 := ν.face.card_eq_dim_succ
+        _ = (ν.level.1 + 1) + 1 := by rw [ν.face_dim]
+        _ = ν.level.succ.1 + 1 := by simp
+    exact Nat.add_right_cancel hcard'
+  refine ⟨s, hs, ?_, himg⟩
+  have hsle : s.card + 1 ≤ ν.level.castSucc.1 + 1 := by
+    calc
+      s.card + 1 ≤ ρ₁.carrier.card := hcard
+      _ = ν.level.succ.1 := hρ₁card
+      _ = ν.level.castSucc.1 + 1 := by simp
+  exact Nat.succ_le_succ_iff.mp hsle
+
 structure ChosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec where
   exists_second_codimOneSubface_of_point_of_positiveLevel_topDim_of_faceSubdividesLowerPrefix :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
