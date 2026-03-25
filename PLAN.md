@@ -1129,7 +1129,16 @@
   also identifies the precise obstruction to reusing the older fixed-carrier machinery in the
   lower-milestone subcase: an arbitrary entrance carrier `ρ` meeting `[b_{k-1}, b_k]` need not
   itself subdivide the lower prefix face `ν.level.castSucc`, so the existing lower-milestone
-  continuation theorems do not transfer to `ρ` without a new bridge.
+  continuation theorems do not transfer to `ρ` without a new bridge. The new theorem
+  `SubdivisionFace.exists_carrierVertex_coord_pos_of_imageContainsPointAwayFromBoundary_of_coord_pos`
+  now isolates the endpoint-entry half of that bridge sharply: if an entrance-carrier image point
+  has positive current-prefix coordinate, then some actual carrier vertex already has positive
+  current-prefix domain coordinate. So the remaining obstruction is specifically one-sided. Lean
+  can now push positive current-prefix information from the image simplex back to the domain
+  carrier, but it still has no theorem converting zero current-prefix image data at the lower
+  endpoint into the `ν.level.castSucc` carrier normalization needed by the fixed-carrier
+  continuation API. The next local job is therefore either to prove exactly that zero-coordinate
+  normalization bridge, or to bypass it with a direct entrance-carrier same-level coface theorem.
 
 ## Current input status
 - No proposed axioms.

@@ -1293,4 +1293,14 @@
   the older lower-milestone carrier API cannot simply be reused unchanged in that split: an
   arbitrary entrance carrier `ρ` meeting `[b_{k-1}, b_k]` need not already subdivide the lower
   prefix face `ν.level.castSucc`, so the fixed-carrier continuation theorems do not apply to `ρ`
-  verbatim.
+  verbatim. The new theorem
+  `SubdivisionFace.exists_carrierVertex_coord_pos_of_imageContainsPointAwayFromBoundary_of_coord_pos`
+  now sharpens that obstruction into an exact one-sided bridge. In the endpoint-entry half of the
+  manuscript's split, positive current-prefix coordinate at an image point of `λ(ρ)` already
+  forces an actual carrier vertex of `ρ` with positive current-prefix domain coordinate. So the
+  remaining difficulty is not “how to move any coordinate information back to the domain”, but
+  specifically the zero-coordinate half: if the entrance point on `[b_{k-1}, b_k]` is the lower
+  endpoint direction, Lean still lacks the manuscript-faithful bridge turning that image-side
+  lower-endpoint situation into the `ν.level.castSucc` carrier normalization needed by the older
+  fixed-carrier continuation theorems. Either that zero-coordinate normalization must be proved,
+  or the same-level coface theorem must be established directly without passing through it.

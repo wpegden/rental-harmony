@@ -59,7 +59,16 @@
   reason the older fixed-carrier continuation API cannot close this theorem unchanged: an
   arbitrary entrance carrier `ρ` meeting `[b_{k-1}, b_k]` need not already subdivide the lower
   prefix face `ν.level.castSucc`, so the lower-milestone carrier theorems do not apply to `ρ`
-  verbatim.
+  verbatim. The new theorem
+  `SubdivisionFace.exists_carrierVertex_coord_pos_of_imageContainsPointAwayFromBoundary_of_coord_pos`
+  sharpens the endpoint-entry half of this split: if an entrance-carrier image point has positive
+  current-prefix coordinate, then some actual carrier vertex already has positive current-prefix
+  domain coordinate. So the remaining obstruction is now asymmetrical and exact. Positive
+  current-prefix data can be pushed from the image back to the domain, but zero current-prefix
+  data still does not normalize an arbitrary entrance carrier to a
+  `ν.level.castSucc`-subdividing lower-milestone carrier. The next proof step is therefore to
+  either supply precisely that zero-coordinate normalization bridge, or prove the entrance-carrier
+  same-level coface theorem directly in a way that avoids it.
 - [ ] Exact higher-dimensional deleted-spur frontier:
   prove the two fields of
   `Section5GraphNode.ChosenMilestoneChainDeletedSpurNoEscapeSpec`.

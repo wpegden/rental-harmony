@@ -3735,6 +3735,142 @@ theorem mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_o
     exact ⟨hwpos i, hwlt i⟩
   simpa [sx] using (hwx ▸ hxint)
 
+theorem all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_coord_eq_zero
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)}
+    (hτdim : 0 < τ.dim)
+    (hxaway : τ.ImageContainsPointAwayFromBoundary (T := T) φ x)
+    {i : Room (dimension + 1)}
+    (hxi : ((x : RealPoint dimension) i) = 0) :
+    ∀ v ∈ τ.carrier,
+      (((φ v : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 := by
+  let hτ :=
+    affineIndependent_carrierImage_of_imageContainsPointAwayFromBoundary
+      (T := T) (τ := τ) (φ := φ) (x := x) hxaway
+  let sx := carrierImageSimplex (T := T) τ φ hτ
+  have hxint :
+      ((x : RealPoint dimension) ∈ sx.interior) :=
+    mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_of_pos
+      (T := T) (τ := τ) (φ := φ) (x := x) hτ hτdim hxaway
+  rcases hxint with ⟨w, hw, hw01, hwx⟩
+  have hcoord_sum :
+      ∑ j, w j * ((sx.points j) i) = 0 := by
+    have hwxlin := hwx
+    rw [Finset.affineCombination_eq_linear_combination
+        (s := Finset.univ) (k := ℝ) (p := sx.points) (w := w) hw] at hwxlin
+    have hcoord := congrArg (fun z : RealPoint dimension => z i) hwxlin
+    simpa [Pi.smul_apply, smul_eq_mul, hxi] using hcoord
+  have hterm_nonneg :
+      ∀ j ∈ (Finset.univ : Finset (Fin (τ.dim + 1))),
+        0 ≤ w j * ((sx.points j) i) := by
+    intro j _
+    let v : Vertex :=
+      (((carrierSubtypeEquivFin (T := T) τ).symm j : (τ.carrier : Set Vertex)) : Vertex)
+    have hcoord_nonneg :
+        0 ≤ (((φ v : RentDivision (dimension + 1)) : RealPoint dimension) i) :=
+      (φ v).2.1 i
+    simpa [sx, carrierImageSimplex, v] using
+      mul_nonneg (hw01 j).1.le hcoord_nonneg
+  have hterm_zero :
+      ∀ j ∈ (Finset.univ : Finset (Fin (τ.dim + 1))),
+        w j * ((sx.points j) i) = 0 := by
+    exact (Finset.sum_eq_zero_iff_of_nonneg hterm_nonneg).mp hcoord_sum
+  intro v hv
+  let j : Fin (τ.dim + 1) := carrierSubtypeEquivFin (T := T) τ ⟨v, hv⟩
+  have hjzero : w j * ((sx.points j) i) = 0 :=
+    hterm_zero j (by simp)
+  have hwpos : 0 < w j := (hw01 j).1
+  have hcoord_nonneg : 0 ≤ ((sx.points j) i) :=
+    by
+      let v : Vertex :=
+        (((carrierSubtypeEquivFin (T := T) τ).symm j : (τ.carrier : Set Vertex)) : Vertex)
+      have :
+          0 ≤ (((φ v : RentDivision (dimension + 1)) : RealPoint dimension) i) :=
+        (φ v).2.1 i
+      simpa [sx, carrierImageSimplex, v] using this
+  have hcoord_zero : ((sx.points j) i) = 0 := by
+    nlinarith
+  simpa [sx, carrierImageSimplex, j] using hcoord_zero
+
+theorem exists_imageVertex_coord_pos_of_imageContainsPointAwayFromBoundary_of_coord_pos
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)}
+    (hτdim : 0 < τ.dim)
+    (hxaway : τ.ImageContainsPointAwayFromBoundary (T := T) φ x)
+    {i : Room (dimension + 1)}
+    (hxi : 0 < ((x : RealPoint dimension) i)) :
+    ∃ v ∈ τ.carrier,
+      0 < (((φ v : RentDivision (dimension + 1)) : RealPoint dimension) i) := by
+  by_contra hnone
+  push_neg at hnone
+  let hτ :=
+    affineIndependent_carrierImage_of_imageContainsPointAwayFromBoundary
+      (T := T) (τ := τ) (φ := φ) (x := x) hxaway
+  let sx := carrierImageSimplex (T := T) τ φ hτ
+  have hxint :
+      ((x : RealPoint dimension) ∈ sx.interior) :=
+    mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_of_pos
+      (T := T) (τ := τ) (φ := φ) (x := x) hτ hτdim hxaway
+  rcases hxint with ⟨w, hw, hw01, hwx⟩
+  have hterm_zero :
+      ∀ j : Fin (τ.dim + 1), w j * ((sx.points j) i) = 0 := by
+    intro j
+    let v : Vertex :=
+      (((carrierSubtypeEquivFin (T := T) τ).symm j : (τ.carrier : Set Vertex)) : Vertex)
+    have hv : v ∈ τ.carrier :=
+      (((carrierSubtypeEquivFin (T := T) τ).symm j : (τ.carrier : Set Vertex)).property)
+    have hcoord_nonneg : 0 ≤ ((sx.points j) i) :=
+      by
+        have :
+            0 ≤ (((φ v : RentDivision (dimension + 1)) : RealPoint dimension) i) :=
+          (φ v).2.1 i
+        simpa [sx, carrierImageSimplex, v] using this
+    have hcoord_notpos : ¬ 0 < ((sx.points j) i) := by
+      simpa [sx, carrierImageSimplex, v] using hnone v hv
+    have hcoord_zero : ((sx.points j) i) = 0 := by
+      linarith
+    simp [hcoord_zero]
+  have hcoord_sum :
+      ∑ j, w j * ((sx.points j) i) = ((x : RealPoint dimension) i) := by
+    have hwxlin := hwx
+    rw [Finset.affineCombination_eq_linear_combination
+        (s := Finset.univ) (k := ℝ) (p := sx.points) (w := w) hw] at hwxlin
+    have hcoord := congrArg (fun z : RealPoint dimension => z i) hwxlin
+    simpa [Pi.smul_apply, smul_eq_mul] using hcoord
+  have hsum_zero :
+      ∑ j, w j * ((sx.points j) i) = 0 := by
+    apply Finset.sum_eq_zero
+    intro j hj
+    exact hterm_zero j
+  linarith
+
+theorem exists_carrierVertex_coord_pos_of_imageContainsPointAwayFromBoundary_of_coord_pos
+    {τ : SubdivisionFace T} (φ : PiecewiseLinearSimplexMap T)
+    {x : RentDivision (dimension + 1)}
+    (hτdim : 0 < τ.dim)
+    (hxaway : τ.ImageContainsPointAwayFromBoundary (T := T) φ.vertexMap x)
+    {i : Room (dimension + 1)}
+    (hxi : 0 < ((x : RealPoint dimension) i)) :
+    ∃ v ∈ τ.carrier,
+      0 < (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) i) := by
+  rcases
+      exists_imageVertex_coord_pos_of_imageContainsPointAwayFromBoundary_of_coord_pos
+        (T := T) (τ := τ) (φ := φ.vertexMap) (x := x) hτdim hxaway hxi with
+    ⟨v, hv, hvimg⟩
+  have hvimg_ne :
+      (((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension) i) ≠ 0 :=
+    ne_of_gt hvimg
+  have hvi_mem : i ∈ T.boundaryFace v := by
+    by_contra hvi_mem
+    exact hvimg_ne (φ.boundary_preserving v i hvi_mem)
+  have hvi_ne :
+      (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) i) ≠ 0 :=
+    (T.boundaryFace_exact v i).mp hvi_mem
+  have hvi_nonneg :
+      0 ≤ (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) i) :=
+    (T.vertexPos v).2.1 i
+  exact ⟨v, hv, lt_of_le_of_ne hvi_nonneg hvi_ne.symm⟩
+
 theorem carrierImageSimplex_affineSpan_eq_prefixVertexFinset_affineSpan_of_subdividesPrefixFace_and_dim
     {τ : SubdivisionFace T} (φ : PiecewiseLinearSimplexMap T) {k : Fin dimension}
     (hτdim : τ.dim = k.1 + 1)
