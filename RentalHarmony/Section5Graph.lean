@@ -54,6 +54,11 @@ lemma card_eq_dim_succ (τ : SubdivisionFace T) : τ.carrier.card = τ.dim + 1 :
   symm
   exact Nat.sub_add_cancel (Nat.succ_le_of_lt τ.card_pos)
 
+lemma dim_le (τ : SubdivisionFace T) : τ.dim ≤ dimension := by
+  have hcard : τ.dim + 1 ≤ dimension + 1 := by
+    simpa [τ.card_eq_dim_succ] using τ.card_le
+  exact Nat.succ_le_succ_iff.mp hcard
+
 lemma exists_facet_superset (τ : SubdivisionFace T) :
     ∃ σ ∈ T.facets, τ.carrier ⊆ σ :=
   τ.subset_facet
@@ -2718,6 +2723,65 @@ structure ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec where
         Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
         ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
           Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+/--
+Top-dimensional lower-milestone door theorem for the positive-level missing-next branch.
+
+This isolates the replacement route needed after the ambient-facet same-level continuation theorem
+was shown impossible at top dimension.
+-/
+structure ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneDoorSpec where
+  two_doors_of_missing_nextMilestone_positiveLevel_topDim_contains_lowerMilestone :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim = dimension →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+/--
+Below-top-dimensional lower-milestone door theorem for the positive-level missing-next branch.
+
+This is the branch where the fresh-prefix-vertex continuation route still makes sense.
+-/
+structure ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec where
+  two_doors_of_missing_nextMilestone_positiveLevel_belowTopDim_contains_lowerMilestone :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim < dimension →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+def chosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec_of_topDim_and_belowTopDim
+    (htop : ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneDoorSpec
+      (T := T) (φ := φ))
+    (hbelow : ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec
+      (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hupper hlower
+  by_cases htopdim : ν.face.dim = dimension
+  · exact htop.two_doors_of_missing_nextMilestone_positiveLevel_topDim_contains_lowerMilestone
+      ν hk htopdim hupper hlower
+  · have hbelowdim : ν.face.dim < dimension :=
+      lt_of_le_of_ne ν.face.dim_le (fun h => htopdim h)
+    exact hbelow.two_doors_of_missing_nextMilestone_positiveLevel_belowTopDim_contains_lowerMilestone
+      ν hk hbelowdim hupper hlower
 
 /--
 The positive-level missing-next branch after removing the already-isolated open-crossing case.

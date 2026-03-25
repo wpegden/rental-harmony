@@ -720,3 +720,10 @@
   `not_exists_sameLevelPrefixFace_in_ambientFacet_of_topDim` shows that the current ambient-facet
   prefix-extension conclusion itself is impossible in the top-dimensional branch, not merely
   unproved.
+- The lower-milestone recovery route is therefore now split at the correct level. Rather than keep
+  pushing the impossible top-dimensional continuation theorem, the support file now isolates
+  `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneDoorSpec` for the top-dimensional branch
+  and `ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec` for the genuinely
+  below-top-dimensional continuation argument, with
+  `chosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec_of_topDim_and_belowTopDim` recombining
+  them into the unchanged lower-milestone door theorem used downstream.

@@ -459,3 +459,10 @@
   prefix-extension conclusion is actually impossible in the top-dimensional branch. So the
   remaining below-top-dimensional issue is no longer plain freshness, but specifically choosing a
   fresh ambient-facet vertex that also lies in the larger prefix face `ν.level.succ`.
+- [x] Move the lower-milestone proof frontier to the correct layer after that diagnosis:
+  `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneDoorSpec` and
+  `ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec` now isolate the genuinely
+  different top-dimensional and below-top-dimensional door arguments, and
+  `chosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec_of_topDim_and_belowTopDim` recombines
+  them into the unchanged paper-facing
+  `ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec`.

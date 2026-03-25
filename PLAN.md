@@ -646,6 +646,13 @@
   still missing;
   in the top-dimensional branch, the current ambient-facet prefix-extension conclusion itself is
   impossible and must eventually be replaced by a different continuation statement.
+- The support layer now reflects that route change explicitly at the two-door level rather than at
+  the impossible ambient-facet continuation level.
+  `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneDoorSpec` isolates the direct
+  top-dimensional door theorem still missing, while
+  `ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec` isolates the surviving
+  below-top-dimensional continuation route. The original paper-facing lower-milestone contract is
+  recovered by `chosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec_of_topDim_and_belowTopDim`.
 
 ## Current input status
 - No proposed axioms.
