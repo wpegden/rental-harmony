@@ -205,6 +205,14 @@
   `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality`, so the remaining Section 5
   work is now the actual convex-geometric proof of this transversality package for a suitable
   milestone chain.
+- Latest status after repairing the missing-next branch:
+  the graph-side consequence of a lower-endpoint door is now formalized abstractly.
+  `exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone` and its graph-level corollary
+  `exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone` show that once a positive node
+  admits a codimension-`1` subface in the lower prefix face whose image contains `b_k`, the
+  Section 5 graph already has the required vertical door. So the remaining missing-next work is no
+  longer graph bookkeeping; it is the geometric existence of that codimension-`1` lower-prefix
+  subface for the concrete `chosenMilestoneChain`.
 - Latest blocker after pushing on that proof directly:
   mathlib does provide full-dimensional interior lemmas such as
   `interior_convexHull_nonempty_iff_affineSpan_eq_top`, but the milestone-chain argument needs

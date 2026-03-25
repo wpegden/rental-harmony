@@ -218,6 +218,15 @@
   of at most `k` points. Without one of those support results, the existence of a milestone chain
   satisfying `Section5GraphNode.MilestoneSegmentTransversality` is currently blocked.
 - Formalization note after the latest support-theorem attempt:
+  the repaired missing-next branch is now partly pushed through the graph interface.
+  `chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone` proves the
+  paper-faithful disjunction for the concrete chosen milestones, and the new lemmas
+  `exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone` and
+  `exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone` show that any codimension-`1`
+  lower-prefix subface carrying the lower milestone already yields the desired vertical door in the
+  Section 5 graph. So the remaining blocker is sharper than before: one must still prove that such
+  a codimension-`1` lower-prefix subface exists in the concrete chosen-chain situation when the
+  lower milestone lies in the image of a positive node.
   the prefix-face route is now started in Lean. `RentalHarmony/Section5Graph.lean` defines the
   bundled subtype `PrefixFace k` for the outer face `conv{e_1, ..., e_{k+1}}`, and
   `Section5MilestoneChain.prefixPoint` upgrades each milestone to an element of that subtype.

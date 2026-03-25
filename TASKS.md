@@ -17,8 +17,11 @@
   Current blocker: the support-layer mismatch is now repaired, and the concrete chosen chain
   proves the corrected missing-next branch
   `missing_nextMilestone_openCrossing_or_contains_lowerMilestone`. The remaining work is to turn
-  that lower-endpoint containment alternative into an actual vertical-door / two-neighbor
-  consequence and then package the full `chosenMilestoneChain` witness.
+  that lower-endpoint containment alternative into an actual codimension-`1` lower-prefix subface
+  witness. Once such a subface is available, the new abstract bridge lemmas
+  `exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone` and
+  `exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone` convert it into the needed
+  vertical door / graph neighbor and the remaining two-neighbor packaging.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
@@ -97,6 +100,11 @@
   milestone containment in the missing-next case, and
   `chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone`
   proves that corrected branch for the concrete chosen chain.
+- [x] Added the abstract vertical-door bridge lemmas
+  `exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone` and
+  `exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone`, which turn a codimension-`1`
+  lower-prefix subface carrying the lower milestone into an actual graph neighbor in the Section 5
+  graph.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made

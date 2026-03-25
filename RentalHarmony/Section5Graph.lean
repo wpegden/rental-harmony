@@ -1371,6 +1371,66 @@ def IsTerminal : Section5GraphNode c φ → Prop
       ν.face.dim = dimension ∧
         ν.face.ImageContainsMilestone (T := T) c φ.vertexMap (Fin.last dimension)
 
+theorem exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    {ρ : SubdivisionFace T}
+    (hρ : ρ.IsCodimOneSubface ν.face)
+    (hρsub : ρ.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    (hρmil : ρ.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc) :
+    ∃ μ : Section5PositiveNode c φ, μ.VerticalAdj (T := T) c φ ν := by
+  let lowerLevel : Fin dimension :=
+    ⟨ν.level.1 - 1, by
+      simpa [Nat.pred_eq_sub_one] using
+        lt_trans (Nat.pred_lt (Nat.ne_of_gt hk)) ν.level.2⟩
+  have hk_le : 1 ≤ ν.level.1 := Nat.succ_le_of_lt hk
+  have hsucc : lowerLevel.succ = ν.level.castSucc := by
+    apply Fin.ext
+    simp [lowerLevel, Nat.sub_add_cancel hk_le]
+  have hρcard : ρ.carrier.card = ν.level.1 + 1 := by
+    have hρeq : ρ.carrier.card + 1 = (ν.level.1 + 1) + 1 := by
+      calc
+        ρ.carrier.card + 1 = ν.face.carrier.card := hρ.2
+        _ = (ν.level.1 + 1) + 1 := by rw [ν.face.card_eq_dim_succ, ν.face_dim]
+    exact Nat.add_right_cancel hρeq
+  have hρdim : ρ.dim = lowerLevel.1 + 1 := by
+    calc
+      ρ.dim = ρ.carrier.card - 1 := rfl
+      _ = ν.level.1 := by simp [hρcard]
+      _ = lowerLevel.1 + 1 := by
+        simp [lowerLevel, Nat.sub_add_cancel hk_le]
+  have hρmeets : ρ.ImageMeetsMilestoneSegment (T := T) c φ.vertexMap lowerLevel := by
+    refine ⟨c.point lowerLevel.succ, ?_, ?_⟩
+    · simpa [Section5MilestoneChain.segment, hsucc] using
+        (right_mem_segment ℝ
+          (((c.point lowerLevel.castSucc : RentDivision (dimension + 1)) : RealPoint dimension))
+          (((c.point lowerLevel.succ : RentDivision (dimension + 1)) : RealPoint dimension)))
+    · simpa [SubdivisionFace.ImageContainsMilestone, hsucc] using hρmil
+  refine ⟨
+    { level := lowerLevel
+      face := ρ
+      face_dim := hρdim
+      subdivides := by simpa [hsucc] using hρsub
+      meets_segment := hρmeets }, ?_⟩
+  refine ⟨?_, hρ, ?_⟩
+  · simp [lowerLevel, Nat.sub_add_cancel hk_le]
+  · simpa [hsucc] using hρmil
+
+theorem exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    {ρ : SubdivisionFace T}
+    (hρ : ρ.IsCodimOneSubface ν.face)
+    (hρsub : ρ.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    (hρmil : ρ.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc) :
+    ∃ w : Section5GraphNode c φ,
+      w ≠ .positive ν ∧ Adj (T := T) c φ (.positive ν) w := by
+  rcases exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone
+      (T := T) (c := c) (φ := φ) hk hρ hρsub hρmil with ⟨μ, hμ⟩
+  refine ⟨.positive μ, ?_, ?_⟩
+  · intro hEq
+    cases hEq
+    exact Section5PositiveNode.not_verticalAdj_self (T := T) (c := c) (φ := φ) ν hμ
+  · exact Or.inr (Or.inr hμ)
+
 theorem chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
     {ν : Section5PositiveNode (c := chosenMilestoneChain (φ := φ)) φ}
     (hcontains :
