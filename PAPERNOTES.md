@@ -489,3 +489,17 @@
   prefix face and whose image still contains that lower milestone. Without such a converse, even a
   minimal-support convex-hull witness in the image does not force the corresponding carrier
   vertices back into the lower domain prefix face.
+- Recovery attempt 2 on the same stuck episode produced a concrete algebraic countermodel shape for
+  that missing theorem. In dimension `2`, take a subdivision whose boundary vertices include
+  `A = e_0`, `D = e_1`, `E = e_2`, together with a lower-edge midpoint
+  `B = (1/2, 1/2, 0)` and an interior vertex `C = (1/3, 1/3, 1/3)`, and triangulate using the
+  four facets `{A,B,C}`, `{B,D,C}`, `{D,E,C}`, and `{E,A,C}`. On the positive face `{A,B,C}`,
+  define the vertex map by `φ(A) = e_0`, `φ(B) = e_0`, `φ(C) = (1/2, 1/2, 0)`, and keep the other
+  boundary vertices fixed. This satisfies the current one-way boundary conditions:
+  `A` and `D` are forced to `e_0` and `e_1`, `E` is forced to `e_2`, `B` only has to keep the
+  last coordinate zero, and the interior vertex `C` is unconstrained. But the image of the full
+  face `{A,B,C}` contains the lower milestone `(1/2, 1/2, 0)`, while every carrier subset or
+  subface lying entirely in the lower domain prefix edge is contained in `{A,B}` and therefore has
+  image hull `{e_0}` only. So the desired lower-prefix reflection statement is not a consequence
+  of the current abstract boundary axioms; it must remain an explicit extra hypothesis or be built
+  into a stronger support layer.

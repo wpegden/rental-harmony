@@ -225,3 +225,11 @@
   now a face-local lower-prefix reflection theorem: if a point or carrier support in the image of
   a positive face lies in the lower target prefix face, then some carrier subset or subface of that
   positive face already lies in the lower domain prefix face and still maps onto that point.
+- [ ] Recovery-attempt outcome: the exact missing face-local theorem now has a concrete 2D
+  countermodel shape under the current abstract axioms. A facet with lower-domain vertices
+  `A = e_0`, `B = (1/2,1/2,0)` and interior vertex `C = (1/3,1/3,1/3)` can satisfy the current
+  one-way boundary conditions with images `φ(A)=e_0`, `φ(B)=e_0`, `φ(C)=(1/2,1/2,0)`, so the full
+  face image contains the lower milestone while every lower-domain carrier subset or subface maps
+  only to `e_0`. This means the needed lower-prefix reflection must stay as an explicit extra
+  hypothesis or be added to a stronger support-layer structure; it is not derivable from the
+  present `boundary_preserving` API alone.

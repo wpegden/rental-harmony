@@ -401,6 +401,15 @@
   remaining theorem is not a pointwise carrier-vertex lemma but a genuinely face-local lower-prefix
   reflection statement for positive faces: lower-target-prefix image support must yield a lower-
   domain-prefix carrier subset or subface whose image still contains the same lower milestone.
+- Recovery attempt 2 indicates that this is not merely an unproved theorem but a likely false one
+  for the current abstract API. The 2D configuration with lower-edge vertices
+  `A = e_0`, `B = (1/2,1/2,0)`, interior vertex `C = (1/3,1/3,1/3)`, and images
+  `φ(A)=e_0`, `φ(B)=e_0`, `φ(C)=(1/2,1/2,0)` satisfies the present one-way boundary conditions
+  while making the full face image contain the lower milestone and every lower-domain carrier
+  subset image miss it. So the correct project plan is no longer to derive the missing reflection
+  theorem from the current fields, but to keep it as an explicit internal hypothesis or strengthen
+  the abstract subdivision / PL-map support layer so that such counterexamples are ruled out by
+  construction.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
