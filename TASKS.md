@@ -561,4 +561,17 @@
   sharpen the remaining local content again: it is enough to prove that the image support inside
   the first codimension-`1` face is affinely dependent. The new theorem
   `not_exists_smaller_support_of_pair_of_mem_openSegment` isolates the simplest obstruction:
-  a two-point open-segment support in that face cannot satisfy one-vertex-drop.
+  a two-point open-segment support in that face cannot satisfy one-vertex-drop. The route change
+  is now formalized too: the new theorems
+  `existsUnique_graphNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData` and
+  `existsUnique_verticalAdj_of_boundaryOnlyUniqueCarrierCounterexampleData` show that the packaged
+  top-dimensional obstruction is a genuine forced-descent node with one canonical lower neighbor,
+  while the new weaker interfaces
+  `ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingAlternativeSpec` and
+  `ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec` separate the exact two cases
+  now supported by Lean: either the desired two-door conclusion, or exact
+  `TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData`. The reduction
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_alternative_and_counterexampleExclusion`
+  records the exact remaining global gap: to recover the old no-open-crossing theorem one must
+  either exclude the packaged obstruction from the intended geometry, or replace the downstream
+  parity pipeline by a contraction lemma that consumes this forced-descent alternative.

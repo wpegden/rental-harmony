@@ -4631,6 +4631,217 @@ theorem not_topDimNoOpenCrossingDoorSpec_of_boundaryOnlyUniqueCarrierCounterexam
       hdata.huniqueCarrier hdata.huniqFacet
       ⟨a, b, hab, ha, hb⟩
 
+theorem existsUnique_graphNeighbor_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    (hνdim : ν.face.dim = dimension)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hclosed :
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level)
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hρsub : ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    (hρmil :
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (huniqueCarrier :
+      ∀ {ρ' : SubdivisionFace.CarrierCodimOneSubface ν.face},
+        ρ'.toSubdivisionFace.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+        ρ' = ρ)
+    (huniqFacet :
+      ∀ σ ∈ T.facets, ρ.carrier ⊆ σ → σ = ν.face.carrier) :
+    ∃! w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w := by
+  let μ :=
+    verticalNeighborOfCodimOneSubfaceContainsLowerMilestone
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+      hk ρ.isCodimOneSubface hρsub hρmil
+  have hμadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) (.positive μ) :=
+    Or.inr <| Or.inr <|
+      verticalNeighborOfCodimOneSubfaceContainsLowerMilestone_verticalAdj
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+        hk ρ.isCodimOneSubface hρsub hρmil
+  refine ⟨.positive μ, hμadj, ?_⟩
+  intro w hw
+  exact
+    eq_verticalNeighbor_of_adj_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+      (T := T) (φ := φ)
+      hk hνdim hupper hclosed hρsub hρmil huniqueCarrier huniqFacet hw
+
+theorem existsUnique_verticalAdj_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    (hνdim : ν.face.dim = dimension)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hclosed :
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level)
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hρsub : ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    (hρmil :
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (huniqueCarrier :
+      ∀ {ρ' : SubdivisionFace.CarrierCodimOneSubface ν.face},
+        ρ'.toSubdivisionFace.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+        ρ' = ρ)
+    (huniqFacet :
+      ∀ σ ∈ T.facets, ρ.carrier ⊆ σ → σ = ν.face.carrier) :
+    ∃! μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ ν := by
+  let μ :=
+    verticalNeighborOfCodimOneSubfaceContainsLowerMilestone
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+      hk ρ.isCodimOneSubface hρsub hρmil
+  have hμ :
+      μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ ν :=
+    verticalNeighborOfCodimOneSubfaceContainsLowerMilestone_verticalAdj
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+      hk ρ.isCodimOneSubface hρsub hρmil
+  refine ⟨μ, hμ, ?_⟩
+  intro μ' hμ'
+  have hEq :
+      Section5GraphNode.positive μ' = Section5GraphNode.positive μ := by
+    exact
+      eq_verticalNeighbor_of_adj_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+        (T := T) (φ := φ)
+        hk hνdim hupper hclosed hρsub hρmil huniqueCarrier huniqFacet
+        (Or.inr <| Or.inr hμ')
+  injection hEq
+
+theorem existsUnique_graphNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData
+    (hdata :
+      TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ)) :
+    ∃! w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive hdata.ν) w :=
+  existsUnique_graphNeighbor_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+    (T := T) (φ := φ)
+    hdata.hk hdata.hνdim hdata.hupper hdata.hclosed
+    hdata.hρsub hdata.hρmil hdata.huniqueCarrier hdata.huniqFacet
+
+theorem existsUnique_verticalAdj_of_boundaryOnlyUniqueCarrierCounterexampleData
+    (hdata :
+      TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ)) :
+    ∃! μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν :=
+  existsUnique_verticalAdj_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+    (T := T) (φ := φ)
+    hdata.hk hdata.hνdim hdata.hupper hdata.hclosed
+    hdata.hρsub hdata.hρmil hdata.huniqueCarrier hdata.huniqFacet
+
+/--
+Weaker top-dimensional no-open-crossing interface matching the currently-supported alternatives.
+
+At a positive-level top-dimensional node with no open crossing, either the desired two-door
+conclusion holds, or Lean can package exact boundary-only unique-carrier counterexample data.
+The right branch still gives a canonical unique vertical descent by
+`existsUnique_verticalAdj_of_boundaryOnlyUniqueCarrierCounterexampleData`.
+-/
+structure ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingAlternativeSpec where
+  two_doors_or_boundaryOnlyUniqueCarrierCounterexample_of_not_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim = dimension →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      (∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b) ∨
+        ∃ hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+          (T := T) (φ := φ),
+          hdata.ν = ν
+
+def chosenMilestoneChainPositiveLevelTopDimNoOpenCrossingAlternativeSpec_of_doorSpec
+    (htop :
+      ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingAlternativeSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hνdim hupper hclosed
+  left
+  exact
+    htop.two_doors_of_missing_nextMilestone_positiveLevel_topDim_of_not_openCrossing
+      ν hk hνdim hupper hclosed
+
+/--
+Weaker positive-level no-open-crossing interface for the chosen chain.
+
+Below top dimension, the existing two-door theorem still applies. At top dimension, the local
+theorem may instead fall into the exact boundary-only unique-carrier obstruction package.
+-/
+structure ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec where
+  two_doors_or_topDimBoundaryOnlyUniqueCarrierCounterexample_of_not_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      (∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b) ∨
+        ∃ hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+          (T := T) (φ := φ),
+          hdata.ν = ν
+
+def chosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec_of_topDim_and_belowTopDim
+    (htop :
+      ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (hbelow :
+      ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hupper hclosed
+  by_cases htopdim : ν.face.dim = dimension
+  · exact
+      htop.two_doors_or_boundaryOnlyUniqueCarrierCounterexample_of_not_openCrossing
+        ν hk htopdim hupper hclosed
+  · have hbelowdim : ν.face.dim < dimension :=
+      lt_of_le_of_ne ν.face.dim_le (fun h => htopdim h)
+    left
+    exact
+      hbelow.two_doors_of_missing_nextMilestone_positiveLevel_belowTopDim_of_not_openCrossing
+        ν hk hbelowdim hupper hclosed
+
+def chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_alternative_and_counterexampleExclusion
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (hexcl :
+      ∀ _hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ), False) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hupper hclosed
+  rcases
+      halt.two_doors_or_topDimBoundaryOnlyUniqueCarrierCounterexample_of_not_openCrossing
+        ν hk hupper hclosed with
+    hdoors | ⟨hdata, hdataEq⟩
+  · exact hdoors
+  · subst hdataEq
+    exact False.elim (hexcl hdata)
+
 def chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_filteredSpec
     (hfiltered :
       ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec

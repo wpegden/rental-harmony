@@ -854,3 +854,18 @@
   `not_boundaryOnlyUniqueCarrierCounterexampleData_of_segmentInteriorWitness_and_escape`
   shows that this witness-plus-escape pair is exactly the missing local geometric statement needed
   to eliminate the packaged obstruction.
+- The current formal picture now also separates the exact local alternatives from the exact global
+  missing step. Lean proves
+  `existsUnique_graphNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData` and
+  `existsUnique_verticalAdj_of_boundaryOnlyUniqueCarrierCounterexampleData`, so the packaged
+  top-dimensional obstruction is a canonical one-door forced-descent configuration, not just a
+  vague failure of the two-door theorem. The weaker interfaces
+  `ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingAlternativeSpec` and
+  `ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec` now record the exact
+  alternatives actually supported by the present development: either the desired two-door
+  conclusion, or exact boundary-only unique-carrier counterexample data. The theorem
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_alternative_and_counterexampleExclusion`
+  makes the remaining gap precise: the old no-open-crossing theorem can be recovered only by
+  excluding this obstruction from the paper's intended genericity hypotheses, or by replacing the
+  current parity/local-degree argument with a contraction lemma that can absorb forced-descent
+  nodes.

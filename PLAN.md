@@ -773,6 +773,20 @@
   face or containment of `b_{k+1}`. The theorem
   `not_boundaryOnlyUniqueCarrierCounterexampleData_of_segmentInteriorWitness_and_escape`
   proves that exactly this witness-plus-escape package rules out the current obstruction.
+- The route change prompted by that obstruction is now also explicit in Lean. The new theorems
+  `existsUnique_graphNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData` and
+  `existsUnique_verticalAdj_of_boundaryOnlyUniqueCarrierCounterexampleData` prove that the
+  packaged top-dimensional counterexample is not just a failure of degree `2`; it is a genuine
+  one-door forced-descent node with a canonical lower vertical neighbor. The new weaker interfaces
+  `ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingAlternativeSpec` and
+  `ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec` record exactly the current
+  local alternatives now supported by Lean: either two doors, or exact boundary-only unique-carrier
+  counterexample data. The reduction
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_alternative_and_counterexampleExclusion`
+  then identifies the precise downstream gap. To recover the old graph-local theorem one must
+  either derive a genuine exclusion of the packaged obstruction from the paper's geometry, or
+  replace the present parity/local-degree package by a contraction argument that consumes this
+  forced-descent alternative.
 
 ## Current input status
 - No proposed axioms.
