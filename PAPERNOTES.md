@@ -751,3 +751,14 @@
   `exists_two_distinct_verticalNeighbors_of_reflection_and_topDimLowerMilestoneSecondCarrier`
   show that this second-carrier theorem is exactly the remaining top-dimensional input before the
   graph already has two distinct vertical doors.
+- The new codimension-`1` coverage lemma sharpens that top-dimensional gap again. Lean now proves
+  `SubdivisionFace.mem_of_mem_codimOneSubface_or_other` and
+  `SubdivisionFace.subdividesPrefixFace_of_two_distinct_codimOneSubfaces`: if a face has two
+  distinct codimension-`1` subfaces both lying in the same lower prefix face, then every vertex of
+  the whole face already lies in that lower prefix face. Therefore
+  `faceSubdividesLowerPrefix_of_reflection_and_topDimLowerMilestoneSecondCarrier` shows that any
+  proof of the current second-carrier theorem must automatically force the entire top-dimensional
+  positive face into the lower prefix face. The remaining top-dimensional content is now clearly
+  image-side rather than domain-side: once all vertices of `ν.face` lie in the lower prefix face,
+  show that the lower milestone lies in the image of a second codimension-`1` subface besides the
+  reflected one.

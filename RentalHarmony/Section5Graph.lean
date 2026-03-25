@@ -1163,6 +1163,53 @@ lemma subdividesPrefixFace_succ_of_castSucc {τ : SubdivisionFace T} {k : Fin di
   intro v hv i hi
   exact hτ v hv i (lt_trans (Nat.lt_succ_self k.1) hi)
 
+lemma mem_of_mem_codimOneSubface_or_other
+    {τ ρ₁ ρ₂ : SubdivisionFace T}
+    (hρ₁ : ρ₁.IsCodimOneSubface τ)
+    (hρ₂ : ρ₂.IsCodimOneSubface τ)
+    (hρne : ρ₁ ≠ ρ₂)
+    {v : Vertex} (hv : v ∈ τ.carrier) :
+    v ∈ ρ₁.carrier ∨ v ∈ ρ₂.carrier := by
+  by_cases hv₁ : v ∈ ρ₁.carrier
+  · exact Or.inl hv₁
+  · by_cases hv₂ : v ∈ ρ₂.carrier
+    · exact Or.inr hv₂
+    · have hρ₁erase : ρ₁.carrier ⊆ τ.carrier.erase v := by
+        intro w hw
+        refine Finset.mem_erase.mpr ⟨?_, hρ₁.1 hw⟩
+        intro hEq
+        exact hv₁ (hEq ▸ hw)
+      have hρ₂erase : ρ₂.carrier ⊆ τ.carrier.erase v := by
+        intro w hw
+        refine Finset.mem_erase.mpr ⟨?_, hρ₂.1 hw⟩
+        intro hEq
+        exact hv₂ (hEq ▸ hw)
+      have hcardρ₁ : ρ₁.carrier.card = (τ.carrier.erase v).card := by
+        rw [Finset.card_erase_of_mem hv]
+        exact Nat.eq_sub_of_add_eq hρ₁.2
+      have hcardρ₂ : ρ₂.carrier.card = (τ.carrier.erase v).card := by
+        rw [Finset.card_erase_of_mem hv]
+        exact Nat.eq_sub_of_add_eq hρ₂.2
+      have hEq₁ : ρ₁.carrier = τ.carrier.erase v :=
+        Finset.eq_of_subset_of_card_le hρ₁erase (by simpa [hcardρ₁])
+      have hEq₂ : ρ₂.carrier = τ.carrier.erase v :=
+        Finset.eq_of_subset_of_card_le hρ₂erase (by simpa [hcardρ₂])
+      exact False.elim <| hρne (SubdivisionFace.ext (hEq₁.trans hEq₂.symm))
+
+theorem subdividesPrefixFace_of_two_distinct_codimOneSubfaces
+    {τ ρ₁ ρ₂ : SubdivisionFace T}
+    (hρ₁ : ρ₁.IsCodimOneSubface τ)
+    (hρ₂ : ρ₂.IsCodimOneSubface τ)
+    (hρne : ρ₁ ≠ ρ₂)
+    {k : Fin (dimension + 1)}
+    (hsub₁ : ρ₁.SubdividesPrefixFace (T := T) k)
+    (hsub₂ : ρ₂.SubdividesPrefixFace (T := T) k) :
+    τ.SubdividesPrefixFace (T := T) k := by
+  intro v hv i hi
+  rcases mem_of_mem_codimOneSubface_or_other (T := T) hρ₁ hρ₂ hρne hv with hv₁ | hv₂
+  · exact hsub₁ v hv₁ i hi
+  · exact hsub₂ v hv₂ i hi
+
 /-- The image of a subdivision face meets one of the chosen Section 5 milestone segments. -/
 def ImageMeetsMilestoneSegment (c : Section5MilestoneChain (dimension := dimension))
     (τ : SubdivisionFace T) (φ : Vertex → RentDivision (dimension + 1)) (k : Fin dimension) :
@@ -2870,6 +2917,32 @@ def chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec
     ⟨ρ₂, hρ₂ne, hρ₂, hρ₂sub, hρ₂mil⟩
   exact ⟨ρ₁.toSubdivisionFace, ρ₂, by simpa using hρ₂ne.symm, ρ₁.isCodimOneSubface,
     hρ₂, hρ₁sub, hρ₂sub, hρ₁mil, hρ₂mil⟩
+
+theorem faceSubdividesLowerPrefix_of_reflection_and_topDimLowerMilestoneSecondCarrier
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hsecond :
+      ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierSpec
+        (T := T) (φ := φ))
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    (hνdim : ν.face.dim = dimension)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hlower :
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc) :
+    ν.face.SubdividesPrefixFace (T := T) ν.level.castSucc := by
+  rcases exists_lowerMilestoneCarrier_of_reflection
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hreflect hk hlower with
+    ⟨ρ₁, hρ₁sub, hρ₁mil⟩
+  rcases hsecond.exists_second_codimOneSubface_of_missing_nextMilestone_positiveLevel_topDim_contains_lowerMilestone
+      ν hk hνdim hupper (ρ₁ := ρ₁) hρ₁sub hρ₁mil with
+    ⟨ρ₂, hρ₂ne, hρ₂, hρ₂sub, _hρ₂mil⟩
+  exact SubdivisionFace.subdividesPrefixFace_of_two_distinct_codimOneSubfaces
+    (T := T) ρ₁.isCodimOneSubface hρ₂ (by simpa using hρ₂ne.symm) hρ₁sub hρ₂sub
 
 /--
 Below-top-dimensional lower-milestone door theorem for the positive-level missing-next branch.

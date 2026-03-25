@@ -673,6 +673,17 @@
   `exists_two_distinct_verticalNeighbors_of_reflection_and_topDimLowerMilestoneSecondCarrier`
   show that this sharper second-carrier theorem is exactly what remains before the top-dimensional
   branch reaches the two-door target.
+- A new codimension-`1` coverage lemma now sharpens that frontier further.
+  `SubdivisionFace.mem_of_mem_codimOneSubface_or_other` and
+  `SubdivisionFace.subdividesPrefixFace_of_two_distinct_codimOneSubfaces` prove that if one face
+  has two distinct codimension-`1` subfaces both lying in the same prefix outer face, then the
+  whole face already lies in that prefix face. Consequently
+  `faceSubdividesLowerPrefix_of_reflection_and_topDimLowerMilestoneSecondCarrier` shows that any
+  successful proof of the top-dimensional second-carrier theorem automatically forces the entire
+  top-dimensional positive face into the lower prefix face. So the remaining top-dimensional gap is
+  now explicitly image-side: once all vertices of `ν.face` are in the lower prefix face, prove
+  that the lower milestone is carried by a second codimension-`1` subface besides the reflected
+  one.
 
 ## Current input status
 - No proposed axioms.

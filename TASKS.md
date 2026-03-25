@@ -25,6 +25,14 @@
   and
   `exists_two_distinct_verticalNeighbors_of_topDimLowerMilestoneCarrierMultiplicity`
   then reduce that second-carrier theorem to two distinct vertical doors.
+  The new lemmas
+  `SubdivisionFace.mem_of_mem_codimOneSubface_or_other`,
+  `SubdivisionFace.subdividesPrefixFace_of_two_distinct_codimOneSubfaces`, and
+  `faceSubdividesLowerPrefix_of_reflection_and_topDimLowerMilestoneSecondCarrier`
+  show that any successful second-carrier proof already forces the entire top-dimensional face to
+  subdivide the lower prefix face. So the remaining top-dimensional content is now explicitly
+  image-side: once every vertex of `ν.face` lies in the lower prefix face, prove that the lower
+  milestone lies in the image of a second codimension-`1` subface besides the reflected one.
   Below-top-dimensional branch:
   finish
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec`
@@ -500,3 +508,11 @@
   rebuilds the older multiplicity package from this sharper input, and
   `exists_two_distinct_verticalNeighbors_of_reflection_and_topDimLowerMilestoneSecondCarrier`
   lands directly at the two-vertical-door target.
+- [x] Proved that two distinct codimension-`1` lower-prefix carriers of the same face already
+  force the whole face into that lower prefix face:
+  `SubdivisionFace.mem_of_mem_codimOneSubface_or_other`,
+  `SubdivisionFace.subdividesPrefixFace_of_two_distinct_codimOneSubfaces`, and
+  `faceSubdividesLowerPrefix_of_reflection_and_topDimLowerMilestoneSecondCarrier`.
+  So the remaining top-dimensional second-carrier gap is no longer domain-side lower-prefix
+  bookkeeping; it is the image-side existence of a second milestone-carrying codimension-`1`
+  subface once the whole top-dimensional face already lies in the lower prefix face.
