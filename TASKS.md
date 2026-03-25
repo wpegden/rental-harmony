@@ -265,3 +265,9 @@
   `ChosenMilestoneChainGraphLocalRestSpec` is now purely the non-boundary part of the graph-local
   package: open-crossing continuation and the positive-level missing-next / away-from-boundary
   cases.
+- [ ] Direct attempt on the higher-dimensional remainder now bottoms out first at
+  `ChosenMilestoneChainGraphLocalRestSpec.two_doors_of_missing_nextMilestone_openCrossing`. The
+  present abstract API allows a positive face image to degenerate onto the milestone segment, in
+  which case several codimension-`1` subfaces can also meet that segment and there is no abstract
+  reason for exactly two doors. So the remaining rest spec also appears to require an explicit
+  transversality / nondegeneracy input on higher-dimensional face images.

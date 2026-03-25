@@ -550,3 +550,11 @@
   `ChosenMilestoneChainGraphLocalRestSpec` is therefore a cleaner higher-dimensional remainder:
   only the open-crossing branch and the positive-level missing-next / away-from-boundary
   continuation data are still outside the boundary contract.
+- Direct attempt on that higher-dimensional remainder immediately hits the same modeling pattern at
+  `ChosenMilestoneChainGraphLocalRestSpec.two_doors_of_missing_nextMilestone_openCrossing`. The
+  current abstract API allows a positive face image to collapse onto the milestone segment itself:
+  one can place all image vertices of a simplex on the line segment `[c_k,c_{k+1}]`, so the face
+  meets the open segment, but several codimension-`1` subfaces also meet that same segment. In
+  such a degenerate configuration there is no reason for exactly two doors to survive. So the
+  higher-dimensional rest package also needs a genuine transversality / nondegeneracy hypothesis on
+  face images, not merely the existing combinatorial face-inclusion data.

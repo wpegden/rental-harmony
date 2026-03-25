@@ -443,6 +443,13 @@
   `ChosenMilestoneChainLevelZeroBoundarySpec`. This leaves
   `ChosenMilestoneChainGraphLocalRestSpec` as a genuinely higher-dimensional remainder consisting
   only of the open-crossing branch and the positive-level continuation statements.
+- A first direct attempt on that higher-dimensional remainder shows that the open-crossing branch is
+  not derivable from the present abstract image model either. If all image vertices of a positive
+  face lie on the milestone segment, then the full face and multiple codimension-`1` subfaces can
+  all meet the same open segment point, so a raw "exactly two doors" theorem fails without an
+  additional transversality / nondegeneracy hypothesis. Therefore the next support-layer question is
+  no longer about lower-boundary interval geometry, but about imposing or isolating the minimal
+  higher-dimensional transversality input needed for `ChosenMilestoneChainGraphLocalRestSpec`.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
