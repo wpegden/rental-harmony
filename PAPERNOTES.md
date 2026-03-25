@@ -218,6 +218,21 @@
   deleted-spur boundary point. So the remaining backup-route difficulty is now accurately focused:
   `.start` can only interfere, if at all, as another interior vertex of the reduced continuation
   component, not as part of the deleted-spur boundary itself.
+- Formalization note after the latest deleted-spur graph step:
+  the backup route now also has the reduced graph itself as a Lean object:
+  `boundaryOnlyUniqueCarrierDeletedSpurSubgraph`. Moreover
+  `twoNeighborSpec_of_not_terminal_belowTopDim_positive_of_alternativeSpecs` repackages the
+  existing Section 5 local API into one reusable two-neighbor theorem for below-top-dimensional
+  nonterminal positive nodes, while
+  `existsUnique_adj_boundaryOnlyUniqueCarrierDeletedSpurSubgraph_of_positiveContinuationNeighbor_of_alternativeSpecs`
+  proves that the continuation node `ξ` has exactly one surviving neighbor after deleting
+  `{ν, μ}`. Finally
+  `neighborSet_boundaryOnlyUniqueCarrierDeletedSpurSubgraph_eq_of_mem_support_of_not_boundary`
+  shows that any reduced-support vertex not touching the deleted spur keeps exactly its full-graph
+  neighbor set. So the next missing theorem is now very concrete: parity on the connected
+  component of `ξ` in this deleted-spur subgraph, with the only remaining unresolved issue being
+  whether another odd vertex such as `.start` or a further top-dimensional obstruction can still
+  lie in that same component.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those

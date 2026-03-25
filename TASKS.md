@@ -142,7 +142,19 @@
   shows that `.start` is not such a boundary vertex. So the exact remaining backup-route gap is
   now sharper still: prove that `ξ` is odd in the reduced component and that every other
   nonterminal vertex in that component is even, while controlling `.start` as a possible interior
-  escape rather than a spur boundary point.
+  escape rather than a spur boundary point. The reduced graph itself is now explicit too:
+  `boundaryOnlyUniqueCarrierDeletedSpurSubgraph` deletes the vertices `{ν, μ}` from the chosen
+  chain graph, `twoNeighborSpec_of_not_terminal_belowTopDim_positive_of_alternativeSpecs`
+  packages the existing below-top-dimensional two-door API in one reusable theorem, and
+  `existsUnique_adj_boundaryOnlyUniqueCarrierDeletedSpurSubgraph_of_positiveContinuationNeighbor_of_alternativeSpecs`
+  proves that the continuation node `ξ` has a unique surviving neighbor in that deleted-spur
+  subgraph. Meanwhile
+  `neighborSet_boundaryOnlyUniqueCarrierDeletedSpurSubgraph_eq_of_mem_support_of_not_boundary`
+  shows that any reduced-support vertex not touching the deleted spur keeps exactly its full-graph
+  neighbor set. So the next exact theorem is now the component-level restart:
+  use those lemmas to show the connected component of `ξ` in the deleted-spur subgraph has odd
+  start `ξ`, even nonterminal vertices away from the deleted-spur boundary, and no fatal escape to
+  another odd obstruction such as `.start`.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,

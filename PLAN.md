@@ -156,10 +156,20 @@
   `boundaryOnlyUniqueCarrierDeletedSpurBoundary_iff_eq_positiveContinuationNeighbor`
   identify the deleted-spur boundary inside that reduced support exactly with the continuation node
   `ξ`, and `not_isBoundaryOnlyUniqueCarrierDeletedSpurBoundary_start` records that `.start` is not
-  one of those deleted-spur boundary contacts. So the next backup step is now even sharper:
-  establish odd degree for `ξ` and even degree for every other nonterminal vertex in the relevant
-  reduced connected component, with `.start` treated as a potential interior escape rather than a
-  boundary vertex.
+  one of those deleted-spur boundary contacts. The reduced graph itself is now explicit as
+  `boundaryOnlyUniqueCarrierDeletedSpurSubgraph`, and the new theorems
+  `twoNeighborSpec_of_not_terminal_belowTopDim_positive_of_alternativeSpecs`,
+  `existsUnique_adj_boundaryOnlyUniqueCarrierDeletedSpurSubgraph_of_positiveContinuationNeighbor_of_alternativeSpecs`,
+  and
+  `neighborSet_boundaryOnlyUniqueCarrierDeletedSpurSubgraph_eq_of_mem_support_of_not_boundary`
+  show respectively that below-top-dimensional nonterminal positive nodes still have an exact
+  two-neighbor description in the full chosen-chain graph, that the continuation node `ξ` has a
+  unique surviving neighbor after deleting `{ν, μ}`, and that any reduced-support vertex not
+  touching the deleted spur keeps exactly its full-graph neighbor set. So the next backup step is
+  now even sharper: instantiate the connected-component parity theorem on the component of `ξ` in
+  this deleted-spur subgraph, using unique reduced adjacency for oddness at `ξ` and preserved
+  neighbor sets for evenness away from the deleted-spur boundary, while ruling out any residual
+  escape to `.start` or another odd obstruction inside that component.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:

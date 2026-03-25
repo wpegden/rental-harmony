@@ -6138,6 +6138,230 @@ theorem not_isBoundaryOnlyUniqueCarrierDeletedSpurBoundary_start
       (start_mem_boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ)).mp hboundary
   cases hEq
 
+def boundaryOnlyUniqueCarrierDeletedSpurSubgraph
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    (μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ) :
+    (graph (T := T) (chosenMilestoneChain (φ := φ)) φ).Subgraph where
+  verts := boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ
+  Adj v w :=
+    Adj (T := T) (chosenMilestoneChain (φ := φ)) φ v w ∧
+      v ∈ boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ ∧
+      w ∈ boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ
+  adj_sub := fun h => h.1
+  edge_vert := fun h => h.2.1
+  symm := by
+    intro v w h
+    exact
+      ⟨adj_symm (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) h.1, h.2.2, h.2.1⟩
+
+@[simp] theorem boundaryOnlyUniqueCarrierDeletedSpurSubgraph_verts
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    (μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    (w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ) :
+    w ∈ (boundaryOnlyUniqueCarrierDeletedSpurSubgraph (T := T) (φ := φ) hdata μ).verts ↔
+      w ∈ boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ := by
+  rfl
+
+@[simp] theorem boundaryOnlyUniqueCarrierDeletedSpurSubgraph_adj_iff
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    (μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    {v w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ} :
+    (boundaryOnlyUniqueCarrierDeletedSpurSubgraph (T := T) (φ := φ) hdata μ).Adj v w ↔
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ v w ∧
+        v ∈ boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ ∧
+        w ∈ boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ := by
+  rfl
+
+theorem twoNeighborSpec_of_not_terminal_belowTopDim_positive_of_alternativeSpecs
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    {ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hξdim : ξ.face.dim < dimension)
+    (hξterm :
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ)) :
+    ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      a ≠ b ∧
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) a ∧
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) b ∧
+      ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) w → w = a ∨ w = b := by
+  by_cases hnext :
+      ξ.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level.succ
+  · exact
+      haway.two_doors_of_nextMilestone_awayFromBoundary ξ
+        (chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
+          (T := T) (φ := φ) hnext hξterm)
+        hξterm
+  · by_cases hopenξ :
+      ξ.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level
+    · exact
+        hopen.two_doors_of_missing_nextMilestone_openCrossing ξ hnext hopenξ
+    · by_cases hk : 0 < ξ.level.1
+      · rcases
+            halt.two_doors_or_topDimBoundaryOnlyUniqueCarrierCounterexample_of_not_openCrossing
+              ξ hk hnext hopenξ with
+          hdoors | ⟨hdata, hdataEq⟩
+        · exact hdoors
+        · exfalso
+          have htop : ξ.face.dim = dimension := by
+            simpa [hdataEq] using hdata.hνdim
+          exact (Nat.ne_of_lt hξdim) htop
+      · exact
+          hzero.two_doors_of_missing_nextMilestone_level_zero ξ
+            (Nat.eq_zero_of_not_pos hk) hnext
+            (chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
+              (T := T) (φ := φ) (ν := ξ) hnext hopenξ)
+
+theorem
+    not_adj_counterexampleNode_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hξne : ξ ≠ hdata.ν)
+    (hξadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ)) :
+    ¬ Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive hdata.ν) := by
+  have hξsupport :=
+    positiveContinuationNeighbor_mem_boundaryOnlyUniqueCarrierDeletedSpurSupport
+      (T := T) (φ := φ) hdata hξne hξadj
+  have hlt :=
+    level_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ) hdata hμ hξne hξadj
+  intro hξν
+  rcases hξν with hhor | hupper | hlower
+  · rcases hhor with ⟨hlevel, -, -⟩
+    have hEq : ξ.level.1 = hdata.ν.level.1 := by
+      exact congrArg Fin.val hlevel
+    omega
+  · rcases
+        existsUnique_verticalAdj_of_boundaryOnlyUniqueCarrierCounterexampleData
+          (T := T) (φ := φ) hdata with
+      ⟨u, hu, huniq⟩
+    have hEq : ξ = μ := by
+      exact huniq ξ hupper |>.trans (huniq μ hμ).symm
+    exact hξsupport.2 (by simpa [hEq])
+  · rcases hlower with ⟨hlevel, -, -⟩
+    omega
+
+lemma graphNeighbor_mem_boundaryOnlyUniqueCarrierDeletedSpurSupport_of_mem_support_of_not_boundary
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    {w z : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ}
+    (hboundary :
+      ¬ IsBoundaryOnlyUniqueCarrierDeletedSpurBoundary (T := T) (φ := φ) hdata μ w)
+    (hadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ w z) :
+    z ∈ boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ := by
+  refine ⟨?_, ?_⟩
+  · intro hzν
+    apply hboundary
+    left
+    simpa [hzν] using hadj
+  · intro hzμ
+    apply hboundary
+    right
+    simpa [hzμ] using hadj
+
+theorem neighborSet_boundaryOnlyUniqueCarrierDeletedSpurSubgraph_eq_of_mem_support_of_not_boundary
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    {w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ}
+    (hw :
+      w ∈ boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ)
+    (hboundary :
+      ¬ IsBoundaryOnlyUniqueCarrierDeletedSpurBoundary (T := T) (φ := φ) hdata μ w) :
+    (boundaryOnlyUniqueCarrierDeletedSpurSubgraph (T := T) (φ := φ) hdata μ).neighborSet w =
+      (graph (T := T) (chosenMilestoneChain (φ := φ)) φ).neighborSet w := by
+  ext z
+  constructor
+  · intro hz
+    exact hz.1
+  · intro hz
+    exact
+      ⟨hz, hw,
+        graphNeighbor_mem_boundaryOnlyUniqueCarrierDeletedSpurSupport_of_mem_support_of_not_boundary
+          (T := T) (φ := φ) hdata hboundary hz⟩
+
+theorem
+    existsUnique_adj_boundaryOnlyUniqueCarrierDeletedSpurSubgraph_of_positiveContinuationNeighbor_of_alternativeSpecs
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hξne : ξ ≠ hdata.ν)
+    (hξadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ)) :
+    ∃! w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      (boundaryOnlyUniqueCarrierDeletedSpurSubgraph (T := T) (φ := φ) hdata μ).Adj
+        (.positive ξ) w := by
+  classical
+  let H := boundaryOnlyUniqueCarrierDeletedSpurSubgraph (T := T) (φ := φ) hdata μ
+  have hξsupport :
+      .positive ξ ∈ boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ :=
+    positiveContinuationNeighbor_mem_boundaryOnlyUniqueCarrierDeletedSpurSupport
+      (T := T) (φ := φ) hdata hξne hξadj
+  have hξterm :
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) :=
+    not_isTerminal_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ) hdata hμ hξne hξadj
+  have hξdim :
+      ξ.face.dim < dimension :=
+    face_dim_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ) hdata hμ hξne hξadj
+  rcases
+      twoNeighborSpec_of_not_terminal_belowTopDim_positive_of_alternativeSpecs
+        (T := T) (φ := φ) hzero hopen halt haway hξdim hξterm with
+    ⟨a, b, hab, ha, hb, hall⟩
+  have hξμ :
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive μ) := by
+    exact adj_symm (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hξadj
+  have hξν :
+      ¬ Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive hdata.ν) :=
+    not_adj_counterexampleNode_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ) hdata hμ hξne hξadj
+  rcases hall (.positive μ) hξμ with hμa | hμb
+  · refine ⟨b, ?_, ?_⟩
+    · refine ⟨hb, hξsupport, ?_⟩
+      refine ⟨?_, ?_⟩
+      · intro hbν
+        exact hξν (by simpa [hbν] using hb)
+      · intro hbμ
+        exact hab (hμa.symm.trans hbμ.symm)
+    · intro z hz
+      have hzg : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) z := hz.1
+      rcases hall z hzg with hza | hzb
+      · exfalso
+        exact hz.2.2.2 (by simpa [hμa] using hza)
+      · exact hzb
+  · refine ⟨a, ?_, ?_⟩
+    · refine ⟨ha, hξsupport, ?_⟩
+      refine ⟨?_, ?_⟩
+      · intro haν
+        exact hξν (by simpa [haν] using ha)
+      · intro haμ
+        exact hab (haμ.trans hμb)
+    · intro z hz
+      have hzg : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) z := hz.1
+      rcases hall z hzg with hza | hzb
+      · exact hza
+      · exfalso
+        exact hz.2.2.2 (by simpa [hμb] using hzb)
+
 def chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal
     (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
     (hnostart :
