@@ -10,6 +10,20 @@
 <!-- SUPERVISOR_TASKS:END -->
 
 ## Worker Tasks
+- [ ] Exact higher-dimensional deleted-spur frontier:
+  prove the two fields of
+  `Section5GraphNode.ChosenMilestoneChainDeletedSpurNoEscapeSpec`.
+  The parity restart and the terminal-extraction wrapper are now formalized, via
+  `exists_terminal_of_positiveContinuationNeighbor_of_deletedSpurNoEscapeSpec_of_alternativeSpecs`
+  and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_deletedSpurNoEscapeSpec_of_two_lt_dimension`.
+  So the remaining Section 5 backup-route work is no longer to build another graph theorem, but to
+  prove exactly:
+  `ChosenMilestoneChainDeletedSpurNoEscapeSpec.no_start_of_positiveContinuationNeighbor`
+  and
+  `ChosenMilestoneChainDeletedSpurNoEscapeSpec.no_boundaryOnlyUniqueCarrierCounterexampleNode_of_positiveContinuationNeighbor`.
+  If either fails from the current API, record that exact theorem statement as the first missing
+  local continuation principle.
 - [ ] Finish the positive-level no-open-crossing support at the exact graph interface.
   Top-dimensional branch:
   stop treating

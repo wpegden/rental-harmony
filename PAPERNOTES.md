@@ -244,6 +244,19 @@
   longer needs any further graph transport. So the exact remaining mathematical question in the
   higher-dimensional obstruction branch is now whether Section 5's geometry excludes those two
   escape outcomes inside the continuation component.
+- Formalization note after packaging the deleted-spur no-escape interface:
+  Lean now exposes the exact remaining higher-dimensional assumption as a structure,
+  `ChosenMilestoneChainDeletedSpurNoEscapeSpec`, with two fields:
+  `no_start_of_positiveContinuationNeighbor` and
+  `no_boundaryOnlyUniqueCarrierCounterexampleNode_of_positiveContinuationNeighbor`.
+  The new theorem
+  `exists_terminal_of_positiveContinuationNeighbor_of_deletedSpurNoEscapeSpec_of_alternativeSpecs`
+  shows that these two exclusions are sufficient to recover terminal existence from the positive
+  continuation node, and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_deletedSpurNoEscapeSpec_of_two_lt_dimension`
+  lifts that local no-escape input to the full higher-dimensional bypass theorem. So the first
+  exact statements still missing from the current Section 5 API are now formalized in Lean rather
+  than only described informally.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those

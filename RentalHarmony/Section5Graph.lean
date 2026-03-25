@@ -6558,6 +6558,67 @@ theorem
   · exact False.elim (hnostart (hstart ▸ hvC))
   · exact False.elim (hnoobstruction v hvC hglobal)
 
+/--
+Exact remaining deleted-spur input in the higher-dimensional obstruction branch.
+
+After descending from a boundary-only unique-carrier obstruction to its canonical vertical
+neighbor and then following the positive continuation node `ξ`, Lean can already restart the
+parity argument in the deleted-spur component. The only missing step is to rule out escape of
+that reduced component either back to `.start` or to another top-dimensional boundary-only
+unique-carrier obstruction node.
+-/
+structure ChosenMilestoneChainDeletedSpurNoEscapeSpec where
+  no_start_of_positiveContinuationNeighbor :
+    ∀ hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ),
+      ∀ μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν →
+        ξ ≠ hdata.ν →
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ) →
+        let H := boundaryOnlyUniqueCarrierDeletedSpurSubgraph (T := T) (φ := φ) hdata μ
+        let C : H.spanningCoe.ConnectedComponent := H.spanningCoe.connectedComponentMk (.positive ξ)
+        .start ∉ C.supp
+  no_boundaryOnlyUniqueCarrierCounterexampleNode_of_positiveContinuationNeighbor :
+    ∀ hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ),
+      ∀ μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν →
+        ξ ≠ hdata.ν →
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ) →
+        let H := boundaryOnlyUniqueCarrierDeletedSpurSubgraph (T := T) (φ := φ) hdata μ
+        let C : H.spanningCoe.ConnectedComponent := H.spanningCoe.connectedComponentMk (.positive ξ)
+        ∀ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          v ∈ C.supp →
+            ¬ IsBoundaryOnlyUniqueCarrierCounterexampleNode (T := T) (φ := φ) v
+
+theorem
+    exists_terminal_of_positiveContinuationNeighbor_of_deletedSpurNoEscapeSpec_of_alternativeSpecs
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hnoescape :
+      ChosenMilestoneChainDeletedSpurNoEscapeSpec
+        (T := T) (φ := φ))
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hξne : ξ ≠ hdata.ν)
+    (hξadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ)) :
+    ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      v ≠ .start ∧
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v := by
+  exact
+    exists_terminal_of_positiveContinuationNeighbor_of_no_start_or_boundaryOnlyUniqueCarrierCounterexampleEscape_in_deletedSpurComponent_of_alternativeSpecs
+      (T := T) (φ := φ) hzero hopen halt haway hdata hμ hξne hξadj
+      (hnoescape.no_start_of_positiveContinuationNeighbor hdata μ ξ hμ hξne hξadj)
+      (hnoescape.no_boundaryOnlyUniqueCarrierCounterexampleNode_of_positiveContinuationNeighbor
+        hdata μ ξ hμ hξne hξadj)
+
 def chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal
     (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
     (hnostart :
@@ -6603,6 +6664,28 @@ def
   exact
     exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_positiveContinuationNeighbor_of_two_lt_dimension
       (T := T) (φ := φ) haway hdata hdim (hcont hdata)
+
+def
+    chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_deletedSpurNoEscapeSpec_of_two_lt_dimension
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdim : 2 < dimension)
+    (hnoescape :
+      ChosenMilestoneChainDeletedSpurNoEscapeSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec (T := T) (φ := φ) := by
+  refine
+    chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal_of_two_lt_dimension
+      (T := T) (φ := φ) haway hdim ?_
+  intro hdata μ ξ hμ hξne hξadj
+  exact
+    exists_terminal_of_positiveContinuationNeighbor_of_deletedSpurNoEscapeSpec_of_alternativeSpecs
+      (T := T) (φ := φ) hzero hopen halt haway hnoescape hdata hμ hξne hξadj
 
 def
     chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_lowerLevelPositiveContinuationNeighborTerminal_of_two_lt_dimension

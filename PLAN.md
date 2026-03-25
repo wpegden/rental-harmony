@@ -178,7 +178,14 @@
   `IsBoundaryOnlyUniqueCarrierCounterexampleNode`. The immediate corollary
   `exists_terminal_of_positiveContinuationNeighbor_of_no_start_or_boundaryOnlyUniqueCarrierCounterexampleEscape_in_deletedSpurComponent_of_alternativeSpecs`
   shows that the only remaining higher-dimensional work is to exclude those two escape branches,
-  after which the deleted-spur bypass theorem can be repackaged cleanly.
+  after which the deleted-spur bypass theorem can be repackaged cleanly. That repackaging is now
+  explicit: `ChosenMilestoneChainDeletedSpurNoEscapeSpec` records exactly those two exclusions,
+  `exists_terminal_of_positiveContinuationNeighbor_of_deletedSpurNoEscapeSpec_of_alternativeSpecs`
+  turns that no-escape input into terminal existence from the positive continuation node, and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_deletedSpurNoEscapeSpec_of_two_lt_dimension`
+  turns it into the full higher-dimensional bypass theorem. So the exact remaining proof frontier
+  is no longer the deleted-spur parity restart itself, but the two specific no-escape fields of
+  `ChosenMilestoneChainDeletedSpurNoEscapeSpec`.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:
