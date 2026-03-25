@@ -55,7 +55,11 @@
   obstacle: the existing `SimplicialSubdivision` API still does not prove that a point known to
   lie in the convex hull of a specified face or facet has its global `baryCoord` support inside
   that chosen face or facet, so the desired `SubdivisionFace.ImageContains -> ∃ x, φ.toFun x = ...`
-  theorem is not yet derivable from the present local-barycentric infrastructure.
+  theorem is not yet derivable from the present local-barycentric infrastructure. The direct proof
+  now reduces to one missing support theorem:
+  `x ∈ convexHull (facetVertexPoints T σ) -> supportingFacet x ⊆ σ`
+  or equivalently
+  `x ∈ convexHull (facetVertexPoints T σ) -> baryCoord v x = 0` for all `v ∉ σ`.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for

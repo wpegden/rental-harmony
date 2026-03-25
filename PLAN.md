@@ -335,6 +335,11 @@
   face or facet, its global `baryCoord` support can be taken inside that chosen face or facet.
   Without such a local-barycentric compatibility result, the repo does not yet justify the desired
   face-local affine/preimage theorem.
+- Concretely, the direct proof attempt reduces to one missing support-file theorem of the form
+  `x ∈ convexHull (facetVertexPoints T σ) -> supportingFacet x ⊆ σ` or equivalently
+  `x ∈ convexHull (facetVertexPoints T σ) -> baryCoord v x = 0` for every `v ∉ σ`.
+  The present `SimplicialSubdivision` API does not include that property, so the current Section 5
+  frontier is blocked exactly on this local-barycentric compatibility theorem.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

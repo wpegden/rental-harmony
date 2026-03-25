@@ -394,3 +394,13 @@
   from the existing API, so the intended `SubdivisionFace.ImageContains -> ∃ x, φ.toFun x = ...`
   step remains blocked on genuinely missing local affine infrastructure rather than on the Section 5
   graph bookkeeping itself.
+- More precise API mismatch from the latest direct attempt:
+  the current abstract data only provide
+  `T.supportingFacet_mem : supportingFacet x ∈ facets` and
+  `T.baryCoord_supported : baryCoord v x ≠ 0 -> v ∈ supportingFacet x`.
+  They do not provide any face-local converse such as
+  `x ∈ convexHull (facetVertexPoints T σ) -> supportingFacet x ⊆ σ`
+  or even
+  `x ∈ convexHull (facetVertexPoints T σ) -> baryCoord v x = 0` for `v ∉ σ`.
+  This is exactly the theorem needed to convert a specified face-image containment witness into a
+  preimage whose barycentric support stays inside that chosen face.
