@@ -521,6 +521,14 @@
   lower-milestone carrier candidate. So the remaining plan is no longer to bridge carrier geometry
   to graph adjacency; it is specifically to prove existence and uniqueness of those graph-relevant
   same-level candidates.
+- A direct attempt on that existence/uniqueness theorem identifies the first missing half: same-
+  level continuation existence. Once a same-level horizontal door is present, the new lemmas
+  recover the filtered candidate automatically, so uniqueness is not the immediate blocker. The
+  actual obstruction is earlier: from a normalized codimension-`1` carrier inside `ν.face`, the
+  current `SimplicialSubdivision` API gives only one containing facet via `subset_facet`, not a
+  second same-level positive coface. So the next viable plan is to supply exactly that local
+  same-level continuation-existence theorem, or to keep it as the minimal no-open-crossing
+  internal contract if it cannot be proved from the present abstract subdivision data.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

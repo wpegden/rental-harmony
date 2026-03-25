@@ -636,3 +636,10 @@
   normalized lower-milestone carrier candidate. So the remaining question is not how to pass
   between carrier witnesses and graph adjacency; it is exactly whether the chosen-milestone
   geometry forces existence and uniqueness of such graph-relevant same-level candidates.
+- A direct attempt on that filtered theorem shows that the proof stalls before uniqueness enters.
+  The current `SimplicialSubdivision` structure only says a face carrier lies in some facet
+  (`subset_facet`), not that a codimension-`1` carrier lying on the lower milestone has a second
+  same-level continuation coface inside the relevant prefix-face subdivision. Since the new bridge
+  lemmas already turn any same-level horizontal door into a filtered candidate automatically, the
+  first irreducible no-open-crossing gap is now existence of that second same-level continuation,
+  not its uniqueness once found.

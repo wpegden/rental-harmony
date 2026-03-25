@@ -353,3 +353,11 @@
   extract such a candidate automatically, but the current abstract support layer still does not
   force that candidate to exist or be unique. This is now the sharpest remaining statement on that
   branch.
+- [ ] Direct proof attempt on that filtered theorem now isolates the first missing half even more
+  sharply: existence of a second same-level positive coface through the normalized lower-milestone
+  carrier. The current `SimplicialSubdivision` API only records `subset_facet :
+  ∃ σ ∈ facets, carrier ⊆ σ`, so from a codimension-`1` carrier `ρ ⊆ ν.face` it provides one
+  ambient facet but no theorem that some other same-level graph face also contains `ρ`. The new
+  extraction/promotion lemmas show that uniqueness only becomes relevant after such a same-level
+  horizontal continuation exists, so the first irreducible no-open-crossing obstruction is now
+  same-level continuation existence rather than candidate translation.
