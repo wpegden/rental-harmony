@@ -6027,6 +6027,117 @@ theorem
     not_adj_positive_start_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_two_lt_dimension
       (T := T) (φ := φ) hdata hμ hdim
 
+def boundaryOnlyUniqueCarrierDeletedSpurSupport
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    (μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ) :
+    Set (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ) :=
+  {w | w ≠ .positive hdata.ν ∧ w ≠ .positive μ}
+
+def IsBoundaryOnlyUniqueCarrierDeletedSpurBoundary
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    (μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    (w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ) : Prop :=
+  Adj (T := T) (chosenMilestoneChain (φ := φ)) φ w (.positive hdata.ν) ∨
+    Adj (T := T) (chosenMilestoneChain (φ := φ)) φ w (.positive μ)
+
+theorem positiveContinuationNeighbor_mem_boundaryOnlyUniqueCarrierDeletedSpurSupport
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hξne : ξ ≠ hdata.ν)
+    (hξadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ)) :
+    .positive ξ ∈
+      boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ := by
+  refine ⟨?_, ?_⟩
+  · intro hEq
+    exact hξne (by simpa using hEq)
+  · intro hEq
+    have hEq' : ξ = μ := by simpa using hEq
+    have hself :
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive ξ) := by
+      simpa [hEq'] using hξadj
+    exact not_adj_self (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) (.positive ξ) hself
+
+theorem
+    boundaryOnlyUniqueCarrierDeletedSpurBoundary_iff_eq_positiveContinuationNeighbor
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hξne : ξ ≠ hdata.ν)
+    (hξadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ))
+    {w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ}
+    (hw :
+      w ∈ boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ) :
+    IsBoundaryOnlyUniqueCarrierDeletedSpurBoundary (T := T) (φ := φ) hdata μ w ↔
+      w = .positive ξ := by
+  constructor
+  · intro hboundary
+    rcases hboundary with hwν | hwμ
+    · exfalso
+      rcases
+          existsUnique_graphNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData
+            (T := T) (φ := φ) hdata with
+        ⟨u, hu, huniq⟩
+      have hμadj :
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive hdata.ν) (.positive μ) := by
+        exact Or.inr <| Or.inr hμ
+      have hwEq : w = .positive μ := by
+        have hwν' :
+            Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive hdata.ν) w :=
+          (adj_symm (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)) hwν
+        calc
+          w = u := huniq w hwν'
+          _ = .positive μ := (huniq (.positive μ) hμadj).symm
+      exact hw.2 hwEq
+    · rcases
+          existsUnique_graphNeighbor_ne_counterexampleNode_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+            (T := T) (φ := φ) haway hdata hμ with
+        ⟨u, hu, huniq⟩
+      have hξprop :
+          Section5GraphNode.positive ξ ≠ Section5GraphNode.positive hdata.ν ∧
+            Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ) := by
+        refine ⟨?_, hξadj⟩
+        intro hEq
+        exact hξne (by simpa using hEq)
+      have hwprop : w ≠ .positive hdata.ν ∧
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) w := by
+        refine ⟨hw.1, ?_⟩
+        exact (adj_symm (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)) hwμ
+      calc
+        w = u := huniq w hwprop
+        _ = .positive ξ := (huniq (.positive ξ) hξprop).symm
+  · intro hwEq
+    right
+    simpa [hwEq] using
+      (adj_symm (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)) hξadj
+
+lemma start_mem_boundaryOnlyUniqueCarrierDeletedSpurSupport
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    (μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ) :
+    .start ∈ boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ := by
+  simp [boundaryOnlyUniqueCarrierDeletedSpurSupport]
+
+theorem not_isBoundaryOnlyUniqueCarrierDeletedSpurBoundary_start
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hξne : ξ ≠ hdata.ν)
+    (hξadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ)) :
+    ¬ IsBoundaryOnlyUniqueCarrierDeletedSpurBoundary (T := T) (φ := φ) hdata μ .start := by
+  intro hboundary
+  have hEq :=
+    (boundaryOnlyUniqueCarrierDeletedSpurBoundary_iff_eq_positiveContinuationNeighbor
+      (T := T) (φ := φ) haway hdata hμ hξne hξadj
+      (start_mem_boundaryOnlyUniqueCarrierDeletedSpurSupport (T := T) (φ := φ) hdata μ)).mp hboundary
+  cases hEq
+
 def chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal
     (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
     (hnostart :

@@ -133,7 +133,16 @@
   now removes the old subtype/coercion bookkeeping from that route as well, so the next exact
   setup problem is narrower: define the deleted-spur continuation component and verify its odd
   start / even off-boundary hypotheses without letting the restart escape back through the
-  original odd node `.start`.
+  original odd node `.start`. The first reduced-graph setup lemmas are now in place:
+  `boundaryOnlyUniqueCarrierDeletedSpurSupport`,
+  `IsBoundaryOnlyUniqueCarrierDeletedSpurBoundary`, and
+  `boundaryOnlyUniqueCarrierDeletedSpurBoundary_iff_eq_positiveContinuationNeighbor`
+  show that after deleting `{ν, μ}`, the only remaining support vertex touching that deleted spur
+  is the continuation node `ξ`; moreover `not_isBoundaryOnlyUniqueCarrierDeletedSpurBoundary_start`
+  shows that `.start` is not such a boundary vertex. So the exact remaining backup-route gap is
+  now sharper still: prove that `ξ` is odd in the reduced component and that every other
+  nonterminal vertex in that component is even, while controlling `.start` as a possible interior
+  escape rather than a spur boundary point.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,

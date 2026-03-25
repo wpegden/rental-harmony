@@ -206,6 +206,18 @@
   continuation component after removing `{ν, μ}`: prove the continuation node is the odd start in
   that reduced component, prove all other nonterminal nonboundary vertices there are even, and
   control possible escape back to the original odd start `.start`.
+- Formalization note after the latest deleted-spur setup step:
+  the reduced graph used by that backup route is now partially explicit in Lean. The new
+  definitions `boundaryOnlyUniqueCarrierDeletedSpurSupport` and
+  `IsBoundaryOnlyUniqueCarrierDeletedSpurBoundary` describe the graph after deleting the
+  obstruction spur `{ν, μ}`, and
+  `boundaryOnlyUniqueCarrierDeletedSpurBoundary_iff_eq_positiveContinuationNeighbor` proves that
+  inside this reduced support the only vertex still touching the deleted spur is the continuation
+  node `ξ`. In particular
+  `not_isBoundaryOnlyUniqueCarrierDeletedSpurBoundary_start` shows that `.start` is not a
+  deleted-spur boundary point. So the remaining backup-route difficulty is now accurately focused:
+  `.start` can only interfere, if at all, as another interior vertex of the reduced continuation
+  component, not as part of the deleted-spur boundary itself.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those
