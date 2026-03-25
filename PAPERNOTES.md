@@ -443,10 +443,15 @@
   combinatorial pipeline already goes through in Lean: the explicit milestone lemmas upgrade that
   genericity package to `MilestoneSegmentTransversality`, the parity theorem produces a terminal
   node, and one extracts a facet whose image contains the chain's terminal milestone. Therefore the
-  remaining obstacles are now separated into three explicit theorem statements rather than one vague
+  remaining obstacles are now separated into explicit theorem statements rather than one vague
   stuck region:
   1. the lower-door contract above;
   2. the start / two-door graph-local consequences needed to build `GeometricGenericity` for
-     `chosenMilestoneChain`;
-  3. the final identification of the chain's terminal milestone with the standard simplex
-     barycenter used by `FacetImageContainsBarycenter`.
+     `chosenMilestoneChain`.
+- Formalization note after the latest endpoint cleanup:
+  the third blocker in that list is now gone. `prefixBarycenter_last_eq_barycentricRentDivision`
+  proves that the last prefix barycenter is the true simplex barycenter, and
+  `chosenMilestoneChain_terminal_eq_barycenter` plus
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_doorSpec`
+  show that once the lower-door contract and the chosen-chain door-count package are supplied, the
+  Section 5 parity pipeline already yields the paper's barycenter-containing facet statement.

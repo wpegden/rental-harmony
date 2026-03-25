@@ -198,11 +198,15 @@
   `GeometricGenericity` is available for `chosenMilestoneChain`, the already-proved explicit
   milestone lemmas rebuild `MilestoneSegmentTransversality`, terminal-node existence, and a
   terminal-milestone facet.
+- [x] Closed the small endpoint wrapper from the concrete chosen chain to the paper's barycenter:
+  `prefixBarycenter_last_eq_barycentricRentDivision`,
+  `chosenMilestoneChain_terminal_eq_barycenter`, and
+  `exists_barycenterPreimageCell_of_chosenMilestoneChain_doorSpec`
+  now show that under the isolated door-count contract, the Section 5 pipeline reaches a true
+  `FacetImageContainsBarycenter` conclusion rather than only a terminal-milestone facet.
 - [ ] Current concrete frontier: prove or supply the two remaining internal contracts for the
   higher-dimensional Section 5 proof.
   First, the lower-door support theorem now appears explicitly as
   `Section5GraphNode.FaceLocalLowerPrefixCarrierSpec.exists_graphNeighbor_of_contains_lowerMilestone`.
   Second, the graph-local start/door-count package still has to be produced as
-  `GeometricGenericity` for `chosenMilestoneChain`. After those are in place, only the small
-  endpoint wrapper from the terminal milestone `chosenMilestoneChain.point (Fin.last dimension)` to
-  `FacetImageContainsBarycenter` remains.
+  `Section5GraphNode.ChosenMilestoneChainDoorSpec` for `chosenMilestoneChain`.

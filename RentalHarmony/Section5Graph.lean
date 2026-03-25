@@ -1391,6 +1391,47 @@ noncomputable def chosenMilestoneChain : Section5MilestoneChain (dimension := di
       (chosenPrefixMilestonePoint (φ := φ) k).1 :=
   rfl
 
+@[simp] lemma prefixVertex_last (j : Fin (dimension + 1)) :
+    prefixVertex (dimension := dimension) (Fin.last dimension) j =
+      stdSimplex.vertex (S := ℝ) j := by
+  ext i
+  by_cases h : i = j
+  · subst h
+    simp [prefixVertex, stdSimplex.vertex]
+  · simp [prefixVertex, stdSimplex.vertex, h]
+
+lemma prefixBarycenter_last_eq_barycentricRentDivision :
+    prefixBarycenter (dimension := dimension) (Fin.last dimension) =
+      barycentricRentDivision (dimension + 1) := by
+  ext i
+  change
+    (Finset.univ.centerMass (fun _ : Fin (dimension + 1) => (1 : ℝ))
+      (fun j =>
+        ((prefixVertex (dimension := dimension) (Fin.last dimension) j :
+          RentDivision (dimension + 1)) : RealPoint dimension)) i) =
+      (((barycentricRentDivision (dimension + 1) : RentDivision (dimension + 1)) :
+        RealPoint dimension) i)
+  rw [show ((barycentricRentDivision (dimension + 1) : RentDivision (dimension + 1)) :
+      RealPoint dimension) =
+      Finset.centerMass Finset.univ (fun _ : Room (dimension + 1) => (1 : ℝ))
+        (fun j => ((stdSimplex.vertex (S := ℝ) j : RentDivision (dimension + 1)) :
+          RealPoint dimension)) by
+        simpa [barycentricRentDivision] using
+          (stdSimplex.barycenter_eq_centerMass (𝕜 := ℝ) (X := Room (dimension + 1)))]
+  simp [prefixVertex_last]
+
+lemma chosenMilestoneChain_terminal_eq_barycenter :
+    (chosenMilestoneChain (T := T) (φ := φ)).point (Fin.last dimension) =
+      barycentricRentDivision (dimension + 1) := by
+  rw [(chosenMilestoneChain (T := T) (φ := φ)).terminal_eq]
+  exact prefixBarycenter_last_eq_barycentricRentDivision (dimension := dimension)
+
+lemma chosenPrefixMilestonePoint_terminal_eq_barycenter :
+    (chosenPrefixMilestonePoint (T := T) (φ := φ) (Fin.last dimension)).1 =
+      barycentricRentDivision (dimension + 1) := by
+  rw [← chosenMilestoneChain_point (T := T) (φ := φ) (Fin.last dimension)]
+  exact chosenMilestoneChain_terminal_eq_barycenter (T := T) (φ := φ)
+
 lemma imagePoints_eq_prefixImageVertices {k : Fin (dimension + 1)}
     (τ : SubdivisionFace T) (hτ : τ.SubdividesPrefixFace (T := T) k) :
     τ.imagePoints φ.vertexMap =
@@ -2283,6 +2324,56 @@ structure MilestoneSegmentTransversality
       ¬ IsTerminal (T := T) c φ (.positive ν) →
       ν.face.ImageContainsMilestoneAwayFromBoundary (T := T) c φ.vertexMap ν.level.succ
 
+/--
+Remaining graph-local contract for the concrete chosen chain.
+
+The explicit milestone geometry already proved in this file reduces the higher-dimensional Section 5
+argument to these start and door-count statements.
+-/
+structure ChosenMilestoneChainDoorSpec where
+  start_neighbor : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ
+  start_adj :
+    Adj (T := T) (chosenMilestoneChain (φ := φ)) φ .start (.positive start_neighbor)
+  start_unique :
+    ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ .start w →
+        w = .positive start_neighbor
+  two_doors_of_missing_nextMilestone_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+  two_doors_of_missing_nextMilestone_contains_lowerMilestone :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+  two_doors_of_nextMilestone_awayFromBoundary :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
 def localDegreeHypotheses_of_geometricGenericity
     (hgen : GeometricGenericity (T := T) (c := c) (φ := φ)) :
     LocalDegreeHypotheses (T := T) (c := c) (φ := φ) := by
@@ -2300,6 +2391,26 @@ def geometricGenericity_of_milestoneSegmentTransversality
     (htrans : MilestoneSegmentTransversality (T := T) (c := c) (φ := φ)) :
     GeometricGenericity (T := T) (c := c) (φ := φ) :=
   htrans.toGeometricGenericity
+
+def chosenMilestoneChain_geometricGenericity_of_doorSpec
+    (hdoor : ChosenMilestoneChainDoorSpec (T := T) (φ := φ)) :
+    GeometricGenericity
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) := by
+  refine
+    { start_neighbor := hdoor.start_neighbor
+      start_adj := hdoor.start_adj
+      start_unique := hdoor.start_unique
+      two_doors_of_missing_nextMilestone := ?_
+      two_doors_of_nextMilestone := ?_ }
+  · intro ν hupper
+    rcases chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone
+        (T := T) (φ := φ) (ν := ν) hupper with hopen | hlower
+    · exact hdoor.two_doors_of_missing_nextMilestone_openCrossing ν hupper hopen
+    · exact hdoor.two_doors_of_missing_nextMilestone_contains_lowerMilestone ν hupper hlower
+  · intro ν hnext hν
+    exact hdoor.two_doors_of_nextMilestone_awayFromBoundary ν
+      (chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
+        (T := T) (φ := φ) hnext hν) hν
 
 lemma degree_start_eq_one
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
@@ -2424,6 +2535,17 @@ theorem exists_terminal_of_chosenMilestoneChain_geometricGenericity
     (chosenMilestoneChain_milestoneSegmentTransversality_of_geometricGenericity
       (T := T) (φ := φ) hgen)
 
+theorem exists_terminal_of_chosenMilestoneChain_doorSpec
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hdoor : ChosenMilestoneChainDoorSpec (T := T) (φ := φ)) :
+    ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      v ≠ .start ∧
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v := by
+  exact exists_terminal_of_chosenMilestoneChain_geometricGenericity
+    (T := T) (φ := φ)
+    (chosenMilestoneChain_geometricGenericity_of_doorSpec
+      (T := T) (φ := φ) hdoor)
+
 theorem exists_terminalMilestoneCell_of_chosenMilestoneChain_geometricGenericity
     [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
     (hgen :
@@ -2448,6 +2570,22 @@ theorem exists_terminalMilestoneCell_of_chosenMilestoneChain_geometricGenericity
       refine ⟨σ, hσ, ?_⟩
       simpa [SubdivisionFace.ImageContainsMilestone, SubdivisionFace.ImageContains,
         SubdivisionFace.imagePoints, FacetImageContains, hσeq] using hνimage
+
+theorem exists_barycenterPreimageCell_of_chosenMilestoneChain_doorSpec
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hdoor : ChosenMilestoneChainDoorSpec (T := T) (φ := φ)) :
+    ∃ σ ∈ T.facets, FacetImageContainsBarycenter σ φ.vertexMap := by
+  rcases exists_terminalMilestoneCell_of_chosenMilestoneChain_geometricGenericity
+      (T := T) (φ := φ)
+      (chosenMilestoneChain_geometricGenericity_of_doorSpec
+        (T := T) (φ := φ) hdoor) with ⟨σ, hσ, hσmil⟩
+  have hσmil' :
+      FacetImageContains σ φ.vertexMap
+        ((chosenMilestoneChain (φ := φ)).point (Fin.last dimension)) := by
+    simpa [chosenMilestoneChain_point] using hσmil
+  refine ⟨σ, hσ, ?_⟩
+  simpa [FacetImageContainsBarycenter, chosenMilestoneChain_point,
+    chosenPrefixMilestonePoint_terminal_eq_barycenter (T := T) (φ := φ)] using hσmil'
 
 end Section5GraphNode
 

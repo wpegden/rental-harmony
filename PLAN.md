@@ -369,10 +369,15 @@
   whose image contains the chain's terminal milestone. So the remaining hidden blockers are now
   sharply separated into:
   1. the lower-door support contract above;
-  2. the start / two-door graph-local consequences needed to build `GeometricGenericity` for
-     `chosenMilestoneChain`;
-  3. a small endpoint wrapper identifying the terminal milestone with the paper's simplex
-     barycenter.
+  2. the start / two-door graph-local consequences needed to build
+     `Section5GraphNode.ChosenMilestoneChainDoorSpec` for `chosenMilestoneChain`.
+- That final endpoint wrapper is now finished. The new lemmas
+  `prefixBarycenter_last_eq_barycentricRentDivision` and
+  `chosenMilestoneChain_terminal_eq_barycenter` identify the last chosen milestone with the
+  ambient simplex barycenter, and
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_doorSpec`
+  shows that once the two remaining internal contracts are supplied, the whole Section 5 pipeline
+  reaches the paper-faithful `FacetImageContainsBarycenter` conclusion.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
