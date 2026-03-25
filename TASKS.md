@@ -41,14 +41,25 @@
   to this theorem. The new intermediate structure
   `ChosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec`
   sharpens the exact remaining local geometry again to the paper's edge definition itself:
-  produce a distinct same-level coface across the entrance carrier. The wrappers
+  produce a distinct same-level coface across the entrance carrier. A further interface repair in
+  this cycle shows that this coface theorem should keep the full next-milestone hypotheses visible:
+  positive level, below-top-dimensionality, `b_k` away from the boundary of `λ(ν.face)`, and
+  nonterminality of `ν`. Those are exactly the hypotheses used by the paper's continuation
+  paragraph and exactly the data needed for the lower-milestone / endpoint-entry subcase split.
+  The wrappers
   `chosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec_of_prefixExtension`,
   `chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_cofaceContinuation`, and
   `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_entranceCarrierContinuation`.
   So the next concrete job is no longer to prove the overstrong fresh-prefix-vertex theorem, nor
   even the horizontal-adjacency statement directly, but to prove the corrected entrance-carrier
-  same-level coface theorem from the Section 5 face geometry and then decide how the resulting
-  same-level continuation should feed the below-top-dimensional direct route.
+  same-level coface theorem from the Section 5 face geometry with those full next-milestone
+  hypotheses, most naturally by splitting into the lower-milestone-present and endpoint-entry
+  subcases, and then decide how the resulting same-level continuation should feed the
+  below-top-dimensional direct route. The latest direct proof attempt also isolates the exact
+  reason the older fixed-carrier continuation API cannot close this theorem unchanged: an
+  arbitrary entrance carrier `ρ` meeting `[b_{k-1}, b_k]` need not already subdivide the lower
+  prefix face `ν.level.castSucc`, so the lower-milestone carrier theorems do not apply to `ρ`
+  verbatim.
 - [ ] Exact higher-dimensional deleted-spur frontier:
   prove the two fields of
   `Section5GraphNode.ChosenMilestoneChainDeletedSpurNoEscapeSpec`.

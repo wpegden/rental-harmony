@@ -1117,8 +1117,19 @@
   while
   `chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_cofaceContinuation`
   and the rerouted same-level continuation wrapper factor the route through this more
-  manuscript-faithful intermediate step. So the exact remaining local gap is now the direct proof
-  of the entrance-carrier same-level coface theorem, not the horizontal-adjacency corollary.
+  manuscript-faithful intermediate step. The latest interface repair makes one more manuscript
+  point explicit: this coface theorem should retain the full next-milestone hypotheses already
+  present in the surrounding argument, namely positive level, below-top-dimensionality,
+  `ImageContainsMilestoneAwayFromBoundary` at `b_k`, and nonterminality of `ν`. Those are exactly
+  the hypotheses under which the paper's continuation paragraph splits into lower-milestone and
+  endpoint-entry subcases, and the old theorem statement without them was stronger than the
+  manuscript's actual local claim. So the exact remaining local gap is now the direct proof of
+  this corrected entrance-carrier same-level coface theorem, ideally by that same lower-milestone
+  / endpoint-entry case split, not the horizontal-adjacency corollary. A direct proof search now
+  also identifies the precise obstruction to reusing the older fixed-carrier machinery in the
+  lower-milestone subcase: an arbitrary entrance carrier `ρ` meeting `[b_{k-1}, b_k]` need not
+  itself subdivide the lower prefix face `ν.level.castSucc`, so the existing lower-milestone
+  continuation theorems do not transfer to `ρ` without a new bridge.
 
 ## Current input status
 - No proposed axioms.

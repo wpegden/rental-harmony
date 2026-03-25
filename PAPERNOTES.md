@@ -1282,5 +1282,15 @@
   ->
   `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_entranceCarrierContinuation`
   shows that the older ambient-facet prefix-extension package is only a stronger sufficient proof
-  strategy for this more faithful statement. Consequently the precise remaining local gap is now
-  the direct proof of that same-level coface theorem from the Section 5 trap-door geometry.
+  strategy for this more faithful statement. A further correction in this cycle is that the
+  coface theorem itself should keep the full next-milestone hypotheses visible: positive level,
+  below-top-dimensionality, `b_k` away from the boundary of `λ(ν.face)`, and nonterminality of
+  `ν`. Those are exactly the hypotheses the manuscript uses when reasoning from the entrance
+  carrier, and they are exactly what permit the intended lower-milestone / endpoint-entry subcase
+  split. Consequently the precise remaining local gap is now the direct proof of that corrected
+  same-level coface theorem from the Section 5 trap-door geometry, most likely by proving those
+  two subcases separately and then recombining them. A direct Lean proof attempt also shows why
+  the older lower-milestone carrier API cannot simply be reused unchanged in that split: an
+  arbitrary entrance carrier `ρ` meeting `[b_{k-1}, b_k]` need not already subdivide the lower
+  prefix face `ν.level.castSucc`, so the fixed-carrier continuation theorems do not apply to `ρ`
+  verbatim.

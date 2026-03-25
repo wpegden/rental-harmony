@@ -5567,7 +5567,11 @@ structure ChosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec
   exists_sameLevelCoface_of_entranceCarrier :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
       {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face},
+      0 < ν.level.1 →
       ν.face.dim < dimension →
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
       ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
         (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
       ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
@@ -5582,7 +5586,7 @@ def chosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec_of_pr
     ChosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec
       (T := T) (φ := φ) := by
   refine ⟨?_⟩
-  intro ν ρ _hνdim hρmeets
+  intro ν ρ _hk _hνdim _haway _hνterm hρmeets
   rcases
       exists_sameLevelCarrierContinuationCandidate_of_codimOneSubface_meets_segment_of_lt_topDim_of_prefixExtension
         (T := T) (φ := φ) hext hρmeets with
@@ -5610,7 +5614,11 @@ structure ChosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec where
   exists_sameLevelHorizontalAdj_of_entranceCarrier :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
       {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face},
+      0 < ν.level.1 →
       ν.face.dim < dimension →
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
       ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
         (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
       ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
@@ -5623,8 +5631,8 @@ def chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_cofaceCo
     ChosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec
       (T := T) (φ := φ) := by
   refine ⟨?_⟩
-  intro ν ρ hνdim hρmeets
-  rcases hcoface.exists_sameLevelCoface_of_entranceCarrier ν hνdim hρmeets with
+  intro ν ρ hk hνdim haway hνterm hρmeets
+  rcases hcoface.exists_sameLevelCoface_of_entranceCarrier ν hk hνdim haway hνterm hρmeets with
     ⟨μ, hμne, hlevel, hρμ⟩
   exact
     ⟨μ,
@@ -5676,7 +5684,7 @@ def chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_a
       hentrance.exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary
         ν hk hνdim haway hνterm with
     ⟨ρ, hρmeets⟩
-  exact hcont.exists_sameLevelHorizontalAdj_of_entranceCarrier ν hνdim hρmeets
+  exact hcont.exists_sameLevelHorizontalAdj_of_entranceCarrier ν hk hνdim haway hνterm hρmeets
 
 def chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_prefixExtension
     (hentrance :
