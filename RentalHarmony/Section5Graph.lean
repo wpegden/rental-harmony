@@ -2782,6 +2782,65 @@ structure ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpe
         ∃! μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
           IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ
 
+/--
+Existence half of the filtered same-level continuation theorem.
+
+This isolates the first genuinely missing step in the no-open-crossing branch: producing any
+graph-relevant same-level continuation candidate once the normalized lower-milestone carrier has
+been identified.
+-/
+structure ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec where
+  exists_candidate_of_not_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+        ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc ∧
+        ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc ∧
+        ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+          IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ
+
+/--
+Uniqueness half of the filtered same-level continuation theorem.
+
+Once an admissible normalized lower-milestone carrier and one same-level candidate are available,
+this asks only that any other graph-relevant same-level candidate coincide with it.
+-/
+structure ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec where
+  candidate_unique_of_not_openCrossing :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face},
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc →
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ∀ {μ₁ μ₂ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ},
+        IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ₁ →
+        IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ₂ →
+        μ₁ = μ₂
+
+def
+    chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_existence_and_uniqueness
+    (hexists :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec
+        (T := T) (φ := φ))
+    (huniq :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hupper hclosed
+  rcases hexists.exists_candidate_of_not_openCrossing ν hk hupper hclosed with
+    ⟨ρ, hρsub, hρmil, μ, hμ⟩
+  refine ⟨ρ, hρsub, hρmil, ⟨μ, hμ, ?_⟩⟩
+  intro μ' hμ'
+  exact (huniq.candidate_unique_of_not_openCrossing ν hρsub hρmil
+    (μ₁ := μ) (μ₂ := μ') hμ hμ').symm
+
 lemma isCodimOneSubface_of_sameLevelCarrierContinuationCandidate
     {ν μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
     {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}

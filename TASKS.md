@@ -364,6 +364,13 @@
   might be horizontal; it directly constructs a downward vertical neighbor. So the next minimal
   missing theorem is an independent same-level continuation-existence statement alongside that
   already-known vertical door, not a reclassification lemma for the reflection neighbor.
+- [x] Countermodel-style dependency check: after the new bridge lemmas, the local data they leave
+  behind really is too weak to force same-level continuation. A toy local skeleton with one
+  positive node `ν`, one normalized codimension-`1` carrier `ρ ⊆ ν.face`, and one lower positive
+  node `λ` with `λ.VerticalAdj ν`, but with no same-level positive node through `ρ`, is consistent
+  with all currently formalized post-bridge facts. So same-level continuation existence is
+  genuinely independent of the current reflected-neighbor / bridge layer and should remain the next
+  minimal internal contract unless the subdivision API is strengthened.
 - [ ] Direct proof attempt on that filtered theorem now isolates the first missing half even more
   sharply: existence of a second same-level positive coface through the normalized lower-milestone
   carrier. The current `SimplicialSubdivision` API only records `subset_facet :
@@ -372,3 +379,9 @@
   extraction/promotion lemmas show that uniqueness only becomes relevant after such a same-level
   horizontal continuation exists, so the first irreducible no-open-crossing obstruction is now
   same-level continuation existence rather than candidate translation.
+- [x] Refactor that filtered no-open-crossing theorem into the actual two subproblems that remain:
+  `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec` and
+  `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec`, together with
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_existence_and_uniqueness`.
+  This records that the present frontier is only the existence half; uniqueness is now a separate,
+  downstream contract rather than part of one coarse blocked theorem.

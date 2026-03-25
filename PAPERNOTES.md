@@ -651,3 +651,15 @@
   missing filtered same-level continuation merely by classifying that reflected neighbor: the
   reflection contract already fixes its type. The genuine remaining theorem is additional
   same-level continuation existence beside that vertical door.
+- A countermodel-style dependency check confirms that this is a real independence issue at the
+  current abstraction level. After the new bridge lemmas, the remaining local interface can be
+  caricatured by a positive node `ν`, a normalized codimension-`1` carrier `ρ`, and one lower
+  positive node giving a downward vertical door. No currently formalized post-bridge theorem forces
+  a same-level continuation in that reduced setting, so the missing no-open-crossing existence
+  theorem is not an artifact of proof search; it is genuinely new local data absent from the
+  present support layer.
+- The development now reflects that diagnosis explicitly: the older filtered continuation package
+  has been split into `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec` and
+  `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec`. So the remaining missing
+  theorem is no longer phrased as one opaque "exists unique continuation" block; it is precisely
+  the existence half for a same-level continuation through the normalized lower-milestone carrier.

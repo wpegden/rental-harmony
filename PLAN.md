@@ -536,6 +536,12 @@
   `exists_verticalAdj_of_contains_lowerMilestone_of_reflection`. So the remaining no-open-crossing
   existence problem is not to reclassify that reflected neighbor as horizontal; it is to find an
   additional same-level continuation beyond the already-known vertical door.
+- The countermodel-style check for the post-bridge local interface goes through conceptually as
+  well: once one forgets the ambient subdivision and keeps only `ν`, the normalized carrier `ρ`,
+  and the already-proved downward vertical door, there is no remaining formal invariant that forces
+  a same-level continuation. So the roadmap should now treat same-level continuation existence as a
+  genuinely new local theorem (or contract), not as something recoverable from the present bridge
+  lemmas plus reflection.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -577,6 +583,12 @@
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's
   `k + 1`-labels-for-`k`-agents counting lemma from the geometric cell.
+- The no-open-crossing positive-level continuation theorem has now been split into its true two
+  local ingredients:
+  `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec` and
+  `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec`. This confirms that the
+  current blocker is specifically existence of a same-level continuation through the normalized
+  lower-milestone carrier; uniqueness is a separate later step.
 
 ## Current input status
 - No proposed axioms.
