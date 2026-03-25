@@ -443,3 +443,12 @@
   prefix face, and
   `chosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec_of_freshPrefixVertex`
   shows the full prefix-extension contract follows from this concrete vertex-existence lemma.
+- [x] Record the exact obstruction to pushing that fresh-vertex route further without a new
+  geometric idea: the new lemmas `ambientFacet_eq_of_topDim` and
+  `no_freshAmbientFacetVertex_of_topDim` show that if `ν.face` is already top-dimensional, then
+  any ambient facet `σ` containing `ν.face` is forced to equal `ν.face`, so there is no fresh
+  vertex in `σ \ ν.face.carrier` to feed into
+  `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex`. The fresh-prefix-vertex route
+  is therefore inherently a below-top-dimensional argument and cannot settle
+  `ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec` uniformly on its
+  own.

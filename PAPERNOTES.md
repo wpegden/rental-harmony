@@ -706,3 +706,9 @@
   prefix face, then the required same-level prefix-face coface can be built explicitly. The
   remaining obstruction is therefore the existence of such a fresh prefix-face vertex, not the
   coface construction itself.
+- That reduction now has a precise built-in limitation. The new lemmas
+  `ambientFacet_eq_of_topDim` and `no_freshAmbientFacetVertex_of_topDim` show that if `ν.face` is
+  already top-dimensional, then every ambient facet `σ` containing `ν.face` is actually equal to
+  `ν.face`, so no vertex of `σ` lies outside `ν.face.carrier`. Hence the fresh-prefix-vertex route
+  cannot prove the full theorem uniformly; it only addresses the below-top-dimensional case and
+  leaves a genuinely separate top-dimensional continuation problem.

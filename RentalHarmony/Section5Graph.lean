@@ -2925,6 +2925,30 @@ theorem chosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtension
   exact exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex
     (T := T) (φ := φ) ν hσ hνσ hρsub hvσ hvν hvprefix
 
+lemma ambientFacet_eq_of_topDim
+    (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    {σ : Finset Vertex}
+    (hσ : σ ∈ T.facets)
+    (hνσ : ν.face.carrier ⊆ σ)
+    (hνdim : ν.face.dim = dimension) :
+    ν.face.carrier = σ := by
+  apply Finset.eq_of_subset_of_card_le hνσ
+  have hνcard : ν.face.carrier.card = dimension + 1 := by
+    rw [ν.face.card_eq_dim_succ, hνdim]
+  rw [T.facet_card σ hσ, hνcard]
+
+lemma no_freshAmbientFacetVertex_of_topDim
+    (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    {σ : Finset Vertex}
+    (hσ : σ ∈ T.facets)
+    (hνσ : ν.face.carrier ⊆ σ)
+    (hνdim : ν.face.dim = dimension) :
+    ¬ ∃ v ∈ σ, v ∉ ν.face.carrier := by
+  intro hfresh
+  rcases hfresh with ⟨v, hvσ, hvν⟩
+  have hEq := ambientFacet_eq_of_topDim (T := T) (φ := φ) ν hσ hνσ hνdim
+  exact hvν (by simpa [hEq] using hvσ)
+
 structure ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec where
   exists_sameLevelCoface_in_ambientFacet_of_carrier :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
@@ -3822,11 +3846,8 @@ theorem exists_terminalMilestoneCell_of_chosenMilestoneChain_geometricGenericity
   | positive ν =>
       rcases hterminal with ⟨hνdim, hνimage⟩
       rcases ν.face.subset_facet with ⟨σ, hσ, hνσ⟩
-      have hνcard : ν.face.carrier.card = dimension + 1 := by
-        rw [ν.face.card_eq_dim_succ, hνdim]
-      have hσeq : ν.face.carrier = σ := by
-        apply Finset.eq_of_subset_of_card_le hνσ
-        rw [T.facet_card σ hσ, hνcard]
+      have hσeq : ν.face.carrier = σ :=
+        ambientFacet_eq_of_topDim (T := T) (φ := φ) ν hσ hνσ hνdim
       refine ⟨σ, hσ, ?_⟩
       simpa [SubdivisionFace.ImageContainsMilestone, SubdivisionFace.ImageContains,
         SubdivisionFace.imagePoints, FacetImageContains, hσeq] using hνimage

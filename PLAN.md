@@ -631,6 +631,12 @@
   required same-level coface explicitly. Thus the unresolved content of
   `ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec` is now exactly the
   existence of such a fresh prefix-face vertex in the chosen ambient facet.
+- A new obstruction lemma now shows that this fresh-vertex reduction is not uniform in dimension:
+  `ambientFacet_eq_of_topDim` and `no_freshAmbientFacetVertex_of_topDim` prove that when the
+  current positive face is already top-dimensional, any ambient facet containing it must equal it,
+  so there is no fresh ambient-facet vertex at all. Therefore the current reduction can only solve
+  the below-top-dimensional part directly; the full prefix-extension theorem still needs either a
+  separate top-dimensional continuation argument or a different uniform geometric input.
 
 ## Current input status
 - No proposed axioms.
