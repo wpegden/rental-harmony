@@ -65,6 +65,9 @@
   `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitLowerMilestoneSpec`, and
   `chosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplitLowerMilestone`
   shows that proving those containment fields is sufficient for the older descent interface.
+  The new theorem `contains_lowerMilestone_of_exists_lowerLevel_positive` records the converse:
+  any successful strict-descent proof in these branches must first force lower-milestone
+  containment.
   The exact remaining direct-route subcases are therefore:
   the level-`0` base case, the positive-level next-milestone lower-milestone-containment branch,
   and the positive-level open-crossing lower-milestone-containment branch.

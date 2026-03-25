@@ -313,7 +313,14 @@
   theorem
   `chosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplitLowerMilestone`
   shows that the old direct-route strict-descent interface is recoverable once those exact
-  lower-milestone-containment fields are supplied. So the exact remaining direct-route local
+  lower-milestone-containment fields are supplied. The new theorem
+  `contains_lowerMilestone_of_exists_lowerLevel_positive` makes the converse explicit inside Lean:
+  any descent proof in these branches must first establish lower-milestone containment. This also
+  matches the manuscript gap: in the higher-dimensional trap-door paragraph, the paper explains
+  that a `k`-face meeting `[b_{k-1}, b_k]` has one or two doors through faces meeting
+  `[b_k, b_{k+1}]`, but it never separately proves the current missing implication from the
+  next-milestone branch back down to containment of `b_{k-1}`.
+  So the exact remaining direct-route local
   subcases are now the level-`0` base case, the positive-level next-milestone
   lower-milestone-containment branch, and the positive-level open-crossing
   lower-milestone-containment branch.

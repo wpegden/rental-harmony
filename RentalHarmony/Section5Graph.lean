@@ -7018,6 +7018,20 @@ theorem
       (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
       hlower hζadj hζlt
 
+theorem
+    contains_lowerMilestone_of_exists_lowerLevel_positive
+    {ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hdesc :
+      ∃ ζ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive ζ) ∧
+          ζ.level.1 < ξ.level.1) :
+    ξ.face.ImageContainsMilestone (T := T)
+      (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level.castSucc := by
+  by_contra hlower
+  exact
+    not_exists_lowerLevel_positive_of_not_contains_lowerMilestone
+      (T := T) (φ := φ) hlower hdesc
+
 structure ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec where
   exists_terminal_of_levelZero_belowTopDim :
     ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
