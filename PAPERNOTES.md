@@ -878,3 +878,13 @@
   pipeline literally uses the wrong local invariant at such a node. Any faithful continuation of
   the paper's Section 5 argument now needs either an explicit geometric exclusion of this pattern
   or a graph-level contraction/descent lemma replacing the old even-degree step.
+- Lean now also has the minimal parity replacement theorem that the current proof really supports.
+  The abstract lemma
+  `exists_terminal_or_boundary_of_odd_start_and_nonterminal_even_off_boundary`
+  says that if odd nonterminal vertices are confined to a designated boundary class, then parity
+  yields either a genuine terminal or a boundary vertex. Its chosen-chain specialization
+  `exists_terminal_or_boundaryOnlyUniqueCarrierCounterexampleData_of_alternativeSpecs`
+  shows that the current Section 5 local hypotheses already prove exactly
+  "terminal face or explicit boundary-only unique-carrier obstruction." So the remaining mismatch
+  with the manuscript is no longer vague: the missing theorem is specifically the contraction or
+  bypass step that turns this disjunction into pure terminal existence.

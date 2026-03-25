@@ -60,7 +60,14 @@
   show that the packaged obstruction makes a nonterminal node of graph degree `1`. So the next
   proof obligation is not another local exclusion theorem by default; it is the graph-level
   contraction/descent lemma that replaces the old even-degree use of
-  `LocalDegreeHypotheses.nonterminal_two_neighbors`.
+  `LocalDegreeHypotheses.nonterminal_two_neighbors`. The new abstract parity theorem
+  `exists_terminal_or_boundary_of_odd_start_and_nonterminal_even_off_boundary` and its chosen-chain
+  instantiation
+  `exists_terminal_or_boundaryOnlyUniqueCarrierCounterexampleData_of_alternativeSpecs`
+  now isolate the exact minimal replacement statement already supported by Lean: from the corrected
+  local interface one can prove "terminal node or explicit packaged obstruction." The next step is
+  still to turn that disjunction into a pure terminal-existence theorem by contracting or bypassing
+  the obstruction branch.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,

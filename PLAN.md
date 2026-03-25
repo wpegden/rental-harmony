@@ -799,6 +799,15 @@
   So the exact remaining Section 5 theorem is now the graph-level contraction/descent step that
   bypasses such nodes in the terminal-node existence argument; the current parity package fails
   there for a precise structural reason, not because of another unresolved local geometry detail.
+- The first replacement theorem for that failed parity package is now formalized too.
+  `exists_terminal_or_boundary_of_odd_start_and_nonterminal_even_off_boundary`
+  is the abstract finite-graph version: once odd nonterminal nodes are allowed only inside a
+  designated boundary predicate, parity yields either a terminal node or a boundary node. Its
+  chosen-chain specialization
+  `exists_terminal_or_boundaryOnlyUniqueCarrierCounterexampleData_of_alternativeSpecs`
+  shows that the present Section 5 local hypotheses already imply the exact disjunction
+  "terminal face or packaged boundary-only unique-carrier obstruction." This makes the remaining
+  contraction lemma precise: consume the right-hand branch of that theorem.
 
 ## Current input status
 - No proposed axioms.

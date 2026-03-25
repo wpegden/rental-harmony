@@ -1708,6 +1708,18 @@ theorem exists_terminal_of_odd_start_and_nonterminal_even
   by_contra hterminal
   exact (Nat.not_even_iff_odd.mpr hoddv) (heven v hv hterminal)
 
+theorem exists_terminal_or_boundary_of_odd_start_and_nonterminal_even_off_boundary
+    (start : V) (terminal boundary : V → Prop)
+    (hstart : Odd (G.degree start))
+    (heven : ∀ v, v ≠ start → ¬ boundary v → ¬ terminal v → Even (G.degree v)) :
+    ∃ v, v ≠ start ∧ (terminal v ∨ boundary v) := by
+  rcases G.exists_ne_odd_degree_of_exists_odd_degree start hstart with ⟨v, hv, hoddv⟩
+  by_cases hterm : terminal v
+  · exact ⟨v, hv, Or.inl hterm⟩
+  · by_cases hboundary : boundary v
+    · exact ⟨v, hv, Or.inr hboundary⟩
+    · exact False.elim ((Nat.not_even_iff_odd.mpr hoddv) (heven v hv hboundary hterm))
+
 end Parity
 
 namespace Section5GraphNode
@@ -5242,22 +5254,45 @@ def chosenMilestoneChain_geometricGenericity_of_doorSpec
       (chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
         (T := T) (φ := φ) hnext hν) hν
 
-lemma degree_start_eq_one
+lemma degree_start_eq_one_of_startAdj_and_unique
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
-    (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ)) :
+    {ν : Section5PositiveNode c φ}
+    (hstart : Adj (T := T) c φ .start (.positive ν))
+    (hunique :
+      ∀ w : Section5GraphNode c φ,
+        Adj (T := T) c φ .start w → w = .positive ν) :
     (graph (T := T) c φ).degree .start = 1 := by
   classical
   let G : SimpleGraph (Section5GraphNode c φ) := graph (T := T) c φ
   rw [SimpleGraph.degree_eq_one_iff_existsUnique_adj (G := G) (v := .start)]
-  refine ⟨.positive hdeg.start_neighbor, hdeg.start_adj, ?_⟩
+  refine ⟨.positive ν, hstart, ?_⟩
   intro w hw
-  exact hdeg.start_unique w hw
+  exact hunique w hw
+
+lemma degree_start_eq_one
+    [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
+    (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ)) :
+    (graph (T := T) c φ).degree .start = 1 := by
+  exact degree_start_eq_one_of_startAdj_and_unique
+    (T := T) (c := c) (φ := φ) hdeg.start_adj hdeg.start_unique
 
 lemma odd_degree_start
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
     (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ)) :
     Odd ((graph (T := T) c φ).degree .start) := by
   rw [degree_start_eq_one (T := T) (c := c) (φ := φ) hdeg]
+  decide
+
+lemma odd_degree_start_of_startAdj_and_unique
+    [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
+    {ν : Section5PositiveNode c φ}
+    (hstart : Adj (T := T) c φ .start (.positive ν))
+    (hunique :
+      ∀ w : Section5GraphNode c φ,
+        Adj (T := T) c φ .start w → w = .positive ν) :
+    Odd ((graph (T := T) c φ).degree .start) := by
+  rw [degree_start_eq_one_of_startAdj_and_unique
+    (T := T) (c := c) (φ := φ) hstart hunique]
   decide
 
 lemma not_isTerminal_of_topDim_missing_nextMilestone
@@ -5284,6 +5319,34 @@ lemma degree_positive_eq_two
   classical
   let G : SimpleGraph (Section5GraphNode c φ) := graph (T := T) c φ
   rcases hdeg.nonterminal_two_neighbors ν hν with ⟨a, b, hab, hadja, hadjb, hall⟩
+  have hfinset : G.neighborFinset (.positive ν) = ({a, b} : Finset (Section5GraphNode c φ)) := by
+    ext w
+    rw [SimpleGraph.mem_neighborFinset]
+    constructor
+    · intro hw
+      simpa [Finset.mem_insert, Finset.mem_singleton] using hall w hw
+    · intro hw
+      rw [Finset.mem_insert, Finset.mem_singleton] at hw
+      rcases hw with rfl | rfl
+      · exact hadja
+      · exact hadjb
+  rw [← G.card_neighborFinset_eq_degree, hfinset]
+  simp [hab]
+
+lemma degree_positive_eq_two_of_twoNeighborSpec
+    [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
+    (ν : Section5PositiveNode c φ)
+    (hdoors :
+      ∃ a b : Section5GraphNode c φ,
+        a ≠ b ∧
+        Adj (T := T) c φ (.positive ν) a ∧
+        Adj (T := T) c φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode c φ,
+          Adj (T := T) c φ (.positive ν) w → w = a ∨ w = b) :
+    (graph (T := T) c φ).degree (.positive ν) = 2 := by
+  classical
+  let G : SimpleGraph (Section5GraphNode c φ) := graph (T := T) c φ
+  rcases hdoors with ⟨a, b, hab, hadja, hadjb, hall⟩
   have hfinset : G.neighborFinset (.positive ν) = ({a, b} : Finset (Section5GraphNode c φ)) := by
     ext w
     rw [SimpleGraph.mem_neighborFinset]
@@ -5370,6 +5433,115 @@ theorem not_even_degree_of_boundaryOnlyUniqueCarrierCounterexampleData
   rw [degree_positive_eq_one_of_boundaryOnlyUniqueCarrierCounterexampleData
     (T := T) (φ := φ) hdata]
   decide
+
+def IsBoundaryOnlyUniqueCarrierCounterexampleNode
+    (w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ) : Prop :=
+  ∃ hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ),
+    w = .positive hdata.ν
+
+lemma even_degree_of_not_terminal_of_not_boundaryOnlyUniqueCarrierCounterexampleNode_of_alternativeSpecs
+    [Fintype (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    [DecidableRel (graph (T := T) (chosenMilestoneChain (φ := φ)) φ).Adj]
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    {w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ}
+    (hw : w ≠ .start)
+    (hboundary : ¬ IsBoundaryOnlyUniqueCarrierCounterexampleNode (T := T) (φ := φ) w)
+    (hterminal :
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ w) :
+    Even ((graph (T := T) (chosenMilestoneChain (φ := φ)) φ).degree w) := by
+  cases w with
+  | start =>
+      contradiction
+  | positive ν =>
+      by_cases hnext :
+          ν.face.ImageContainsMilestone (T := T)
+            (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ
+      · rw [degree_positive_eq_two_of_twoNeighborSpec
+          (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) ν]
+        · decide
+        · exact
+            haway.two_doors_of_nextMilestone_awayFromBoundary ν
+              (chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
+                (T := T) (φ := φ) hnext hterminal)
+              hterminal
+      · by_cases hopenν :
+          ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+            (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+        · rw [degree_positive_eq_two_of_twoNeighborSpec
+            (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) ν]
+          · decide
+          · exact
+              hopen.two_doors_of_missing_nextMilestone_openCrossing ν hnext hopenν
+        · by_cases hk : 0 < ν.level.1
+          · rcases
+                halt.two_doors_or_topDimBoundaryOnlyUniqueCarrierCounterexample_of_not_openCrossing
+                  ν hk hnext hopenν with
+              hdoors | ⟨hdata, hdataEq⟩
+            · rw [degree_positive_eq_two_of_twoNeighborSpec
+                (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) ν hdoors]
+              decide
+            · exfalso
+              apply hboundary
+              refine ⟨hdata, ?_⟩
+              simpa [hdataEq]
+          · rw [degree_positive_eq_two_of_twoNeighborSpec
+              (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) ν]
+            · decide
+            · exact
+                hzero.two_doors_of_missing_nextMilestone_level_zero ν
+                  (Nat.eq_zero_of_not_pos hk) hnext
+                  (chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
+                    (T := T) (φ := φ) (ν := ν) hnext hopenν)
+
+theorem exists_terminal_or_boundaryOnlyUniqueCarrierCounterexampleData_of_alternativeSpecs
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ)) :
+    (∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      v ≠ .start ∧
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v) ∨
+      Nonempty
+        (TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+          (T := T) (φ := φ)) := by
+  classical
+  letI := Fintype.ofFinite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)
+  let hlocal :
+      LocalDegreeOrDescentHypotheses
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) :=
+    chosenMilestoneChain_localDegreeOrDescentHypotheses_of_alternativeSpecs
+      (T := T) (φ := φ) hzero hopen halt haway
+  have heven :
+      ∀ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        v ≠ .start →
+        ¬ IsBoundaryOnlyUniqueCarrierCounterexampleNode (T := T) (φ := φ) v →
+        ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v →
+        Even ((graph (T := T) (chosenMilestoneChain (φ := φ)) φ).degree v) := by
+    intro v hv hboundary hterm
+    exact
+      even_degree_of_not_terminal_of_not_boundaryOnlyUniqueCarrierCounterexampleNode_of_alternativeSpecs
+        (T := T) (φ := φ) hzero hopen halt haway hv hboundary hterm
+  rcases
+      exists_terminal_or_boundary_of_odd_start_and_nonterminal_even_off_boundary
+        (graph (T := T) (chosenMilestoneChain (φ := φ)) φ) .start
+        (IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ)
+        (IsBoundaryOnlyUniqueCarrierCounterexampleNode (T := T) (φ := φ))
+        (odd_degree_start_of_startAdj_and_unique
+          (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+          hlocal.start_adj hlocal.start_unique) heven with
+    ⟨v, hv, hterm | hboundary⟩
+  · exact Or.inl ⟨v, hv, hterm⟩
+  · rcases hboundary with ⟨hdata, hw⟩
+    exact Or.inr ⟨hdata⟩
 
 theorem exists_terminal_of_local_degree_lemmas
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
