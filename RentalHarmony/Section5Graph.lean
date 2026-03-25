@@ -2942,6 +2942,20 @@ def chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_fi
   refine ⟨ρ, hρsub, hρmil, ?_⟩
   simpa [IsSameLevelCarrierContinuationCandidate] using huniq
 
+def chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_existence_and_uniqueness
+    (hexists :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec
+        (T := T) (φ := φ))
+    (huniq :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_filteredSpec
+    (T := T) (φ := φ)
+    (chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_existence_and_uniqueness
+      (T := T) (φ := φ) hexists huniq)
+
 def chosenMilestoneChainPositiveLevelLowerMilestoneSpec_of_doorSpec
     (hdoor : ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec (T := T) (φ := φ)) :
     ChosenMilestoneChainPositiveLevelLowerMilestoneSpec (T := T) (φ := φ) := by

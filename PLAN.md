@@ -589,6 +589,11 @@
   `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec`. This confirms that the
   current blocker is specifically existence of a same-level continuation through the normalized
   lower-milestone carrier; uniqueness is a separate later step.
+- The downstream carrier-continuation layer now runs through that split interface, so the support
+  dependency is explicit. A scan of the current development still shows no theorem giving
+  same-level codimension-`1` coface uniqueness, so unless such a simplicial-complex uniqueness
+  lemma is added, `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec` should
+  be treated as a separate local input after the existence half.
 
 ## Current input status
 - No proposed axioms.

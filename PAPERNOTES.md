@@ -663,3 +663,9 @@
   `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec`. So the remaining missing
   theorem is no longer phrased as one opaque "exists unique continuation" block; it is precisely
   the existence half for a same-level continuation through the normalized lower-milestone carrier.
+- The carrier-continuation wrapper has now been rewritten through that split interface as well, so
+  the support-layer dependency is explicit. A scan of the current repo still finds no ambient
+  theorem saying that two same-level positive cofaces through the same normalized codimension-`1`
+  carrier must coincide. Thus the uniqueness half is not currently derivable from the existing
+  bridge lemmas alone; it should remain a separate local contract unless a stronger coface
+  uniqueness theorem is formalized.

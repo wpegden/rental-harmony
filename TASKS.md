@@ -385,3 +385,12 @@
   `chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_existence_and_uniqueness`.
   This records that the present frontier is only the existence half; uniqueness is now a separate,
   downstream contract rather than part of one coarse blocked theorem.
+- [x] Thread the downstream carrier-continuation wrapper through that split interface via
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_existence_and_uniqueness`.
+  This makes the remaining dependency explicit in the support layer: downstream code no longer
+  needs the old monolithic filtered theorem.
+- [ ] Uniqueness check result: there is still no ambient same-level codimension-`1` coface
+  uniqueness theorem in the current repo. The available lemmas build codimension-`1` faces and
+  promote horizontal doors to candidates, but nothing yet proves that two same-level candidates
+  through the same normalized carrier must coincide. So `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec`
+  remains an explicit local input unless a stronger simplicial-complex uniqueness theorem is added.
