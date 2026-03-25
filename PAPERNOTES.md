@@ -464,3 +464,13 @@
   `exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone`. So the
   remaining abstract support gap is no longer "produce a graph neighbor somehow", but the more
   precise large-lower-prefix carrier statement.
+- Formalization note after the latest graph-local refinement:
+  the second unresolved Section 5 contract is now also stated in a sharper form.
+  `Section5GraphNode.ChosenMilestoneChainGraphLocalSpec` isolates the remaining start/door-count
+  work into the exact cases forced by the current lower-door API: an open-crossing branch, a
+  level-`0` lower-milestone branch, a positive-level branch that turns one supplied extra neighbor
+  into the full two-door conclusion, and the away-from-boundary next-milestone branch. The old
+  `ChosenMilestoneChainDoorSpec` is now derived from
+  `ChosenMilestoneChainGraphLocalSpec` plus `FaceLocalLowerPrefixCarrierSpec`, and the wrapper
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_specs` shows that these
+  two refined contracts already suffice for the downstream barycenter-cell statement.

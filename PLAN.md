@@ -384,6 +384,15 @@
   data consumed by
   `exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone`. The older
   contract `FaceLocalLowerPrefixCarrierSpec` is now just a derived wrapper.
+- The second remaining contract has also been split into the graph-local shape actually forced by
+  the current proofs. `Section5GraphNode.ChosenMilestoneChainGraphLocalSpec` separates the
+  missing-next/lower-milestone branch into a level-`0` base case and a positive-level theorem that
+  turns one known extra neighbor into the full two-door conclusion. Together with
+  `FaceLocalLowerPrefixCarrierSpec`, it now derives the old `ChosenMilestoneChainDoorSpec`, and
+  the new theorem
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_specs`
+  shows that these two refined contracts already suffice for the downstream Section 5 barycenter
+  cell conclusion.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

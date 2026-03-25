@@ -2364,6 +2364,69 @@ Remaining graph-local contract for the concrete chosen chain.
 The explicit milestone geometry already proved in this file reduces the higher-dimensional Section 5
 argument to these start and door-count statements.
 -/
+structure ChosenMilestoneChainGraphLocalSpec where
+  start_neighbor : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ
+  start_adj :
+    Adj (T := T) (chosenMilestoneChain (φ := φ)) φ .start (.positive start_neighbor)
+  start_unique :
+    ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ .start w →
+        w = .positive start_neighbor
+  two_doors_of_missing_nextMilestone_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+  two_doors_of_missing_nextMilestone_level_zero :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ν.level.1 = 0 →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+  two_doors_of_missing_nextMilestone_positiveLevel_of_extraNeighbor :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      (∃ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        w ≠ .positive ν ∧
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w) →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+  two_doors_of_nextMilestone_awayFromBoundary :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+/--
+This combines the primitive lower-door support contract with the remaining purely graph-local
+Section 5 consequences for the chosen chain.
+-/
 structure ChosenMilestoneChainDoorSpec where
   start_neighbor : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ
   start_adj :
@@ -2407,6 +2470,29 @@ structure ChosenMilestoneChainDoorSpec where
         Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
         ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
           Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+def chosenMilestoneChainDoorSpec_of_faceLocal_and_graphLocal
+    (hlower :
+      FaceLocalLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hgraph : ChosenMilestoneChainGraphLocalSpec (T := T) (φ := φ)) :
+    ChosenMilestoneChainDoorSpec (T := T) (φ := φ) := by
+  refine
+    { start_neighbor := hgraph.start_neighbor
+      start_adj := hgraph.start_adj
+      start_unique := hgraph.start_unique
+      two_doors_of_missing_nextMilestone_openCrossing :=
+        hgraph.two_doors_of_missing_nextMilestone_openCrossing
+      two_doors_of_missing_nextMilestone_contains_lowerMilestone := ?_
+      two_doors_of_nextMilestone_awayFromBoundary :=
+        hgraph.two_doors_of_nextMilestone_awayFromBoundary }
+  intro ν hupper hlowerMil
+  by_cases hk : 0 < ν.level.1
+  · exact hgraph.two_doors_of_missing_nextMilestone_positiveLevel_of_extraNeighbor ν hk hupper
+      (exists_graphNeighbor_of_contains_lowerMilestone_of_faceLocalSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hlower hk hlowerMil)
+  · exact hgraph.two_doors_of_missing_nextMilestone_level_zero ν
+      (Nat.eq_zero_of_not_pos hk) hupper hlowerMil
 
 def localDegreeHypotheses_of_geometricGenericity
     (hgen : GeometricGenericity (T := T) (c := c) (φ := φ)) :
@@ -2620,6 +2706,18 @@ theorem exists_barycenterPreimageCell_of_chosenMilestoneChain_doorSpec
   refine ⟨σ, hσ, ?_⟩
   simpa [FacetImageContainsBarycenter, chosenMilestoneChain_point,
     chosenPrefixMilestonePoint_terminal_eq_barycenter (T := T) (φ := φ)] using hσmil'
+
+theorem exists_barycenterPreimageCell_of_chosenMilestoneChain_specs
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hlower :
+      FaceLocalLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hgraph : ChosenMilestoneChainGraphLocalSpec (T := T) (φ := φ)) :
+    ∃ σ ∈ T.facets, FacetImageContainsBarycenter σ φ.vertexMap := by
+  exact exists_barycenterPreimageCell_of_chosenMilestoneChain_doorSpec
+    (T := T) (φ := φ)
+    (chosenMilestoneChainDoorSpec_of_faceLocal_and_graphLocal
+      (T := T) (φ := φ) hlower hgraph)
 
 end Section5GraphNode
 

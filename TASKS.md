@@ -211,5 +211,7 @@
   from which the older graph-neighbor contract
   `Section5GraphNode.FaceLocalLowerPrefixCarrierSpec.exists_graphNeighbor_of_contains_lowerMilestone`
   is now derived automatically.
-  Second, the graph-local start/door-count package still has to be produced as
-  `Section5GraphNode.ChosenMilestoneChainDoorSpec` for `chosenMilestoneChain`.
+  Second, the remaining graph-local start/door-count package is now isolated as
+  `Section5GraphNode.ChosenMilestoneChainGraphLocalSpec`, whose level-`0` and positive-level
+  missing-next branches combine with the lower-door support contract to derive the older
+  `Section5GraphNode.ChosenMilestoneChainDoorSpec` and hence the barycenter-cell wrapper.
