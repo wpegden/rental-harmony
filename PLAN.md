@@ -352,6 +352,11 @@
   a relative-interior point chooses a unique containing facet. Without those properties, the
   proposed proof that `φ.toFun` restricts on each facet to the corresponding local affine map
   cannot be carried out from the current abstractions.
+- The third recovery suggestion also fails at the level of project structure: there is no concrete
+  subdivision object anywhere in the repo to instantiate a richer geometric bundle against. The
+  entire Section 5 and Sperner development is parameterized by an arbitrary
+  `SimplicialSubdivision`, so any successful repair now has to strengthen that abstract support
+  layer itself or thread stronger internal assumptions through the support lemmas.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

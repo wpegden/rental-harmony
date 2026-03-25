@@ -192,3 +192,8 @@
 - [x] Added compile-clean `RentalHarmony/PaperDefinitions.lean` and `RentalHarmony/PaperTheorems.lean` skeleton modules.
 - [x] Checked every section of the paper for proof gaps, hidden assumptions, and theorem dependencies.
 - [x] Identified the main clarification points for formalization: the one-cent tolerance usage, the cyclic relabeling/Sperner step, and the interior-point/facet arguments.
+- [ ] Current concrete frontier: strengthen the abstract `SimplicialSubdivision` / `PiecewiseLinearSimplexMap`
+  support layer with face-local affine or barycentric-preimage data. After three recovery attempts,
+  the blocker is no longer in `Section5Graph.lean`: the present abstract API is too weak to derive
+  the all-image-lower lower-door step, and there is no concrete subdivision object anywhere in the
+  repo on which a richer internal geometric bundle could be instantiated instead.

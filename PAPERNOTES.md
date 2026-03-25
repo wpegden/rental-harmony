@@ -423,3 +423,11 @@
   affine extension and then extend by continuity. So the current obstruction is not just a missing
   lemma name; the existing abstract `SimplicialSubdivision` interface is too weak for both the
   global-support route and the relative-interior affine-restriction route.
+- Recovery attempt 3 diagnosis:
+  the suggested "prove a stronger geometric bundle only for the concrete subdivision used in the
+  repo" also does not fit the current development. There is no concrete subdivision implementation
+  anywhere in the repo to instantiate such a bundle against; all of `Section5Graph.lean`,
+  `Sperner.lean`, and `PaperTheorems.lean` are parameterized by an arbitrary
+  `SimplicialSubdivision`. So unblocking Section 5 now requires strengthening the core abstract
+  support layer itself (or adding equivalent internal assumptions throughout), not merely proving a
+  richer theorem package for some hidden concrete instance.
