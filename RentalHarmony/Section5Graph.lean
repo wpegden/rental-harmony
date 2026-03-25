@@ -1052,6 +1052,69 @@ theorem exists_prefixMilestonePoint_avoiding_forbiddenFamily (k : Fin (dimension
       (T := milestoneForbiddenFamily (T := T) (φ := φ) k)
       (fun t ht => card_milestoneForbiddenFamily_member_le (T := T) (φ := φ) ht)
 
+lemma prefixVertex_coord_eq_zero_of_lt (k : Fin (dimension + 1)) (j : Fin (k.1 + 1))
+    {i : Room (dimension + 1)} (hi : k.1 < i.1) :
+    (((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+      RealPoint dimension) i) = 0 := by
+  have hne : j.castLE (Nat.succ_le_of_lt k.2) ≠ i := by
+    intro hEq
+    have hle : i.1 ≤ k.1 := by
+      have hle' : (j.castLE (Nat.succ_le_of_lt k.2)).1 ≤ k.1 := by
+        simpa using Nat.le_of_lt_succ j.2
+      simpa [hEq] using hle'
+    omega
+  simp [prefixVertex, stdSimplex.vertex, hne]
+
+lemma prefixBarycenter_coord_eq_zero_of_lt (k : Fin (dimension + 1))
+    {i : Room (dimension + 1)} (hi : k.1 < i.1) :
+    (((prefixBarycenter (dimension := dimension) k : RentDivision (dimension + 1)) :
+      RealPoint dimension) i) = 0 := by
+  unfold prefixBarycenter
+  change
+    (((Finset.univ.centerMass (fun _ : Fin (k.1 + 1) => (1 : ℝ))
+      (fun j =>
+        ((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+          RealPoint dimension))) i) = 0)
+  simp [Finset.centerMass, Pi.smul_apply, smul_eq_mul,
+    prefixVertex_coord_eq_zero_of_lt (dimension := dimension) k, hi]
+
+/-- The true barycenter of a prefix face, re-bundled as a point of that prefix face. -/
+def prefixBarycenterPoint (k : Fin (dimension + 1)) : PrefixFace (dimension := dimension) k :=
+  ⟨prefixBarycenter (dimension := dimension) k,
+    fun _ hi => prefixBarycenter_coord_eq_zero_of_lt (dimension := dimension) k hi⟩
+
+/--
+The concrete milestone points used for the Section 5 graph proof:
+start at `e₁`, end at the true simplex barycenter, and use levelwise avoiding choices in between.
+-/
+noncomputable def chosenPrefixMilestonePoint (k : Fin (dimension + 1)) :
+    PrefixFace (dimension := dimension) k :=
+  if hk0 : k = 0 then
+    hk0 ▸ prefixBarycenterPoint (dimension := dimension) 0
+  else if hklast : k = Fin.last dimension then
+    hklast ▸ prefixBarycenterPoint (dimension := dimension) (Fin.last dimension)
+  else
+    Classical.choose (exists_prefixMilestonePoint_avoiding_forbiddenFamily
+      (T := T) (φ := φ) k)
+
+/-- The Section 5 milestone chain with fixed endpoints and chosen intermediate avoiding points. -/
+noncomputable def chosenMilestoneChain : Section5MilestoneChain (dimension := dimension) where
+  point k := (chosenPrefixMilestonePoint (T := T) (φ := φ) k).1
+  start_eq := by
+    simp [chosenPrefixMilestonePoint, prefixBarycenterPoint]
+  terminal_eq := by
+    unfold chosenPrefixMilestonePoint
+    by_cases hk0 : (Fin.last dimension : Fin (dimension + 1)) = 0
+    · have hdim : dimension = 0 := by
+        have hval := congrArg Fin.val hk0
+        simpa using hval
+      subst hdim
+      simp [prefixBarycenterPoint]
+    · simp [hk0, prefixBarycenterPoint]
+  point_subdividesPrefixFace := by
+    intro k i hi
+    exact (chosenPrefixMilestonePoint (T := T) (φ := φ) k).2 i hi
+
 end MilestoneFamilies
 
 section GraphStructure

@@ -265,3 +265,11 @@
   blocker is now only the final assembly/transversality argument: splice these levelwise choices
   together with the fixed start point `e_1` and fixed terminal barycenter, and prove the resulting
   chain satisfies `Section5GraphNode.MilestoneSegmentTransversality`.
+- Formalization note after the latest chain-construction step:
+  that assembly is now done as well.
+  `RentalHarmony/Section5Graph.lean` now defines `chosenPrefixMilestonePoint` and
+  `chosenMilestoneChain`, combining the fixed start point `e_1`, the fixed terminal barycenter,
+  and the levelwise avoiding choices from `exists_prefixMilestonePoint_avoiding_forbiddenFamily`.
+  So the remaining Section 5 blocker is now exactly the final geometric proof that this concrete
+  chain satisfies the open-segment and away-from-boundary clauses of
+  `Section5GraphNode.MilestoneSegmentTransversality`.

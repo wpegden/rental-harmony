@@ -248,6 +248,10 @@
   the actual assembly step: combine those levelwise choices with the fixed start vertex and fixed
   terminal barycenter, then prove the resulting chain satisfies
   `Section5GraphNode.MilestoneSegmentTransversality`.
+- That assembly is now in code:
+  `chosenPrefixMilestonePoint` and `chosenMilestoneChain` provide the concrete milestone chain with
+  fixed endpoints and chosen intermediate prefix-face points. The remaining Section 5 work is now
+  purely the final transversality proof for that specific chain.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -279,8 +283,7 @@
   sense recorded there. At the moment this reduces to a missing support theorem about choosing
   points in the relative interior of prefix simplex faces away from finitely many lower-dimensional
   convex hulls. That smaller-simplex convex-hull avoidance theorem is now proved, so the next
-  missing argument is the assembly of the resulting levelwise choices into a milestone chain
-  witnessing
+  missing argument is the proof that the concrete chain `chosenMilestoneChain` witnesses
   `Section5GraphNode.MilestoneSegmentTransversality`.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
