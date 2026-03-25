@@ -426,3 +426,9 @@
 - [x] Route the no-open-crossing filtered wrapper chain through this coface-extension interface as
   well, via `chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierCofaceExtension`
   and `chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_reflection_and_fixedCarrierCofaceExtension_and_uniqueness`.
+- [x] Push the same obstruction one layer further down to the single-simplex viewpoint suggested by
+  the paper: `ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec` now asks for a
+  second same-level coface inside one ambient facet `σ` containing `ν.face`, and the coface-
+  extension / filtered-wrapper chain is routed through it via
+  `chosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec_of_ambientFacetExit` and the
+  corresponding no-open-crossing wrapper theorems.

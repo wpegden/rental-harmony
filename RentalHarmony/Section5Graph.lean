@@ -2814,6 +2814,24 @@ is precisely the missing upward extension step dual to
 `SubdivisionFace.subdividesPrefixFace_of_subface`: extend a codimension-`1` prefix-face carrier to
 a distinct same-level prefix-face coface.
 -/
+structure ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec where
+  exists_sameLevelCoface_in_ambientFacet_of_carrier :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face} {σ : Finset Vertex},
+      σ ∈ T.facets →
+      ν.face.carrier ⊆ σ →
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc →
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        μ ≠ ν ∧
+        μ.level = ν.level ∧
+        ρ.toSubdivisionFace.IsCodimOneSubface μ.face ∧
+        μ.face.carrier ⊆ σ
+
+/--
+This packages the paper's facet-local segment-exit picture inside one ambient simplex.
+-/
 structure ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec where
   exists_sameLevelCoface_of_carrier :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
@@ -2825,6 +2843,22 @@ structure ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec where
         μ ≠ ν ∧
         μ.level = ν.level ∧
         ρ.toSubdivisionFace.IsCodimOneSubface μ.face
+
+/--
+Ambient-facet exit implies the older fixed-carrier same-level coface-extension theorem.
+-/
+def chosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec_of_ambientFacetExit
+    (hexit :
+      ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν ρ hρsub hρmil
+  rcases ν.face.subset_facet with ⟨σ, hσ, hνσ⟩
+  rcases hexit.exists_sameLevelCoface_in_ambientFacet_of_carrier ν hσ hνσ hρsub hρmil with
+    ⟨μ, hne, hlevel, hρμ, -⟩
+  exact ⟨μ, hne, hlevel, hρμ⟩
 
 /--
 Candidate-level version of the fixed-carrier coface-extension theorem.
@@ -2849,6 +2883,17 @@ def chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_co
   intro ν ρ hρsub hρmil
   rcases hext.exists_sameLevelCoface_of_carrier ν hρsub hρmil with ⟨μ, hne, hlevel, hρμ⟩
   exact ⟨μ, hne, hlevel, hρμ.1⟩
+
+def chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_ambientFacetExit
+    (hexit :
+      ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_cofaceExtension
+    (T := T) (φ := φ)
+    (chosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec_of_ambientFacetExit
+      (T := T) (φ := φ) hexit)
 
 /--
 Uniqueness half of the filtered same-level continuation theorem.
@@ -2934,6 +2979,20 @@ def chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_refl
     (chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_cofaceExtension
       (T := T) (φ := φ) hext)
 
+def chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierAmbientFacetExit
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hexit :
+      ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierContinuation
+    (T := T) (φ := φ) hreflect
+    (chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_ambientFacetExit
+      (T := T) (φ := φ) hexit)
+
 def
     chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_existence_and_uniqueness
     (hexists :
@@ -2989,6 +3048,25 @@ def
     (T := T) (φ := φ) hreflect
     (chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_cofaceExtension
       (T := T) (φ := φ) hext)
+    huniq
+
+def
+    chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_reflection_and_fixedCarrierAmbientFacetExit_and_uniqueness
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hexit :
+      ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec
+        (T := T) (φ := φ))
+    (huniq :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_reflection_and_fixedCarrierContinuation_and_uniqueness
+    (T := T) (φ := φ) hreflect
+    (chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_ambientFacetExit
+      (T := T) (φ := φ) hexit)
     huniq
 
 lemma isCodimOneSubface_of_sameLevelCarrierContinuationCandidate

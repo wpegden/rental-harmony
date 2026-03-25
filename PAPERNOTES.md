@@ -690,3 +690,8 @@
   carrier to a distinct same-level coface. The continuation and filtered-wrapper chain is already
   routed through that interface, so the remaining local input can now be stated directly in the
   paper's facet-local language.
+- The same remaining gap is now also isolated at the level of one ambient simplex as
+  `ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec`: after choosing a facet `σ`
+  with `ν.face ⊆ σ`, the paper's geometric picture predicts that the milestone segment exits `σ`
+  through a second codimension-`1` facet distinct from `ν.face`. The coface-extension and
+  no-open-crossing wrapper chain is now routed through that ambient-facet formulation as well.

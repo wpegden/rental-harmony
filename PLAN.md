@@ -615,6 +615,11 @@
   filtered-wrapper theorems are routed through this coface-extension interface, so the remaining
   support dependency can now be stated either combinatorially or in the paper's same-level
   coface-extension language without changing the downstream wrapper chain.
+- The same gap is now isolated one layer lower in the single-simplex language suggested by the
+  paper: `ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec` asks for a second
+  same-level coface inside one ambient facet `σ` containing `ν.face`. The existing coface-
+  extension and no-open-crossing wrapper chain is routed through that ambient-facet interface, so a
+  future simplex-level segment-exit lemma can plug in without changing downstream statements.
 
 ## Current input status
 - No proposed axioms.
