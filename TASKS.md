@@ -36,9 +36,12 @@
   `PrefixFace.padLinear`, `PrefixFace.mem_affineSpan_prefixVertexFinset`, and
   `exists_subset_contains_lowerMilestone_of_all_imageVertices_lowerPrefix`
   formalize the target-side Carathéodory reduction for that all-image-lower case. So the remaining
-  blocker is now purely domain-side: upgrade that proper target support to a proper carrier subset
-  whose vertices themselves lie in the lower prefix face, then feed it into the existing
-  codimension-`1` / vertical-door bridge lemmas.
+  blocker is now purely domain-side and even sharper than before: produce an exact-size
+  lower-prefix carrier subset `s` with `s.card = k + 1` whose image convex hull still contains the
+  lower milestone. The new theorem
+  `exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone`
+  shows that such an `s` is already enough to obtain the needed graph neighbor directly, so the
+  remaining work is precisely to extract that subset in the complementary all-image-lower case.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for

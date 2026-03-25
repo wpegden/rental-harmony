@@ -312,6 +312,12 @@
   that lower-milestone-containment alternative to an actual vertical-door / two-neighbor
   consequence inside `GeometricGenericity`, then package the full concrete chosen-chain witness and
   feed it through the existing terminal-node and surjectivity wrappers.
+- The latest domain-side reduction now makes that bridge target exact:
+  `exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone` shows that once one has an
+  exact-size lower-prefix carrier subset of a positive face whose image convex hull contains the
+  lower milestone, the codimension-`1` / vertical-door machinery is complete. So the remaining
+  chosen-chain gap is no longer a vague lower-door existence statement; it is specifically the
+  extraction of such an exact-size lower-prefix support in the complementary all-image-lower case.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

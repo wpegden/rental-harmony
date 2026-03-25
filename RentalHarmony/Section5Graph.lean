@@ -2004,6 +2004,59 @@ theorem exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone
     exact Section5PositiveNode.not_verticalAdj_self (T := T) (c := c) (φ := φ) ν hμ
   · exact Or.inr (Or.inr hμ)
 
+theorem exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    {s : Finset Vertex}
+    (hs : s ⊆ ν.face.carrier)
+    (hcard : s.card = ν.level.succ.1)
+    (hslower :
+      ∀ v ∈ s,
+        (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0)
+    (himg :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (s : Set Vertex)))) :
+    ∃ w : Section5GraphNode c φ,
+      w ≠ .positive ν ∧ Adj (T := T) c φ (.positive ν) w := by
+  have hsne : s.Nonempty := by
+    apply Finset.card_pos.mp
+    rw [hcard]
+    exact Nat.succ_pos _
+  let ρ : SubdivisionFace T := ν.face.ofSubset s hs hsne
+  have hρ : ρ.IsCodimOneSubface ν.face := by
+    constructor
+    · exact hs
+    · have hfacecard : ν.face.carrier.card = ν.level.succ.1 + 1 := by
+        rw [ν.face.card_eq_dim_succ, ν.face_dim]
+        simp
+      dsimp [ρ]
+      calc
+        s.card + 1 = ν.level.succ.1 + 1 := by rw [hcard]
+        _ = ν.face.carrier.card := hfacecard.symm
+  have hρsub : ρ.SubdividesPrefixFace (T := T) ν.level.castSucc := by
+    intro v hv i hi
+    by_cases hisucc : i = ν.level.succ
+    · subst hisucc
+      exact hslower v hv
+    · have hgt : ν.level.succ.1 < i.1 := by
+        have hge : ν.level.succ.1 ≤ i.1 := by
+          simpa using Nat.succ_le_of_lt hi
+        have hne : ν.level.succ.1 ≠ i.1 := by
+          intro hEq
+          apply hisucc
+          exact Fin.ext hEq.symm
+        exact lt_of_le_of_ne hge hne
+      exact ν.subdivides v (hs hv) i hgt
+  have hρmil :
+      ρ.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc := by
+    dsimp [ρ]
+    simpa [SubdivisionFace.ImageContainsMilestone, SubdivisionFace.ImageContains,
+      SubdivisionFace.imagePoints] using himg
+  exact exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone
+    (T := T) (c := c) (φ := φ) hk hρ hρsub hρmil
+
 theorem chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
     {ν : Section5PositiveNode (c := chosenMilestoneChain (φ := φ)) φ}
     (hcontains :

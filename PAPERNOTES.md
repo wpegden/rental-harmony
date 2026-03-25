@@ -352,3 +352,12 @@
   missing theorem concrete: build a clean ambient padding / affine-span transport statement for
   `PrefixFace k`, so that the all-image-lower-prefix lower-door case can be reduced to a
   Carathéodory support argument inside that lower target prefix face.
+- Formalization note after the latest lower-prefix subset bridge:
+  the remaining all-image-lower obstacle is now isolated in its exact final form.
+  `exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone`
+  packages the existing codimension-`1` and vertical-door lemmas and shows that an exact-size
+  lower-prefix carrier subset already suffices to produce the required graph neighbor. So the
+  unresolved part of Section 5 is now no longer "some lower door exists" in the abstract; it is
+  specifically the extraction of a carrier subset of size `k + 1` whose vertices lie in the lower
+  prefix face and whose image convex hull still contains the lower milestone in the complementary
+  all-image-lower case.
