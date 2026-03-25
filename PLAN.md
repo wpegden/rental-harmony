@@ -1048,6 +1048,20 @@
   shows that the whole higher-dimensional obstruction branch disappears as soon as one proves a
   single abstract theorem: every below-top-dimensional positive chosen-chain node eventually leads
   to a terminal node. This is now the exact remaining high-dimensional graph theorem.
+- The route-changed next-milestone entrance branch is now sharper in the simplex layer as well.
+  The new theorem
+  `Affine.Simplex.exists_mem_faceOpposite_closedInterior_of_mem_closedInterior_of_not_mem_interior`
+  proves the barycentric boundary fact that any point of an affine simplex lying in
+  `closedInterior \ interior` already lies in the closed interior of some opposite face. The new
+  wrapper
+  `chosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec_of_boundaryEntry`
+  then shows that the current carrier-image simplex entrance theorem reduces exactly to one more
+  precise local statement:
+  `ChosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec.
+  exists_boundaryPoint_wbtw_of_mem_interior_carrierImageSimplex_and_lowerMilestone_not_mem_closedInterior`.
+  So the remaining next-milestone gap is no longer "turn a boundary simplex point into a facet";
+  it is specifically "show that the segment from `b_{k-1}` to `b_k` has a first point on the
+  boundary of the carrier-image simplex."
 
 ## Current input status
 - No proposed axioms.

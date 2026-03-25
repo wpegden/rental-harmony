@@ -850,3 +850,16 @@
   records the exact remaining global gap: to recover the old no-open-crossing theorem one must
   either exclude the packaged obstruction from the intended geometry, or replace the downstream
   parity pipeline by a contraction lemma that consumes this forced-descent alternative.
+- [x] Split the literal next-milestone simplex-entry theorem into a proved facet-membership step
+  and one sharper remaining boundary-entry step. The new generic simplex theorem
+  `Affine.Simplex.exists_mem_faceOpposite_closedInterior_of_mem_closedInterior_of_not_mem_interior`
+  proves that every point of `closedInterior \ interior` lies in the closed interior of some
+  opposite face. The new reduction
+  `chosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec_of_boundaryEntry`
+  uses this to show that the current entrance-face target is implied by the exact sharper local
+  statement
+  `ChosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec.
+  exists_boundaryPoint_wbtw_of_mem_interior_carrierImageSimplex_and_lowerMilestone_not_mem_closedInterior`.
+  So the unresolved next-milestone geometry is now no longer generic barycentric-to-facet support;
+  it is specifically the existence of a first boundary point of the carrier-image simplex on the
+  segment `[b_{k-1}, b_k]`.

@@ -3681,6 +3681,59 @@ theorem mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_o
 
 end SubdivisionFace
 
+theorem Affine.Simplex.exists_mem_faceOpposite_closedInterior_of_mem_closedInterior_of_not_mem_interior
+    {n : ℕ} [NeZero n] {s : Affine.Simplex ℝ (RealPoint dimension) n}
+    {x : RealPoint dimension}
+    (hxclosed : x ∈ s.closedInterior) (hxnot : x ∉ s.interior) :
+    ∃ i : Fin (n + 1), x ∈ (s.faceOpposite i).closedInterior := by
+  rcases hxclosed with ⟨w, hw, hw01, hwx⟩
+  have hnotall : ¬ ∀ i, 0 < w i := by
+    intro hwpos
+    have hcard : 1 < Fintype.card (Fin (n + 1)) := by
+      simpa [Fintype.card_fin] using Nat.succ_lt_succ (Nat.pos_of_ne_zero (NeZero.ne n))
+    have hwlt : ∀ i, w i < 1 := by
+      intro i
+      obtain ⟨j, hj⟩ := Fintype.exists_ne_of_one_lt_card hcard i
+      have hrestpos : 0 < Finset.sum (Finset.univ.erase i) w := by
+        have hjmem : j ∈ Finset.univ.erase i := by simp [hj]
+        exact lt_of_lt_of_le (hwpos j) <|
+          Finset.single_le_sum (fun t _ => (hwpos t).le) hjmem
+      have hsplit : w i + Finset.sum (Finset.univ.erase i) w = 1 := by
+        calc
+          w i + Finset.sum (Finset.univ.erase i) w = ∑ t, w t := by
+            symm
+            simpa using Finset.sum_erase_add (s := Finset.univ) (f := w) (a := i) (by simp)
+          _ = 1 := hw
+      linarith
+    apply hxnot
+    rw [← hwx, s.affineCombination_mem_interior_iff hw]
+    intro i
+    exact ⟨hwpos i, hwlt i⟩
+  push_neg at hnotall
+  rcases hnotall with ⟨i, hi⟩
+  have hwi0 : w i = 0 := by
+    have hnonneg : 0 ≤ w i := (hw01 i).1
+    linarith
+  have hfacecard :
+      Finset.card ({i}ᶜ : Finset (Fin (n + 1))) = n - 1 + 1 := by
+    simpa [Finset.card_compl, NeZero.one_le]
+  refine ⟨i, ?_⟩
+  rw [← hwx]
+  have hfaceclosed :
+      Finset.univ.affineCombination ℝ s.points w ∈
+        (s.face (fs := ({i}ᶜ : Finset (Fin (n + 1)))) hfacecard).closedInterior := by
+    rw [s.affineCombination_mem_closedInterior_face_iff_nonneg
+      (fs := ({i}ᶜ : Finset (Fin (n + 1)))) (h := hfacecard) (w := w) hw]
+    constructor
+    · intro j hj
+      exact (hw01 j).1
+    · intro j hj
+      have hji : j = i := by
+        by_contra hne
+        exact hj (by simp [hne])
+      simpa [hji] using hwi0
+  simpa [Affine.Simplex.faceOpposite] using hfaceclosed
+
 theorem not_exists_smaller_support_of_pair_of_mem_openSegment
     (pfun : Vertex → RealPoint dimension)
     {u v : Vertex} (huv : pfun u ≠ pfun v)
@@ -4775,6 +4828,102 @@ structure ChosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec 
       ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
         ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
           (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+
+/--
+Sharper boundary-entry version of the literal carrier-image simplex theorem.
+
+Once `b_k` is known to lie in the interior of the carrier-image simplex and `b_{k-1}` is known to
+lie outside its closed interior, the remaining missing geometry can be isolated as the existence of
+a first boundary point on the segment `[b_{k-1}, b_k]`. The codimension-`1` face then follows from
+the general simplex fact that every point of `closedInterior \ interior` lies on some opposite
+face.
+-/
+structure ChosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec where
+  exists_boundaryPoint_wbtw_of_mem_interior_carrierImageSimplex_and_lowerMilestone_not_mem_closedInterior :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      (hcarrier : AffineIndependent ℝ
+        (fun v : (ν.face.carrier : Set Vertex) =>
+          ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension))) →
+      let sx :=
+        SubdivisionFace.carrierImageSimplex
+          (T := T) ν.face φ.vertexMap
+          hcarrier
+      (((chosenMilestoneChain (φ := φ)).point ν.level.succ :
+          RentDivision (dimension + 1)) : RealPoint dimension) ∈ sx.interior →
+      (((chosenMilestoneChain (φ := φ)).point ν.level.castSucc :
+          RentDivision (dimension + 1)) : RealPoint dimension) ∉ sx.closedInterior →
+      ∃ z : RealPoint dimension,
+        z ∈ sx.closedInterior ∧
+        z ∉ sx.interior ∧
+        z ∈ (chosenMilestoneChain (φ := φ)).segment ν.level
+
+def chosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec_of_boundaryEntry
+    (hboundary :
+      ChosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hcarrier
+  dsimp
+  intro hupper hintlower
+  let sx :=
+    SubdivisionFace.carrierImageSimplex
+      (T := T) ν.face φ.vertexMap
+      hcarrier
+  have hdimpos : 0 < ν.face.dim := by
+    simpa [ν.face_dim] using Nat.succ_pos ν.level.1
+  letI : NeZero ν.face.dim := ⟨Nat.ne_of_gt hdimpos⟩
+  have hfacecard : 1 < ν.face.carrier.card := by
+    rw [ν.face.card_eq_dim_succ]
+    exact Nat.succ_lt_succ hdimpos
+  rcases
+      hboundary.exists_boundaryPoint_wbtw_of_mem_interior_carrierImageSimplex_and_lowerMilestone_not_mem_closedInterior
+        ν hk hcarrier hupper hintlower with
+    ⟨z, hzclosed, hznotint, hzseg⟩
+  rcases
+      Affine.Simplex.exists_mem_faceOpposite_closedInterior_of_mem_closedInterior_of_not_mem_interior
+        hzclosed hznotint with
+    ⟨i, hzfaceclosed⟩
+  let v : Vertex :=
+    (((SubdivisionFace.carrierSubtypeEquivFin (T := T) ν.face).symm i :
+      (ν.face.carrier : Set Vertex)) : Vertex)
+  let ρ : SubdivisionFace.CarrierCodimOneSubface ν.face := {
+    carrier := ν.face.carrier.erase v
+    nonempty := by
+      apply Finset.card_pos.mp
+      rw [Finset.card_erase_of_mem
+        (((SubdivisionFace.carrierSubtypeEquivFin (T := T) ν.face).symm i :
+          (ν.face.carrier : Set Vertex)).property)]
+      exact Nat.sub_pos_of_lt hfacecard
+    subset := Finset.erase_subset _ _
+    card := by
+      rw [Finset.card_erase_of_mem
+        (((SubdivisionFace.carrierSubtypeEquivFin (T := T) ν.face).symm i :
+          (ν.face.carrier : Set Vertex)).property)]
+      exact Nat.sub_add_cancel (Nat.le_of_lt hfacecard) }
+  have hzstd :
+      z ∈ stdSimplex ℝ (Room (dimension + 1)) := by
+    exact
+      (convex_stdSimplex ℝ (Room (dimension + 1))).segment_subset
+        ((chosenMilestoneChain (φ := φ)).point ν.level.castSucc).property
+        ((chosenMilestoneChain (φ := φ)).point ν.level.succ).property
+        hzseg
+  let x : RentDivision (dimension + 1) := ⟨z, hzstd⟩
+  refine ⟨ρ, x, ?_, ?_⟩
+  · simpa [x] using hzseg
+  · change
+      ((x : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun y : Vertex =>
+              ((φ.vertexMap y : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            ((ρ.carrier : Finset Vertex) : Set Vertex)))
+    simpa [sx, ρ, v, x,
+      SubdivisionFace.range_faceOpposite_carrierImageSimplex_points
+        (T := T) (τ := ν.face) hcarrier i] using
+      SubdivisionFace.mem_convexHull_range_of_mem_closedInterior
+        (dimension := dimension) hzfaceclosed
 
 def
     chosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec_of_carrierImageSimplexInteriorEntry

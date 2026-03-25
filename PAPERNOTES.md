@@ -1200,3 +1200,16 @@
   this as the exact remaining version of the second bridge. So the first unresolved
   next-milestone question is still the entrance-face theorem itself; the second has become the
   more concrete "fresh current-prefix ambient-facet vertex" problem.
+- Formalization note after the latest simplex-entry reduction:
+  the literal next-milestone simplex theorem has now split into one proved generic simplex fact
+  and one sharper remaining local entry statement. Lean proves
+  `Affine.Simplex.exists_mem_faceOpposite_closedInterior_of_mem_closedInterior_of_not_mem_interior`:
+  any point in the closed interior but not the interior of an affine simplex already lies on some
+  codimension-`1` opposite face. Consequently the wrapper
+  `chosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec_of_boundaryEntry`
+  shows that the surviving next-milestone gap is not about turning a simplex-boundary point into a
+  facet witness. The exact unresolved geometry is earlier: starting from `b_{k-1}` outside the
+  closed interior of the carrier-image simplex and `b_k` in its interior, show that the segment
+  `[b_{k-1}, b_k]` has a first point on the boundary of that simplex. If the manuscript's
+  trap-door paragraph is meant to justify the entrance-face theorem directly, this boundary-entry
+  statement is now the precise local convex-geometric lemma it must supply.
