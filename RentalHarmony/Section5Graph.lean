@@ -5543,6 +5543,43 @@ theorem exists_terminal_or_boundaryOnlyUniqueCarrierCounterexampleData_of_altern
   · rcases hboundary with ⟨hdata, hw⟩
     exact Or.inr ⟨hdata⟩
 
+/--
+Minimal remaining graph-level input after the current alternative local analysis.
+
+The present development already proves that the chosen-chain graph has either a genuine terminal
+node or exact `TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData`. To recover pure
+terminal existence, it remains to show that such obstruction data can be bypassed via its
+canonical unique descent without losing access to an eventual terminal node.
+-/
+structure ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec where
+  exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData :
+    ∀ _hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ),
+      ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        v ≠ .start ∧
+          IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v
+
+theorem exists_terminal_of_chosenMilestoneChain_alternativeSpecs_and_bypass
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hbypass :
+      ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec (T := T) (φ := φ)) :
+    ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      v ≠ .start ∧
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v := by
+  rcases
+      exists_terminal_or_boundaryOnlyUniqueCarrierCounterexampleData_of_alternativeSpecs
+        (T := T) (φ := φ) hzero hopen halt haway with
+    hterm | hdata
+  · exact hterm
+  · rcases hdata with ⟨hdata⟩
+    exact hbypass.exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData hdata
+
 theorem exists_terminal_of_local_degree_lemmas
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
     (hstart : Odd ((graph (T := T) c φ).degree .start))

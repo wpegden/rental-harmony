@@ -888,3 +888,10 @@
   "terminal face or explicit boundary-only unique-carrier obstruction." So the remaining mismatch
   with the manuscript is no longer vague: the missing theorem is specifically the contraction or
   bypass step that turns this disjunction into pure terminal existence.
+- That missing step is now isolated as a single named interface in Lean:
+  `ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec`.
+  Its reduction theorem
+  `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_and_bypass`
+  shows that no additional local geometry is needed once one can turn explicit packaged
+  obstruction data into eventual terminal existence. This is the exact current frontier of the
+  formalization.

@@ -808,6 +808,12 @@
   shows that the present Section 5 local hypotheses already imply the exact disjunction
   "terminal face or packaged boundary-only unique-carrier obstruction." This makes the remaining
   contraction lemma precise: consume the right-hand branch of that theorem.
+- That final reduction is now packaged as an explicit support theorem rather than only as prose.
+  `ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec` is the minimal remaining graph-level
+  interface: from explicit packaged obstruction data, produce a terminal node anyway. The theorem
+  `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_and_bypass`
+  shows that once such a bypass spec is proved, the current chosen-chain alternative local theory
+  is already sufficient for terminal-node existence.
 
 ## Current input status
 - No proposed axioms.

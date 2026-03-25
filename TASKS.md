@@ -67,7 +67,11 @@
   now isolate the exact minimal replacement statement already supported by Lean: from the corrected
   local interface one can prove "terminal node or explicit packaged obstruction." The next step is
   still to turn that disjunction into a pure terminal-existence theorem by contracting or bypassing
-  the obstruction branch.
+  the obstruction branch. The new structure
+  `ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec` and reduction
+  `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_and_bypass`
+  now package that missing step as one clean theorem: given a way to consume explicit obstruction
+  data, the whole chosen-chain terminal-existence argument goes through again.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,
