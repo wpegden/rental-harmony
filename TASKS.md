@@ -452,3 +452,10 @@
   is therefore inherently a below-top-dimensional argument and cannot settle
   `ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec` uniformly on its
   own.
+- [x] Complete the dimension split around that obstruction without changing the formal interface:
+  `exists_freshAmbientFacetVertex_of_lt_topDim` now shows that below top dimension a fresh ambient-
+  facet vertex exists automatically by cardinality, while
+  `not_exists_sameLevelPrefixFace_in_ambientFacet_of_topDim` shows the current ambient-facet
+  prefix-extension conclusion is actually impossible in the top-dimensional branch. So the
+  remaining below-top-dimensional issue is no longer plain freshness, but specifically choosing a
+  fresh ambient-facet vertex that also lies in the larger prefix face `ν.level.succ`.

@@ -637,6 +637,15 @@
   so there is no fresh ambient-facet vertex at all. Therefore the current reduction can only solve
   the below-top-dimensional part directly; the full prefix-extension theorem still needs either a
   separate top-dimensional continuation argument or a different uniform geometric input.
+- The complementary branch is now sharper too:
+  `exists_freshAmbientFacetVertex_of_lt_topDim` proves that below top dimension a fresh ambient-
+  facet vertex exists automatically by card-counting. Combined with
+  `not_exists_sameLevelPrefixFace_in_ambientFacet_of_topDim`, this means the remaining obstruction
+  has bifurcated cleanly:
+  in the below-top-dimensional branch, only the extra prefix-face condition on that fresh vertex is
+  still missing;
+  in the top-dimensional branch, the current ambient-facet prefix-extension conclusion itself is
+  impossible and must eventually be replaced by a different continuation statement.
 
 ## Current input status
 - No proposed axioms.

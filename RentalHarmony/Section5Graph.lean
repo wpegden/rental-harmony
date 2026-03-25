@@ -92,6 +92,12 @@ def ofFacet (σ : Finset Vertex) (hσ : σ ∈ T.facets) : SubdivisionFace T whe
     (ofFacet (T := T) σ hσ).carrier = σ :=
   rfl
 
+@[ext] theorem ext {τ σ : SubdivisionFace T} (h : τ.carrier = σ.carrier) : τ = σ := by
+  cases τ
+  cases σ
+  cases h
+  simp
+
 /-- The geometric point set spanned by one subdivision face. -/
 def vertexPoints (τ : SubdivisionFace T) : Set (RealPoint dimension) :=
   (fun v ↦ ((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)) '' ↑τ.carrier
@@ -2948,6 +2954,51 @@ lemma no_freshAmbientFacetVertex_of_topDim
   rcases hfresh with ⟨v, hvσ, hvν⟩
   have hEq := ambientFacet_eq_of_topDim (T := T) (φ := φ) ν hσ hνσ hνdim
   exact hvν (by simpa [hEq] using hvσ)
+
+lemma exists_freshAmbientFacetVertex_of_lt_topDim
+    (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    {σ : Finset Vertex}
+    (hσ : σ ∈ T.facets)
+    (_hνσ : ν.face.carrier ⊆ σ)
+    (hνdim : ν.face.dim < dimension) :
+    ∃ v ∈ σ, v ∉ ν.face.carrier := by
+  have hcard_lt : ν.face.carrier.card < σ.card := by
+    calc
+      ν.face.carrier.card = ν.face.dim + 1 := ν.face.card_eq_dim_succ
+      _ < dimension + 1 := by omega
+      _ = σ.card := by rw [T.facet_card σ hσ]
+  by_contra hfresh
+  push_neg at hfresh
+  have hσν : σ ⊆ ν.face.carrier := hfresh
+  have hcard_ge : σ.card ≤ ν.face.carrier.card := Finset.card_le_card hσν
+  exact Nat.not_lt_of_ge hcard_ge hcard_lt
+
+lemma not_exists_sameLevelPrefixFace_in_ambientFacet_of_topDim
+    (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face} {σ : Finset Vertex}
+    (hσ : σ ∈ T.facets)
+    (hνσ : ν.face.carrier ⊆ σ)
+    (hνdim : ν.face.dim = dimension) :
+    ¬ ∃ μface : SubdivisionFace T,
+      μface ≠ ν.face ∧
+      μface.dim = ν.level.1 + 1 ∧
+      μface.SubdividesPrefixFace (T := T) ν.level.succ ∧
+      ρ.toSubdivisionFace.IsCodimOneSubface μface ∧
+      μface.carrier ⊆ σ := by
+  intro hμ
+  rcases hμ with ⟨μface, hμne, hμdim, -, -, hμσ⟩
+  have hμtop : μface.dim = dimension := by
+    calc
+      μface.dim = ν.level.1 + 1 := hμdim
+      _ = ν.face.dim := by rw [ν.face_dim]
+      _ = dimension := hνdim
+  have hμeqσ : μface.carrier = σ := by
+    apply Finset.eq_of_subset_of_card_le hμσ
+    have hμcard : μface.carrier.card = dimension + 1 := by
+      rw [μface.card_eq_dim_succ, hμtop]
+    rw [T.facet_card σ hσ, hμcard]
+  have hνeqσ := ambientFacet_eq_of_topDim (T := T) (φ := φ) ν hσ hνσ hνdim
+  exact hμne (SubdivisionFace.ext (hμeqσ.trans hνeqσ.symm))
 
 structure ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec where
   exists_sameLevelCoface_in_ambientFacet_of_carrier :

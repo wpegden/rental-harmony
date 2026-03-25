@@ -712,3 +712,11 @@
   `ν.face`, so no vertex of `σ` lies outside `ν.face.carrier`. Hence the fresh-prefix-vertex route
   cannot prove the full theorem uniformly; it only addresses the below-top-dimensional case and
   leaves a genuinely separate top-dimensional continuation problem.
+- The complementary branch is now understood more precisely as well. The new lemma
+  `exists_freshAmbientFacetVertex_of_lt_topDim` shows that once `ν.face.dim < dimension`, a fresh
+  vertex of the ambient facet exists automatically by cardinality. So below top dimension the
+  remaining missing input is not “find any fresh ambient-facet vertex,” but “find one whose
+  singleton already lies in the larger prefix face `ν.level.succ`.” Conversely,
+  `not_exists_sameLevelPrefixFace_in_ambientFacet_of_topDim` shows that the current ambient-facet
+  prefix-extension conclusion itself is impossible in the top-dimensional branch, not merely
+  unproved.
