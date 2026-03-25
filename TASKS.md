@@ -14,12 +14,11 @@
 - [ ] Prove the actual milestone-chain geometric/transversality consequences that imply `Section5GraphNode.MilestoneSegmentTransversality`.
 - [ ] Instantiate `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality` from the milestone-chain genericity proof to obtain the Section 5 terminal-node / barycenter-face existence statement.
 - [ ] Finish the concrete `chosenMilestoneChain` transversality proof.
-  Current blocker: the nonterminal away-from-boundary clause is proved, and the open-segment
-  clause has now been reduced to excluding the lower milestone from the same face image, but that
-  exposed a support-layer mismatch: the current
-  `Section5GraphNode.MilestoneSegmentTransversality.open_crossing_of_missing_nextMilestone` field
-  is stronger than the paper's local door-count argument, which still allows a vertical door at
-  the lower endpoint `b_k`.
+  Current blocker: the support-layer mismatch is now repaired, and the concrete chosen chain
+  proves the corrected missing-next branch
+  `missing_nextMilestone_openCrossing_or_contains_lowerMilestone`. The remaining work is to turn
+  that lower-endpoint containment alternative into an actual vertical-door / two-neighbor
+  consequence and then package the full `chosenMilestoneChain` witness.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
@@ -93,6 +92,11 @@
   and
   `chosenMilestoneChain_openSegment_of_missingNextMilestone_of_not_lowerMilestone`
   isolate the exact missing statement as lower-milestone noncontainment.
+- [x] Repaired the missing-next transversality field so it matches the paper's local geometry:
+  `Section5GraphNode.MilestoneSegmentTransversality` now allows either an open crossing or lower
+  milestone containment in the missing-next case, and
+  `chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone`
+  proves that corrected branch for the concrete chosen chain.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made

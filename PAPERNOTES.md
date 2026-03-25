@@ -296,3 +296,13 @@
   `MilestoneSegmentTransversality.open_crossing_of_missing_nextMilestone` rules that case out
   completely. So the remaining blocker may be a local-definition repair rather than one more
   convexity lemma.
+- Formalization note after the latest local repair:
+  that support-layer mismatch is now fixed. The explicit missing-next branch of
+  `MilestoneSegmentTransversality` no longer demands an open crossing outright; it now allows the
+  lower milestone `b_k` to lie in the face image, matching the paper's vertical-door case. The
+  concrete theorem
+  `chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone`
+  proves exactly this corrected alternative for the chosen chain. So the remaining Section 5
+  blocker has shifted again: prove that the lower-milestone-containment alternative yields the
+  actual vertical-door / two-neighbor consequence needed by `GeometricGenericity`, then package
+  the chosen chain into the existing terminal-node framework.

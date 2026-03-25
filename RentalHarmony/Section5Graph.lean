@@ -1439,6 +1439,22 @@ theorem chosenMilestoneChain_openSegment_of_missingNextMilestone_of_not_lowerMil
     SubdivisionFace.imageMeetsOpenMilestoneSegment_of_meets_of_not_containsMilestones
       (T := T) ν.meets_segment hlower hupper
 
+theorem chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone
+    {ν : Section5PositiveNode (c := chosenMilestoneChain (φ := φ)) φ}
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ) :
+    ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level ∨
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc := by
+  by_cases hlower : ν.face.ImageContainsMilestone (T := T)
+      (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc
+  · exact Or.inr hlower
+  · exact Or.inl
+      (chosenMilestoneChain_openSegment_of_missingNextMilestone_of_not_lowerMilestone
+        (T := T) (φ := φ) hlower hupper)
+
 /--
 Local degree data expected from the geometric genericity analysis in Section 5.
 
@@ -1504,16 +1520,17 @@ structure GeometricGenericity where
 /--
 Concrete milestone-segment genericity package for Section 5.
 
-This strengthens `GeometricGenericity` with explicit open-segment and away-from-boundary
-predicates, so the remaining convex-geometric proof can target the paper's relative-interior /
-transversality language instead of the coarser graph-degree consequences.
+This strengthens `GeometricGenericity` with explicit milestone-segment predicates, but now keeps
+the paper's lower-endpoint vertical-door case in the missing-next-milestone branch instead of
+forcing every such intersection to be an open crossing.
 -/
 structure MilestoneSegmentTransversality
     extends GeometricGenericity (T := T) (c := c) (φ := φ) where
-  open_crossing_of_missing_nextMilestone :
+  missing_nextMilestone_openCrossing_or_contains_lowerMilestone :
     ∀ ν : Section5PositiveNode c φ,
       ¬ ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.succ →
-      ν.face.ImageMeetsOpenMilestoneSegment (T := T) c φ.vertexMap ν.level
+      ν.face.ImageMeetsOpenMilestoneSegment (T := T) c φ.vertexMap ν.level ∨
+        ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc
   nextMilestone_awayFromBoundary_of_nonterminal :
     ∀ ν : Section5PositiveNode c φ,
       ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.succ →

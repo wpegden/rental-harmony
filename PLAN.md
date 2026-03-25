@@ -268,6 +268,17 @@
   `MilestoneSegmentTransversality.open_crossing_of_missing_nextMilestone` field demands more than
   the paper's local graph argument, because Section 5 still allows the lower endpoint `b_k` to act
   as a vertical door when the next milestone `b_{k+1}` is absent.
+- That support-layer mismatch is now repaired locally:
+  `MilestoneSegmentTransversality` no longer forces an open crossing in the missing-next case.
+  Instead its explicit missing-next field allows either an open crossing or lower-milestone
+  containment, exactly matching the paper's possibility of a vertical door at `b_k`. The concrete
+  theorem
+  `chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone`
+  now proves this corrected branch for the chosen chain.
+- The remaining Section 5 work is therefore no longer to repair the support target, but to bridge
+  that lower-milestone-containment alternative to an actual vertical-door / two-neighbor
+  consequence inside `GeometricGenericity`, then package the full concrete chosen-chain witness and
+  feed it through the existing terminal-node and surjectivity wrappers.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
