@@ -113,12 +113,15 @@
   image vertex already lies in the lower target prefix face and one must extract a lower-prefix
   domain subface from that stronger geometric situation.
 - Latest support-layer status for that remaining case:
-  `RentalHarmony/Section5Graph.lean` now records the ambient prefix-vertex bookkeeping explicitly
-  via `restrictLinear_prefixVertex`, `prefixVertex_injective`, `prefixVertexFinset`, and
-  `prefixVertexFinset_card`. The next local theorem should identify any point of `PrefixFace k`
-  with the affine span of `prefixVertexFinset k` in the ambient simplex. Once that transport lemma
-  exists, the all-image-lower case should reduce to a Carathéodory support argument inside the
-  lower target prefix face.
+  the ambient transport and target-side support reduction are now formalized.
+  `PrefixFace.padLinear`, `PrefixFace.mem_affineSpan_prefixVertexFinset`,
+  `PrefixFace.mem_affineSpan_prefixVertexFinset_of_coord_eq_zero`,
+  `affineIndependent_prefixVertexFinset`, and
+  `exists_subset_contains_lowerMilestone_of_all_imageVertices_lowerPrefix`
+  reduce the all-image-lower branch to a proper target-side support of size at most `k + 1`.
+  So the remaining local theorem is now sharper: turn that proper target support into a proper
+  carrier subset whose vertices already lie in the lower domain prefix face, then invoke the
+  existing codimension-`1` / vertical-door bridge lemmas.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:

@@ -381,6 +381,56 @@ def restrictLinear : RealPoint dimension →ₗ[ℝ] RealPoint k.1 where
     (pad_apply_lt (dimension := dimension) (k := k) (y := y)
       (i := j.castLE (Nat.succ_le_of_lt k.2)) (by simpa using j.2))
 
+/-- Pad an ambient point of the smaller simplex by trailing zero coordinates. -/
+def padLinear : RealPoint k.1 →ₗ[ℝ] RealPoint dimension where
+  toFun y i := if hi : i ≤ k then y ⟨i.1, Nat.lt_succ_of_le hi⟩ else 0
+  map_add' y z := by
+    ext i
+    by_cases hi : i ≤ k
+    · simp [hi]
+    · simp [hi]
+  map_smul' a y := by
+    ext i
+    by_cases hi : i ≤ k
+    · simp [hi]
+    · simp [hi]
+
+@[simp] lemma padLinear_apply_lt (y : RealPoint k.1) {i : Room (dimension + 1)}
+    (hi : i.1 < k.1 + 1) :
+    padLinear (dimension := dimension) (k := k) y i = y ⟨i.1, hi⟩ := by
+  have hle : i ≤ k := Nat.le_of_lt_succ hi
+  have hEq : (⟨i.1, Nat.lt_succ_of_le hle⟩ : Fin (k.1 + 1)) = ⟨i.1, hi⟩ := by
+    apply Fin.ext
+    rfl
+  simp [padLinear, hle, hEq]
+
+@[simp] lemma padLinear_apply_ge (y : RealPoint k.1) {i : Room (dimension + 1)}
+    (hi : ¬ i.1 < k.1 + 1) :
+    padLinear (dimension := dimension) (k := k) y i = 0 := by
+  have hle : ¬ i ≤ k := by
+    intro hle
+    exact hi (Nat.lt_succ_of_le hle)
+  simp [padLinear, hle]
+
+@[simp] lemma padLinear_restrict (x : PrefixFace (dimension := dimension) k) :
+    padLinear (dimension := dimension) (k := k)
+        (((restrict (dimension := dimension) (k := k) x : RentDivision (k.1 + 1)) :
+          RealPoint k.1)) =
+      (((x.1 : RentDivision (dimension + 1)) : RealPoint dimension)) := by
+  ext i
+  by_cases hi : i.1 < k.1 + 1
+  · have hEq :
+        (⟨i.1, hi⟩ : Fin (k.1 + 1)).castLE (Nat.succ_le_of_lt k.2) = i := by
+      apply Fin.ext
+      rfl
+    rw [padLinear_apply_lt (dimension := dimension) (k := k) (y := _) hi, restrict_apply]
+    simpa [hEq]
+  · rw [padLinear_apply_ge (dimension := dimension) (k := k) (y := _) hi]
+    have hgt : k.1 < i.1 := by
+      omega
+    symm
+    exact x.2 i hgt
+
 end PrefixFace
 
 /-- The `j`-th original vertex inside the prefix face spanned by the first `k + 1` rooms. -/
@@ -465,6 +515,94 @@ lemma prefixVertexFinset_card (k : Fin (dimension + 1)) :
         ((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
           RealPoint dimension))
       (prefixVertex_injective (dimension := dimension) k))
+
+@[simp] lemma PrefixFace.padLinear_single_one
+    (k : Fin (dimension + 1)) (j : Fin (k.1 + 1)) :
+    PrefixFace.padLinear (dimension := dimension) (k := k)
+        (Pi.single j (1 : ℝ)) =
+      (((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+        RealPoint dimension)) := by
+  ext i
+  by_cases hi : i ≤ k
+  · have hi' : i.1 < k.1 + 1 := Nat.lt_succ_of_le hi
+    by_cases hij : (⟨i.1, hi'⟩ : Fin (k.1 + 1)) = j
+    · have hEq : i = j.castLE (Nat.succ_le_of_lt k.2) := by
+        apply Fin.ext
+        simpa using congrArg Fin.val hij
+      subst hEq
+      simp [PrefixFace.padLinear, hi, prefixVertex, stdSimplex.vertex]
+    · have hEq : i ≠ j.castLE (Nat.succ_le_of_lt k.2) := by
+        intro hEq
+        apply hij
+        apply Fin.ext
+        simpa using congrArg Fin.val hEq
+      simp [PrefixFace.padLinear, hi, prefixVertex, stdSimplex.vertex, hij, hEq]
+  · have hEq : j.castLE (Nat.succ_le_of_lt k.2) ≠ i := by
+      intro hEq
+      apply hi
+      cases hEq
+      exact Nat.le_of_lt_succ j.2
+    simp [PrefixFace.padLinear, hi, prefixVertex, stdSimplex.vertex, hEq]
+
+lemma PrefixFace.image_padLinear_range_single_eq_prefixVertex
+    (k : Fin (dimension + 1)) :
+    PrefixFace.padLinear (dimension := dimension) (k := k) ''
+        Set.range (fun j : Fin (k.1 + 1) => Pi.single j (1 : ℝ)) =
+      Set.range (fun j : Fin (k.1 + 1) =>
+        ((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+          RealPoint dimension)) := by
+  ext x
+  constructor
+  · rintro ⟨y, ⟨j, rfl⟩, rfl⟩
+    exact ⟨j, (PrefixFace.padLinear_single_one (dimension := dimension) k j).symm⟩
+  · rintro ⟨j, rfl⟩
+    exact ⟨Pi.single j (1 : ℝ), ⟨j, rfl⟩,
+      PrefixFace.padLinear_single_one (dimension := dimension) k j⟩
+
+lemma PrefixFace.mem_affineSpan_prefixVertexFinset
+    (k : Fin (dimension + 1)) (x : PrefixFace (dimension := dimension) k) :
+    (((x.1 : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+      affineSpan ℝ
+        (((prefixVertexFinset (dimension := dimension) k : Finset (RealPoint dimension)) :
+          Set (RealPoint dimension)))) := by
+  let y : RealPoint k.1 :=
+    ((PrefixFace.restrict (dimension := dimension) (k := k) x : RentDivision (k.1 + 1)) :
+      RealPoint k.1)
+  have hyconv :
+      y ∈ convexHull ℝ (Set.range fun j : Fin (k.1 + 1) => Pi.single j (1 : ℝ)) := by
+    rw [convexHull_rangle_single_eq_stdSimplex]
+    exact (PrefixFace.restrict (dimension := dimension) (k := k) x).property
+  have hpad :
+      PrefixFace.padLinear (dimension := dimension) (k := k) y ∈
+        convexHull ℝ
+          (PrefixFace.padLinear (dimension := dimension) (k := k) ''
+            Set.range (fun j : Fin (k.1 + 1) => Pi.single j (1 : ℝ))) := by
+    have himage :
+        PrefixFace.padLinear (dimension := dimension) (k := k) y ∈
+          PrefixFace.padLinear (dimension := dimension) (k := k) ''
+            convexHull ℝ (Set.range fun j : Fin (k.1 + 1) => Pi.single j (1 : ℝ)) :=
+      ⟨y, hyconv, rfl⟩
+    rw [LinearMap.image_convexHull] at himage
+    exact himage
+  have hconv :
+      (((x.1 : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          (((prefixVertexFinset (dimension := dimension) k : Finset (RealPoint dimension)) :
+            Set (RealPoint dimension)))) := by
+    simpa [y, PrefixFace.padLinear_restrict, PrefixFace.image_padLinear_range_single_eq_prefixVertex,
+      prefixVertexFinset_coe] using hpad
+  exact convexHull_subset_affineSpan _ hconv
+
+lemma PrefixFace.mem_affineSpan_prefixVertexFinset_of_coord_eq_zero
+    (k : Fin (dimension + 1)) {x : RentDivision (dimension + 1)}
+    (hx :
+      ∀ i : Room (dimension + 1), k.1 < i.1 →
+        (((x : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0) :
+    (((x : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+      affineSpan ℝ
+        (((prefixVertexFinset (dimension := dimension) k : Finset (RealPoint dimension)) :
+          Set (RealPoint dimension)))) := by
+  exact PrefixFace.mem_affineSpan_prefixVertexFinset (dimension := dimension) k ⟨x, hx⟩
 
 /--
 Section 5 allows the barycenters to be perturbed slightly in order to enforce genericity.
@@ -606,6 +744,39 @@ lemma affineIndependent_stdSimplexVertices (n : ℕ) :
       exact False.elim (hi' hi)
   rw [hsimp] at hw1i
   simpa using hw1i
+
+lemma affineIndependent_prefixVertices (k : Fin (dimension + 1)) :
+    AffineIndependent ℝ
+      (fun j : Fin (k.1 + 1) =>
+        ((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+          RealPoint dimension)) := by
+  have hstd :
+      AffineIndependent ℝ
+        (fun j : Fin (k.1 + 1) =>
+          (((stdSimplex.vertex (S := ℝ) j : stdSimplex ℝ (Room (k.1 + 1))) :
+            RealPoint k.1))) := by
+    simpa [stdSimplex.vertex] using affineIndependent_stdSimplexVertices (k.1 + 1)
+  have hcomp :
+      AffineIndependent ℝ
+        ((PrefixFace.restrictLinear (dimension := dimension) (k := k)) ∘
+          fun j : Fin (k.1 + 1) =>
+            ((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+              RealPoint dimension)) := by
+    convert hstd using 1
+    funext j
+    simpa [Function.comp] using
+      (restrictLinear_prefixVertex (dimension := dimension) (k := k) j)
+  apply AffineIndependent.of_comp
+    (PrefixFace.restrictLinear (dimension := dimension) (k := k)).toAffineMap
+  exact hcomp
+
+lemma affineIndependent_prefixVertexFinset (k : Fin (dimension + 1)) :
+    AffineIndependent ℝ
+      (fun x :
+        (((prefixVertexFinset (dimension := dimension) k : Finset (RealPoint dimension)) :
+          Set (RealPoint dimension))) => (x : RealPoint dimension)) := by
+  rw [prefixVertexFinset_coe]
+  exact (affineIndependent_prefixVertices (dimension := dimension) k).range
 
 /--
 At most `dimension` points of the smaller simplex cannot span its full affine hull.
@@ -1575,6 +1746,131 @@ theorem exists_subset_contains_lowerMilestone_of_exists_upperCoord_ne_zero
       simpa using hy'
   refine ⟨s, hs_subset, by simpa [hs_card] using hcard_imgZero_le, ?_⟩
   simpa [SubdivisionFace.ImageContains, pfun, hs_image_set] using hcontains_imgZero
+
+theorem exists_subset_contains_lowerMilestone_of_all_imageVertices_lowerPrefix
+    {ν : Section5PositiveNode c φ}
+    (hcontains :
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc)
+    (hallLower :
+      ∀ v ∈ ν.face.carrier,
+        (((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0) :
+    ∃ s : Finset Vertex,
+      s ⊆ ν.face.carrier ∧
+      s.card ≤ ν.level.succ.1 ∧
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (s : Set Vertex))) := by
+  classical
+  let pfun : Vertex → RealPoint dimension := fun v =>
+    ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)
+  have hcontains_img :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ (pfun '' (ν.face.carrier : Set Vertex))) := by
+    simpa [SubdivisionFace.ImageContains, SubdivisionFace.imagePoints, pfun] using hcontains
+  let t : Finset (RealPoint dimension) :=
+    Caratheodory.minCardFinsetOfMemConvexHull hcontains_img
+  have ht_subset :
+      (t : Set (RealPoint dimension)) ⊆ pfun '' (ν.face.carrier : Set Vertex) :=
+    Caratheodory.minCardFinsetOfMemConvexHull_subseteq hcontains_img
+  have ht_mem :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ (t : Set (RealPoint dimension))) :=
+    Caratheodory.mem_minCardFinsetOfMemConvexHull hcontains_img
+  have ht_indep :
+      AffineIndependent ℝ (fun x : (t : Set (RealPoint dimension)) => (x : RealPoint dimension)) :=
+    Caratheodory.affineIndependent_minCardFinsetOfMemConvexHull hcontains_img
+  have ht_aff :
+      (t : Set (RealPoint dimension)) ⊆
+        affineSpan ℝ
+          (((prefixVertexFinset (dimension := dimension) ν.level.castSucc :
+              Finset (RealPoint dimension)) : Set (RealPoint dimension))) := by
+    intro y hy
+    rcases ht_subset hy with ⟨v, hv, rfl⟩
+    apply PrefixFace.mem_affineSpan_prefixVertexFinset_of_coord_eq_zero
+      (dimension := dimension) (k := ν.level.castSucc)
+    intro i hi
+    by_cases hisucc : i = ν.level.succ
+    · subst hisucc
+      exact hallLower v hv
+    · have hgt : ν.level.succ.1 < i.1 := by
+        have hge : ν.level.succ.1 ≤ i.1 := by
+          simpa using Nat.succ_le_of_lt hi
+        have hne : ν.level.succ.1 ≠ i.1 := by
+          intro hEq
+          apply hisucc
+          apply Fin.ext
+          exact hEq.symm
+        exact lt_of_le_of_ne hge hne
+      have hdomain :
+          (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 :=
+        ν.subdivides v hv i hgt
+      have hnot : i ∉ T.boundaryFace v := by
+        intro hi_mem
+        exact ((T.boundaryFace_exact v i).mp hi_mem) hdomain
+      exact φ.boundary_preserving v i hnot
+  have ht_card_le :
+      t.card ≤ ν.level.succ.1 := by
+    have hcard_prefix :
+        t.card ≤ (prefixVertexFinset (dimension := dimension) ν.level.castSucc).card := by
+      simpa using
+        (AffineIndependent.card_le_card_of_subset_affineSpan
+          (s := t)
+          (t := prefixVertexFinset (dimension := dimension) ν.level.castSucc)
+          ht_indep ht_aff)
+    simpa [prefixVertexFinset_card] using hcard_prefix
+  let chooseVertex : {y // y ∈ t} → Vertex := fun y =>
+    Classical.choose (ht_subset y.2)
+  have hchoose_mem :
+      ∀ y : {y // y ∈ t}, chooseVertex y ∈ ν.face.carrier := by
+    intro y
+    exact (Classical.choose_spec (ht_subset y.2)).1
+  have hchoose_image :
+      ∀ y : {y // y ∈ t}, pfun (chooseVertex y) = y.1 := by
+    intro y
+    exact (Classical.choose_spec (ht_subset y.2)).2
+  have hchoose_injective : Function.Injective chooseVertex := by
+    intro y z hEq
+    apply Subtype.ext
+    simpa [hchoose_image y, hchoose_image z] using congrArg pfun hEq
+  let s : Finset Vertex := t.attach.image chooseVertex
+  have hs_subset : s ⊆ ν.face.carrier := by
+    intro u hu
+    rcases Finset.mem_image.mp hu with ⟨y, hy, rfl⟩
+    exact hchoose_mem y
+  have hs_card : s.card = t.card := by
+    simpa [s] using
+      Finset.card_image_of_injective (s := t.attach) (f := chooseVertex) hchoose_injective
+  have hs_image :
+      s.image pfun = t := by
+    apply Finset.ext
+    intro y
+    constructor
+    · intro hy
+      rcases Finset.mem_image.mp hy with ⟨u, hu, rfl⟩
+      rcases Finset.mem_image.mp hu with ⟨z, hz, hEq⟩
+      have huEq : pfun u = z.1 := by
+        simpa [hEq] using hchoose_image z
+      simpa [huEq] using z.2
+    · intro hy
+      refine Finset.mem_image.mpr ?_
+      refine ⟨chooseVertex ⟨y, hy⟩, ?_, ?_⟩
+      · exact Finset.mem_image.mpr ⟨⟨y, hy⟩, by simp, rfl⟩
+      · simpa [hchoose_image ⟨y, hy⟩]
+  have hs_image_set :
+      ((fun v : Vertex => pfun v) '' (s : Set Vertex)) = (t : Set (RealPoint dimension)) := by
+    ext y
+    constructor
+    · rintro ⟨x, hx, rfl⟩
+      have hx' : pfun x ∈ s.image pfun := Finset.mem_image_of_mem _ hx
+      simpa [hs_image] using hx'
+    · intro hy
+      have hy' : y ∈ s.image pfun := by
+        simpa [hs_image] using hy
+      simpa using hy'
+  refine ⟨s, hs_subset, by simpa [hs_card] using ht_card_le, ?_⟩
+  simpa [SubdivisionFace.ImageContains, pfun, hs_image_set] using ht_mem
 
 theorem exists_codimOneSubface_contains_lowerMilestone_of_subset
     {ν : Section5PositiveNode c φ} {s : Finset Vertex}

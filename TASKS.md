@@ -32,12 +32,13 @@
   codimension-`1` supporting face already exists. So the remaining geometric difficulty is now
   strictly sharper: handle only the complementary case where every image vertex of the positive face
   already lies in the lower target prefix face, and from that deduce a codimension-`1`
-  lower-prefix supporting subface in the domain. The new compile-clean prefix-face helper lemmas
-  `restrictLinear_prefixVertex`, `prefixVertex_injective`, `prefixVertexFinset`, and
-  `prefixVertexFinset_card` isolate the exact remaining support theorem: prove an ambient
-  padding/affine-span transport statement identifying points of a `PrefixFace k` with the affine
-  span of `prefixVertexFinset k`, so Carathéodory can be applied cleanly to the all-image-lower
-  case.
+  lower-prefix supporting subface in the domain. The ambient transport step is now done:
+  `PrefixFace.padLinear`, `PrefixFace.mem_affineSpan_prefixVertexFinset`, and
+  `exists_subset_contains_lowerMilestone_of_all_imageVertices_lowerPrefix`
+  formalize the target-side Carathéodory reduction for that all-image-lower case. So the remaining
+  blocker is now purely domain-side: upgrade that proper target support to a proper carrier subset
+  whose vertices themselves lie in the lower prefix face, then feed it into the existing
+  codimension-`1` / vertical-door bridge lemmas.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
@@ -124,6 +125,11 @@
 - [x] Added the codimension-`1` support-reduction lemma
   `exists_codimOneSubface_contains_lowerMilestone_of_subset`, which erases one unused vertex once
   the lower milestone is known to lie in the image convex hull of a proper carrier subset.
+- [x] Proved the ambient prefix-face affine-span transport and the target-side Carathéodory
+  reduction for the complementary all-image-lower lower-door case:
+  `PrefixFace.padLinear`, `PrefixFace.mem_affineSpan_prefixVertexFinset`,
+  `affineIndependent_prefixVertexFinset`, and
+  `exists_subset_contains_lowerMilestone_of_all_imageVertices_lowerPrefix`.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made

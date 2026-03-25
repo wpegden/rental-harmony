@@ -249,6 +249,15 @@
   the prefix-face route is now started in Lean. `RentalHarmony/Section5Graph.lean` defines the
   bundled subtype `PrefixFace k` for the outer face `conv{e_1, ..., e_{k+1}}`, and
   `Section5MilestoneChain.prefixPoint` upgrades each milestone to an element of that subtype.
+- Formalization note after the latest prefix-face transport step:
+  the target-side part of the remaining all-image-lower lower-door case is now formalized.
+  `PrefixFace.padLinear` and `PrefixFace.mem_affineSpan_prefixVertexFinset` identify each ambient
+  prefix-face point with the affine span of the corresponding ambient prefix vertices, and
+  `exists_subset_contains_lowerMilestone_of_all_imageVertices_lowerPrefix` applies Carathéodory to
+  show that if every image vertex already lies in the lower target prefix face, then the lower
+  milestone is still carried by a proper image support of size at most `k + 1`. The manuscript
+  still leaves one genuinely domain-side step implicit: convert that proper target support into a
+  proper carrier subset whose vertices lie in the lower prefix face of the domain simplex.
 - Formalization note after the latest prefix-face step:
   that restriction/padding support theorem is now fully formalized.
   `RentalHarmony/Section5Graph.lean` defines `PrefixFace.restrict`, `PrefixFace.pad`, and the
