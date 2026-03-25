@@ -3548,6 +3548,62 @@ theorem mem_convexHull_range_of_mem_closedInterior
   intro i hi
   exact (hw01 i).1
 
+theorem isClosed_closedInterior_carrierImageSimplex
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    (hτ :
+      AffineIndependent ℝ
+        (fun v : (τ.carrier : Set Vertex) =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension))) :
+    IsClosed ((carrierImageSimplex (T := T) τ φ hτ).closedInterior) := by
+  let sx := carrierImageSimplex (T := T) τ φ hτ
+  have hEq : sx.closedInterior = convexHull ℝ (Set.range sx.points) := by
+    ext x
+    constructor
+    · exact mem_convexHull_range_of_mem_closedInterior
+    · rw [convexHull_range_eq_exists_affineCombination]
+      rintro ⟨s, w, hw₀, hw₁, rfl⟩
+      let w' : Fin (τ.dim + 1) → ℝ := fun i => if i ∈ s then w i else 0
+      have hsum_indicator :
+          ∑ i, ((↑s : Set (Fin (τ.dim + 1))).indicator w) i = s.sum w := by
+        simpa using Finset.sum_indicator_subset w (Finset.subset_univ s)
+      have hsumw' : ∑ i, w' i = s.sum w := by
+        simpa [w'] using hsum_indicator
+      have hw' : ∑ i, w' i = 1 := by
+        rw [hsumw']
+        exact hw₁
+      have hxeq' :
+          Finset.univ.affineCombination ℝ sx.points w' =
+            s.affineCombination ℝ sx.points w := by
+        rw [Finset.affineCombination_indicator_subset w sx.points (Finset.subset_univ s)]
+        congr
+        ext i
+        by_cases hi : i ∈ s <;> simp [w', hi]
+      have hw'nonneg : ∀ i, 0 ≤ w' i := by
+        intro i
+        by_cases hi : i ∈ s
+        · simpa [w', hi] using hw₀ i hi
+        · simp [w', hi]
+      have hw'le : ∀ i, w' i ≤ 1 := by
+        intro i
+        have hrest : 0 ≤ Finset.sum (Finset.univ.erase i) w' := by
+          exact Finset.sum_nonneg fun j _ => hw'nonneg j
+        have hsplit : w' i + Finset.sum (Finset.univ.erase i) w' = 1 := by
+          calc
+            w' i + Finset.sum (Finset.univ.erase i) w' = ∑ j, w' j := by
+              symm
+              simpa using
+                Finset.sum_erase_add (s := Finset.univ) (f := w') (a := i) (by simp)
+            _ = 1 := hw'
+        linarith
+      have hxclosed' :
+          Finset.univ.affineCombination ℝ sx.points w' ∈ sx.closedInterior := by
+        rw [sx.affineCombination_mem_closedInterior_iff hw']
+        intro i
+        exact ⟨hw'nonneg i, hw'le i⟩
+      exact hxeq' ▸ hxclosed'
+  rw [hEq]
+  exact (Set.toFinite (Set.range sx.points)).isClosed_convexHull
+
 theorem imageContains_of_mem_closedInterior_carrierImageSimplex
     {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
     {x : RentDivision (dimension + 1)}

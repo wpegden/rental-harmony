@@ -1212,4 +1212,13 @@
   closed interior of the carrier-image simplex and `b_k` in its interior, show that the segment
   `[b_{k-1}, b_k]` has a first point on the boundary of that simplex. If the manuscript's
   trap-door paragraph is meant to justify the entrance-face theorem directly, this boundary-entry
-  statement is now the precise local convex-geometric lemma it must supply.
+  statement is now the precise local convex-geometric lemma it must supply. The new theorem
+  `SubdivisionFace.isClosed_closedInterior_carrierImageSimplex` shows that the carrier-image
+  simplex closed interior is indeed a closed convex set, so a "first visible point on the
+  segment" route is formally available at that coarse level. However, the corresponding direct
+  Lean proof still fails for an exact manuscript-facing reason: `b_k ∈ sx.interior` is only
+  relative interior of the lower-dimensional simplex `sx`, not ambient interior of
+  `sx.closedInterior`. So the paper's trap-door paragraph cannot be read in Lean as a bare
+  ambient visibility argument; it needs either an affine-span-restricted version of the boundary
+  entry lemma, or an extra geometric statement placing `b_{k-1}` in the affine span of the image
+  simplex before visibility can be applied there.

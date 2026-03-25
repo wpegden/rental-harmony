@@ -1061,7 +1061,15 @@
   exists_boundaryPoint_wbtw_of_mem_interior_carrierImageSimplex_and_lowerMilestone_not_mem_closedInterior`.
   So the remaining next-milestone gap is no longer "turn a boundary simplex point into a facet";
   it is specifically "show that the segment from `b_{k-1}` to `b_k` has a first point on the
-  boundary of the carrier-image simplex."
+  boundary of the carrier-image simplex." The new support theorem
+  `SubdivisionFace.isClosed_closedInterior_carrierImageSimplex` confirms that this simplex closed
+  interior is a genuine closed convex set, so a visibility/first-entry route remains plausible.
+  But the latest direct attempt also isolates the missing extra ingredient: `b_k ∈ sx.interior`
+  is only a relative-interior fact for the lower-dimensional simplex `sx`, so `IsVisible.eq_of_mem_interior`
+  cannot be applied in the ambient space without first moving to the affine span of `sx`.
+  Thus the next exact local theorem should either be an affine-span-restricted boundary-entry
+  lemma, or an independent proof that `b_{k-1}` lies in that affine span in the next-milestone
+  branch.
 
 ## Current input status
 - No proposed axioms.

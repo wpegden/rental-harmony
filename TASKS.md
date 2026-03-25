@@ -862,4 +862,10 @@
   exists_boundaryPoint_wbtw_of_mem_interior_carrierImageSimplex_and_lowerMilestone_not_mem_closedInterior`.
   So the unresolved next-milestone geometry is now no longer generic barycentric-to-facet support;
   it is specifically the existence of a first boundary point of the carrier-image simplex on the
-  segment `[b_{k-1}, b_k]`.
+  segment `[b_{k-1}, b_k]`. The new support theorem
+  `SubdivisionFace.isClosed_closedInterior_carrierImageSimplex` verifies that the carrier-image
+  simplex closed interior is an honest closed convex set, but a direct `IsClosed.exists_wbtw_isVisible`
+  proof attempt fails for the exact structural reason now to record: `b_k ∈ sx.interior` is only
+  relative interior data for the lower-dimensional simplex `sx`, not ambient-topological interior.
+  So the next local bridge is either a boundary-entry theorem stated after restricting to the
+  affine span of `sx`, or an additional theorem that `b_{k-1}` already lies in that affine span.
