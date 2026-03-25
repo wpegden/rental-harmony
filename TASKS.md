@@ -192,8 +192,17 @@
 - [x] Added compile-clean `RentalHarmony/PaperDefinitions.lean` and `RentalHarmony/PaperTheorems.lean` skeleton modules.
 - [x] Checked every section of the paper for proof gaps, hidden assumptions, and theorem dependencies.
 - [x] Identified the main clarification points for formalization: the one-cent tolerance usage, the cyclic relabeling/Sperner step, and the interior-point/facet arguments.
-- [ ] Current concrete frontier: strengthen the abstract `SimplicialSubdivision` / `PiecewiseLinearSimplexMap`
-  support layer with face-local affine or barycentric-preimage data. After three recovery attempts,
-  the blocker is no longer in `Section5Graph.lean`: the present abstract API is too weak to derive
-  the all-image-lower lower-door step, and there is no concrete subdivision object anywhere in the
-  repo on which a richer internal geometric bundle could be instantiated instead.
+- [x] Introduced the spec-first recovery layer in `RentalHarmony/Section5Graph.lean`:
+  `Section5GraphNode.FaceLocalLowerPrefixCarrierSpec` now isolates the exact missing lower-door
+  consequence as an internal contract, and the new downstream reductions show that once
+  `GeometricGenericity` is available for `chosenMilestoneChain`, the already-proved explicit
+  milestone lemmas rebuild `MilestoneSegmentTransversality`, terminal-node existence, and a
+  terminal-milestone facet.
+- [ ] Current concrete frontier: prove or supply the two remaining internal contracts for the
+  higher-dimensional Section 5 proof.
+  First, the lower-door support theorem now appears explicitly as
+  `Section5GraphNode.FaceLocalLowerPrefixCarrierSpec.exists_graphNeighbor_of_contains_lowerMilestone`.
+  Second, the graph-local start/door-count package still has to be produced as
+  `GeometricGenericity` for `chosenMilestoneChain`. After those are in place, only the small
+  endpoint wrapper from the terminal milestone `chosenMilestoneChain.point (Fin.last dimension)` to
+  `FacetImageContainsBarycenter` remains.

@@ -357,6 +357,22 @@
   entire Section 5 and Sperner development is parameterized by an arbitrary
   `SimplicialSubdivision`, so any successful repair now has to strengthen that abstract support
   layer itself or thread stronger internal assumptions through the support lemmas.
+- The latest spec-first refactor made that architecture gap explicit instead of leaving it diffused
+  through `Section5Graph.lean`. The exact remaining lower-door contract is now recorded as
+  `Section5GraphNode.FaceLocalLowerPrefixCarrierSpec.exists_graphNeighbor_of_contains_lowerMilestone`.
+  This is the smallest compile-tested assumption under which the blocked lower-milestone branch can
+  be resumed without changing the paper-facing files.
+- The same refactor also showed that the rest of the Section 5 parity pipeline is already
+  downstream-ready once a graph-local genericity package is supplied. Under an assumed
+  `GeometricGenericity` for `chosenMilestoneChain`, the current repo now reconstructs
+  `MilestoneSegmentTransversality`, proves terminal-node existence, and extracts a subdivision facet
+  whose image contains the chain's terminal milestone. So the remaining hidden blockers are now
+  sharply separated into:
+  1. the lower-door support contract above;
+  2. the start / two-door graph-local consequences needed to build `GeometricGenericity` for
+     `chosenMilestoneChain`;
+  3. a small endpoint wrapper identifying the terminal milestone with the paper's simplex
+     barycenter.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

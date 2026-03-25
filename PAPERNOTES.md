@@ -431,3 +431,22 @@
   `SimplicialSubdivision`. So unblocking Section 5 now requires strengthening the core abstract
   support layer itself (or adding equivalent internal assumptions throughout), not merely proving a
   richer theorem package for some hidden concrete instance.
+- Recovery attempt 4 outcome:
+  the spec-first route does work as an architectural reduction. The exact missing lower-door input
+  is now formalized as the internal contract
+  `Section5GraphNode.FaceLocalLowerPrefixCarrierSpec.exists_graphNeighbor_of_contains_lowerMilestone`.
+  This makes precise what the abstract support layer still lacks: not "some local geometry" in
+  general, but exactly a graph-neighbor consequence for lower-milestone containment in a positive
+  node.
+- The same refactor also exposed the next hidden boundary cleanly. Once one assumes
+  `GeometricGenericity` for the concrete chain `chosenMilestoneChain`, the rest of the Section 5
+  combinatorial pipeline already goes through in Lean: the explicit milestone lemmas upgrade that
+  genericity package to `MilestoneSegmentTransversality`, the parity theorem produces a terminal
+  node, and one extracts a facet whose image contains the chain's terminal milestone. Therefore the
+  remaining obstacles are now separated into three explicit theorem statements rather than one vague
+  stuck region:
+  1. the lower-door contract above;
+  2. the start / two-door graph-local consequences needed to build `GeometricGenericity` for
+     `chosenMilestoneChain`;
+  3. the final identification of the chain's terminal milestone with the standard simplex
+     barycenter used by `FacetImageContainsBarycenter`.

@@ -2093,6 +2093,30 @@ theorem exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerM
   exact exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone
     (T := T) (c := c) (φ := φ) hk (htu.trans hu) htcard ht_lower ht_img
 
+/--
+Internal support-layer contract isolating the remaining lower-door geometry in the all-image-lower
+case.
+
+The current abstract subdivision API does not supply this large lower-prefix carrier set, but once
+it is available the lower-milestone branch can be fed into the existing enlargement lemma above.
+-/
+structure FaceLocalLowerPrefixCarrierSpec : Prop where
+  exists_graphNeighbor_of_contains_lowerMilestone :
+    ∀ {ν : Section5PositiveNode c φ},
+      0 < ν.level.1 →
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc →
+      ∃ w : Section5GraphNode c φ,
+        w ≠ .positive ν ∧ Adj (T := T) c φ (.positive ν) w
+
+theorem exists_graphNeighbor_of_contains_lowerMilestone_of_faceLocalSpec
+    (hspec : FaceLocalLowerPrefixCarrierSpec (T := T) (c := c) (φ := φ))
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    (hcontains :
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc) :
+    ∃ w : Section5GraphNode c φ,
+      w ≠ .positive ν ∧ Adj (T := T) c φ (.positive ν) w := by
+  exact hspec.exists_graphNeighbor_of_contains_lowerMilestone hk hcontains
+
 theorem chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
     {ν : Section5PositiveNode (c := chosenMilestoneChain (φ := φ)) φ}
     (hcontains :
@@ -2369,6 +2393,61 @@ theorem exists_terminal_of_milestoneSegmentTransversality
   exact exists_terminal_of_geometricGenericity (T := T) (c := c) (φ := φ)
     (geometricGenericity_of_milestoneSegmentTransversality
       (T := T) (c := c) (φ := φ) htrans)
+
+def chosenMilestoneChain_milestoneSegmentTransversality_of_geometricGenericity
+    (hgen :
+      GeometricGenericity
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)) :
+    MilestoneSegmentTransversality
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) := by
+  refine
+    { toGeometricGenericity := hgen
+      missing_nextMilestone_openCrossing_or_contains_lowerMilestone := ?_
+      nextMilestone_awayFromBoundary_of_nonterminal := ?_ }
+  · intro ν hupper
+    exact chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone
+      (T := T) (φ := φ) hupper
+  · intro ν hcontains hν
+    exact chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
+      (T := T) (φ := φ) hcontains hν
+
+theorem exists_terminal_of_chosenMilestoneChain_geometricGenericity
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hgen :
+      GeometricGenericity
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)) :
+    ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      v ≠ .start ∧
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v := by
+  exact exists_terminal_of_milestoneSegmentTransversality
+    (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+    (chosenMilestoneChain_milestoneSegmentTransversality_of_geometricGenericity
+      (T := T) (φ := φ) hgen)
+
+theorem exists_terminalMilestoneCell_of_chosenMilestoneChain_geometricGenericity
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hgen :
+      GeometricGenericity
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)) :
+    ∃ σ ∈ T.facets,
+      FacetImageContains σ φ.vertexMap
+        ((chosenMilestoneChain (φ := φ)).point (Fin.last dimension)) := by
+  rcases exists_terminal_of_chosenMilestoneChain_geometricGenericity
+      (T := T) (φ := φ) hgen with ⟨v, hv, hterminal⟩
+  cases v with
+  | start =>
+      contradiction
+  | positive ν =>
+      rcases hterminal with ⟨hνdim, hνimage⟩
+      rcases ν.face.subset_facet with ⟨σ, hσ, hνσ⟩
+      have hνcard : ν.face.carrier.card = dimension + 1 := by
+        rw [ν.face.card_eq_dim_succ, hνdim]
+      have hσeq : ν.face.carrier = σ := by
+        apply Finset.eq_of_subset_of_card_le hνσ
+        rw [T.facet_card σ hσ, hνcard]
+      refine ⟨σ, hσ, ?_⟩
+      simpa [SubdivisionFace.ImageContainsMilestone, SubdivisionFace.ImageContains,
+        SubdivisionFace.imagePoints, FacetImageContains, hσeq] using hνimage
 
 end Section5GraphNode
 
