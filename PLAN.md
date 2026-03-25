@@ -417,6 +417,12 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec`
   confirms that the rest of the higher-dimensional Section 5 argument already runs cleanly under
   this single stronger interface together with `ChosenMilestoneChainGraphLocalSpec`.
+- A direct attempt on the remaining concrete chosen-chain graph-local package shows that the first
+  unresolved field is now genuinely 1-dimensional: the level-`0` missing-next case needs an
+  interval-style lower-boundary continuation theorem for subdivision faces on the first prefix
+  edge. Concretely, if a start-incident edge contains `c_0` but misses `c_1`, one needs a proof
+  that it has exactly one second graph door besides `.start`. The present `SubdivisionFace` and
+  `Adj` APIs do not yet package that boundary-interval decomposition fact.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

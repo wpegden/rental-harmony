@@ -513,3 +513,11 @@
   confirms that once this reflection property and the graph-local door-count package are supplied,
   the downstream Section 5 parity argument again reaches a barycenter-containing facet with no
   further hidden blockers.
+- Direct attempt after that repair: the first unresolved field of
+  `Section5GraphNode.ChosenMilestoneChainGraphLocalSpec` is the level-`0` missing-next branch. The
+  proof wants a 1-dimensional lower-boundary decomposition theorem: a start-incident subdivision
+  edge on the first prefix face that contains `c_0` but misses `c_1` should have exactly one
+  continuation door besides `.start`. The current `SubdivisionFace` / `Adj` API does not encode
+  this interval-style uniqueness for lower-edge faces, so the remaining graph-local package is now
+  blocked first on that explicit 1-dimensional boundary theorem rather than on the older
+  higher-dimensional reflection issue.

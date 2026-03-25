@@ -240,3 +240,10 @@
   `exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec` show that the downstream
   Section 5 parity pipeline closes cleanly under this one extra contract together with the existing
   graph-local spec.
+- [ ] Direct attempt on the remaining graph-local input now bottoms out first at the level-`0`
+  missing-next branch. To prove
+  `ChosenMilestoneChainGraphLocalSpec.two_doors_of_missing_nextMilestone_level_zero`, one needs a
+  1-dimensional lower-boundary subdivision theorem saying that a start-incident edge on the first
+  prefix face which contains `c_0` but misses `c_1` has exactly one second door besides `.start`.
+  The current abstract `SubdivisionFace` / adjacency API does not yet provide the needed interval-
+  decomposition / unique-continuation fact for such lower-edge faces.
