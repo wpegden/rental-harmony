@@ -247,3 +247,8 @@
   prefix face which contains `c_0` but misses `c_1` has exactly one second door besides `.start`.
   The current abstract `SubdivisionFace` / adjacency API does not yet provide the needed interval-
   decomposition / unique-continuation fact for such lower-edge faces.
+- [ ] The latest direct experiment suggests that this level-`0` theorem is itself false under the
+  current abstract face API: several distinct lower-edge faces `{e_0,B_i}` can all be start-
+  incident and pairwise horizontally adjacent through the shared codimension-`1` face `{e_0}`.
+  So the remaining graph-local package now also needs either an explicit lower-boundary interval
+  uniqueness hypothesis or a stronger subdivision-complex support layer ruling out such overlap.

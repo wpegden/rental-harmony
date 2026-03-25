@@ -521,3 +521,15 @@
   this interval-style uniqueness for lower-edge faces, so the remaining graph-local package is now
   blocked first on that explicit 1-dimensional boundary theorem rather than on the older
   higher-dimensional reflection issue.
+- A concrete countermodel shape explains why that level-`0` theorem is not derivable from the
+  current abstract face data alone. In dimension `2`, place three distinct subdivision vertices
+  `B_1,B_2,B_3` on the lower edge between `e_0` and `e_1`, and allow three distinct facets whose
+  carriers contain `{e_0,B_i}` together with separate interior vertices. Then the three level-`0`
+  faces `{e_0,B_i}` are all start-incident and all miss a first milestone `c_1` chosen farther
+  along the lower edge. Because `SubdivisionFace` is defined as an arbitrary nonempty subset of a
+  facet and the current graph only checks shared codimension-`1` subfaces, these three lower-edge
+  faces can all be horizontally adjacent through the shared vertex `{e_0}`. So a start-incident
+  edge can have more than one second door unless one adds an interval-decomposition / simplicial-
+  complex uniqueness theorem for the first prefix face. This shows that
+  `ChosenMilestoneChainGraphLocalSpec.two_doors_of_missing_nextMilestone_level_zero` is another
+  genuinely independent geometric-combinatorial input under the present abstract API.

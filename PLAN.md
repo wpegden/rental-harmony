@@ -423,6 +423,14 @@
   edge. Concretely, if a start-incident edge contains `c_0` but misses `c_1`, one needs a proof
   that it has exactly one second graph door besides `.start`. The present `SubdivisionFace` and
   `Adj` APIs do not yet package that boundary-interval decomposition fact.
+- A concrete overlap countermodel shape now suggests this level-`0` theorem is also not derivable
+  from the current abstract face API. Distinct lower-edge faces `{e_0,B_i}` coming from different
+  facets can all be start-incident and horizontally adjacent through the shared vertex `{e_0}`,
+  so one can get more than one "second door" unless the first prefix face is known to decompose as
+  a genuine 1-dimensional simplicial complex / interval subdivision. Therefore the remaining plan
+  is not to force `ChosenMilestoneChainGraphLocalSpec.two_doors_of_missing_nextMilestone_level_zero`
+  from the present definitions, but to treat that interval-uniqueness property as additional
+  internal support data or to strengthen the subdivision-face layer accordingly.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
