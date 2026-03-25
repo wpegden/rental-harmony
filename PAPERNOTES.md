@@ -533,3 +533,12 @@
   complex uniqueness theorem for the first prefix face. This shows that
   `ChosenMilestoneChainGraphLocalSpec.two_doors_of_missing_nextMilestone_level_zero` is another
   genuinely independent geometric-combinatorial input under the present abstract API.
+- Following that diagnosis, the level-`0` boundary theorem is now isolated in Lean as the smaller
+  internal contract `Section5GraphNode.ChosenMilestoneChainLevelZeroBoundarySpec`, separated from
+  the remaining start/open-crossing/positive-level fields in
+  `Section5GraphNode.ChosenMilestoneChainGraphLocalRestSpec`. The theorem
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'`
+  confirms that this finer factorization is sufficient: once one supplies
+  `PositiveFaceLowerPrefixReflection`, the normalized level-`0` boundary continuation input, and
+  the remaining graph-local data, the downstream Section 5 parity argument again reaches a
+  barycenter-containing facet with no further hidden blockers.

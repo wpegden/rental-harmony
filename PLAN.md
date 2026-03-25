@@ -431,6 +431,13 @@
   is not to force `ChosenMilestoneChainGraphLocalSpec.two_doors_of_missing_nextMilestone_level_zero`
   from the present definitions, but to treat that interval-uniqueness property as additional
   internal support data or to strengthen the subdivision-face layer accordingly.
+- That reduction has now been implemented explicitly. The normalized 1-dimensional continuation
+  input is isolated as `Section5GraphNode.ChosenMilestoneChainLevelZeroBoundarySpec`, while the
+  remaining start/open-crossing/positive-level data sits in
+  `Section5GraphNode.ChosenMilestoneChainGraphLocalRestSpec`. The new wrapper
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'`
+  shows that these two graph-local pieces together with `PositiveFaceLowerPrefixReflection` are
+  exactly sufficient for the downstream Section 5 barycenter-cell conclusion.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

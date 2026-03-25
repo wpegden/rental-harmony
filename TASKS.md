@@ -252,3 +252,10 @@
   incident and pairwise horizontally adjacent through the shared codimension-`1` face `{e_0}`.
   So the remaining graph-local package now also needs either an explicit lower-boundary interval
   uniqueness hypothesis or a stronger subdivision-complex support layer ruling out such overlap.
+- [x] Isolated that level-`0` input as its own minimal internal contract in
+  `RentalHarmony/Section5Graph.lean`. The new
+  `Section5GraphNode.ChosenMilestoneChainLevelZeroBoundarySpec` and
+  `Section5GraphNode.ChosenMilestoneChainGraphLocalRestSpec` show that the barycenter-cell
+  conclusion already follows from `PositiveFaceLowerPrefixReflection`, the normalized level-`0`
+  boundary continuation theorem, and the remaining positive-level/open-crossing graph-local data,
+  via `exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'`.
