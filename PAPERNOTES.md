@@ -813,3 +813,12 @@
   one-vertex drop impossible. So any successful completion of the current top-dimensional branch
   must either rule out that segment case from the Section 5 hypotheses or replace the current
   support-pruning target by a weaker route.
+- The paper text around lines 395--396 confirms that weaker route. Section 5 only claims that, in
+  the no-open-crossing situation, a generic segment contributes the right number of doors; it does
+  not require the stronger one-vertex-drop / second-carrier support-pruning statement that the
+  current top-dimensional formalization was chasing. The new Lean reductions
+  `chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing`,
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_lowerMilestoneDoorSpec`, and
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_topDim_and_belowTopDim` record that the
+  exact remaining top-dimensional target should now be a no-open-crossing door theorem, not the
+  stronger support-pruning contract.

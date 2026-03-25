@@ -2582,6 +2582,21 @@ theorem chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lower
       (chosenMilestoneChain_openSegment_of_missingNextMilestone_of_not_lowerMilestone
         (T := T) (φ := φ) hlower hupper)
 
+theorem chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
+    {ν : Section5PositiveNode (c := chosenMilestoneChain (φ := φ)) φ}
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hclosed :
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level) :
+    ν.face.ImageContainsMilestone (T := T)
+      (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc := by
+  rcases chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone
+      (T := T) (φ := φ) (ν := ν) hupper with hopen | hlower
+  · exact False.elim (hclosed hopen)
+  · exact hlower
+
 /--
 Local degree data expected from the geometric genericity analysis in Section 5.
 
@@ -3496,6 +3511,111 @@ structure ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec where
         Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
         ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
           Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+def chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_lowerMilestoneDoorSpec
+    (hdoor : ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec
+      (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hupper hclosed
+  exact hdoor.two_doors_of_missing_nextMilestone_positiveLevel_contains_lowerMilestone
+    ν hk hupper
+    (chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
+      (T := T) (φ := φ) (ν := ν) hupper hclosed)
+
+/--
+Top-dimensional no-open-crossing door theorem at positive levels.
+
+This is the exact branch of the paper's local door count that remains after separating the open
+crossing case. It is strictly weaker than the older lower-milestone door theorem: the lower
+milestone conclusion is recovered automatically from `hupper` and `hclosed`.
+-/
+structure ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec where
+  two_doors_of_missing_nextMilestone_positiveLevel_topDim_of_not_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim = dimension →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+/--
+Below-top-dimensional no-open-crossing door theorem at positive levels.
+
+This is the genuinely lower-dimensional continuation branch, separated from the top-dimensional
+endpoint case described in paper lines 395--396.
+-/
+structure ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec where
+  two_doors_of_missing_nextMilestone_positiveLevel_belowTopDim_of_not_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim < dimension →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+def chosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec_of_lowerMilestoneDoorSpec
+    (hdoor :
+      ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneDoorSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hνdim hupper hclosed
+  exact hdoor.two_doors_of_missing_nextMilestone_positiveLevel_topDim_contains_lowerMilestone
+    ν hk hνdim hupper
+    (chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
+      (T := T) (φ := φ) (ν := ν) hupper hclosed)
+
+def chosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec_of_lowerMilestoneDoorSpec
+    (hdoor :
+      ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hνdim hupper hclosed
+  exact
+    hdoor.two_doors_of_missing_nextMilestone_positiveLevel_belowTopDim_contains_lowerMilestone
+      ν hk hνdim hupper
+      (chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
+        (T := T) (φ := φ) (ν := ν) hupper hclosed)
+
+def chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_topDim_and_belowTopDim
+    (htop :
+      ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec
+        (T := T) (φ := φ))
+    (hbelow :
+      ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hupper hclosed
+  by_cases htopdim : ν.face.dim = dimension
+  · exact
+      htop.two_doors_of_missing_nextMilestone_positiveLevel_topDim_of_not_openCrossing
+        ν hk htopdim hupper hclosed
+  · have hbelowdim : ν.face.dim < dimension :=
+      lt_of_le_of_ne ν.face.dim_le (fun h => htopdim h)
+    exact
+      hbelow.two_doors_of_missing_nextMilestone_positiveLevel_belowTopDim_of_not_openCrossing
+        ν hk hbelowdim hupper hclosed
 
 /--
 Carrier-level continuation contract for the no-open-crossing positive-level branch.

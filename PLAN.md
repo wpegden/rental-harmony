@@ -734,6 +734,17 @@
   drop is impossible. So the next proof search should either derive affine dependence from the
   Section 5 hypotheses or prove that this nondegenerate segment case cannot occur in the relevant
   top-dimensional branch.
+- The latest interface correction shows that this support-pruning route is stronger than the graph
+  actually needs. The graph only consumes the `¬ openCrossing` branch, and paper lines 395--396
+  ask only for the local door count there. The new reductions
+  `chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing`,
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_lowerMilestoneDoorSpec`, and
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_topDim_and_belowTopDim`
+  move the exact frontier to a top-dimensional no-open-crossing theorem rather than the stronger
+  one-vertex-drop / second-carrier route. So the next proof search should either prove
+  `ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec` directly or isolate a compatible
+  counterexample pattern showing that even this corrected top-dimensional interface still needs
+  revision.
 
 ## Current input status
 - No proposed axioms.

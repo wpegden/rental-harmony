@@ -10,46 +10,24 @@
 <!-- SUPERVISOR_TASKS:END -->
 
 ## Worker Tasks
-- [ ] Finish the split positive-level lower-milestone door support.
+- [ ] Finish the positive-level no-open-crossing support at the exact graph interface.
   Top-dimensional branch:
-  prove the affine-dependence criterion feeding
-  `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec`.
-  Reflection now supplies the first normalized lower-prefix carrier automatically via
-  `exists_lowerMilestoneCarrier_of_reflection`, and the new reduction
-  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec_of_reflection_and_secondCarrier`
-  shows that the remaining top-dimensional gap is only to produce a second distinct such carrier.
-  The constructors
-  `verticalNeighborOfCodimOneSubfaceContainsLowerMilestone`
-  and theorems
-  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec_of_reflection_and_secondCarrier`,
-  `exists_two_distinct_verticalNeighbors_of_reflection_and_topDimLowerMilestoneSecondCarrier`,
-  and
-  `exists_two_distinct_verticalNeighbors_of_topDimLowerMilestoneCarrierMultiplicity`
-  then reduce that second-carrier theorem to two distinct vertical doors.
-  The new lemmas
-  `SubdivisionFace.mem_of_mem_codimOneSubface_or_other`,
-  `SubdivisionFace.subdividesPrefixFace_of_two_distinct_codimOneSubfaces`, and
-  `faceSubdividesLowerPrefix_of_reflection_and_topDimLowerMilestoneSecondCarrier`
-  show that any successful second-carrier proof already forces the entire top-dimensional face to
-  subdivide the lower prefix face. So the remaining top-dimensional content is now explicitly
-  image-side. The file now proves the precise bridge
-  `exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image`, and the wrapper
-  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec_of_affineDependentImage`
-  shows that the one-vertex-drop contract already follows once the support inside the first
-  codimension-`1` face image is affinely dependent. So the remaining top-dimensional task is to
-  prove that affine dependence criterion under the current Section 5 hypotheses. The new
-  obstruction theorem `not_exists_smaller_support_of_pair_of_mem_openSegment` shows that this
-  dependence is not formal nonsense: a nondegenerate two-point segment support inside the first
-  codimension-`1` face would defeat one-vertex-drop outright. So the immediate task is to prove
-  that the Section 5 hypotheses rule out that nondegenerate segment case, or more generally force
-  the first codimension-`1` face image support to be affinely dependent. The reductions
-  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop`,
-  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec_of_supportShrink`, and
-  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec_of_boundaryPointMultiplicity`
-  then recover the milestone-specific second-carrier theorem and hence the top-dimensional door.
+  stop treating
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec`
+  as the exact frontier. The new obstruction theorem
+  `not_exists_smaller_support_of_pair_of_mem_openSegment` shows that one-vertex-drop can fail on a
+  nondegenerate two-point support inside the first codimension-`1` face image, while paper lines
+  395--396 only require the local door count in the `¬ openCrossing` branch. The new reductions
+  `chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing`,
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_lowerMilestoneDoorSpec`, and
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_topDim_and_belowTopDim` move the exact
+  top-dimensional frontier to
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec`.
+  The current support-pruning chain remains a stronger sufficient route, but it is now known to be
+  overkill unless the Section 5 hypotheses exclude the segment-support obstruction.
   Below-top-dimensional branch:
-  finish
-  `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec`
+  finish the exact lower-dimensional no-open-crossing route, equivalently
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,
   by finding a fresh ambient-facet vertex whose singleton already subdivides the larger prefix
   face `ν.level.succ`.
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
