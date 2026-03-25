@@ -2552,6 +2552,28 @@ structure ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec where
         ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
           Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
 
+/--
+The positive-level missing-next branch after removing the already-isolated open-crossing case.
+
+This packages the exact complement of `ChosenMilestoneChainOpenCrossingSpec` at positive levels:
+once the next milestone is absent and there is no open crossing of the milestone segment, the
+remaining two-door conclusion is the only missing local theorem.
+-/
+structure ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec where
+  two_doors_of_missing_nextMilestone_positiveLevel_of_not_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        a ≠ b ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
 def chosenMilestoneChainPositiveLevelLowerMilestoneSpec_of_doorSpec
     (hdoor : ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec (T := T) (φ := φ)) :
     ChosenMilestoneChainPositiveLevelLowerMilestoneSpec (T := T) (φ := φ) := by
@@ -2603,6 +2625,23 @@ def chosenMilestoneChainPositiveLevelSpec_of_openCrossing_and_lowerMilestoneDoor
     (chosenMilestoneChainPositiveLevelLowerMilestoneSpec_of_doorSpec
       (T := T) (φ := φ) hlower)
     haway
+
+def chosenMilestoneChainPositiveLevelSpec_of_openCrossing_and_noOpenCrossing_and_awayFromBoundary
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (hclosed : ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelSpec (T := T) (φ := φ) := by
+  refine
+    { two_doors_of_missing_nextMilestone_positiveLevel_of_extraNeighbor := ?_
+      two_doors_of_nextMilestone_awayFromBoundary :=
+        haway.two_doors_of_nextMilestone_awayFromBoundary }
+  intro ν hk hupper _
+  by_cases hopenν :
+      ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+  · exact hopen.two_doors_of_missing_nextMilestone_openCrossing ν hupper hopenν
+  · exact hclosed.two_doors_of_missing_nextMilestone_positiveLevel_of_not_openCrossing
+      ν hk hupper hopenν
 
 def chosenMilestoneChainGraphLocalRestSpec_of_openCrossing_and_positiveLevel
     (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
@@ -3064,6 +3103,21 @@ theorem exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''''
     (T := T) (φ := φ) hreflect hzero hopen
     (chosenMilestoneChainPositiveLevelSpec_of_openCrossing_and_lowerMilestoneDoor_and_awayFromBoundary
       (T := T) (φ := φ) hopen hlower haway)
+
+theorem exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec_noOpenCrossing
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (hclosed : ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ)) :
+    ∃ σ ∈ T.facets, FacetImageContainsBarycenter σ φ.vertexMap := by
+  exact exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''
+    (T := T) (φ := φ) hreflect hzero hopen
+    (chosenMilestoneChainPositiveLevelSpec_of_openCrossing_and_noOpenCrossing_and_awayFromBoundary
+      (T := T) (φ := φ) hopen hclosed haway)
 
 end Section5GraphNode
 

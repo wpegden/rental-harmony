@@ -473,6 +473,15 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''''`
   shows that this stronger/minimal contract is exactly what the downstream Section 5 pipeline
   needs.
+- The positive-level missing-next case can now be phrased even more sharply. Since the support file
+  already proves `chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone`,
+  the residual branch after the fixed open-crossing contract is simply the complement
+  "not open crossing". This is now isolated as
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec`, and
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec_noOpenCrossing`
+  shows that the Section 5 barycenter-cell pipeline closes under that sharper complement-case
+  contract together with the existing reflection, level-`0` boundary, open-crossing, and
+  away-from-boundary inputs.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

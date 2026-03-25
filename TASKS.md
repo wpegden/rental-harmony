@@ -297,3 +297,10 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''''`
   shows that the barycenter-cell theorem now depends only on the bare lower-endpoint two-door
   statement, not on an additional externally supplied neighbor witness.
+- [x] Reduced that positive-level missing-next branch one step further by using the actual
+  dichotomy already proved in the file: either there is an open crossing or there is not. The new
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec` packages exactly the
+  complement of the already-isolated open-crossing case, and
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec_noOpenCrossing`
+  shows that the downstream barycenter-cell theorem now depends on the no-open-crossing branch
+  rather than on the older lower-milestone door formulation.

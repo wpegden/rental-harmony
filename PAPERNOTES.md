@@ -586,3 +586,12 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''''`
   shows that once this lower-endpoint two-door statement and the separate away-from-boundary case
   are supplied, the downstream parity argument again reaches a barycenter-containing facet.
+- The missing-next positive-level branch can now be stated in an even sharper way: because the
+  support file already proves
+  `chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone`, the
+  residual branch after fixing `ChosenMilestoneChainOpenCrossingSpec` is simply the complement
+  case "no open crossing". This is now recorded as
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec`, and the wrapper
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec_noOpenCrossing`
+  confirms that the downstream parity argument uses exactly that complement-case input together
+  with the separate away-from-boundary theorem, not a broader mixed positive-level package.
