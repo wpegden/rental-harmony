@@ -3568,6 +3568,23 @@ theorem imageContains_of_mem_closedInterior_carrierImageSimplex
   rw [← hwx]
   simpa [sx, range_carrierImageSimplex_points (T := T) (τ := τ) hτ] using hxconv
 
+theorem not_mem_closedInterior_carrierImageSimplex_of_not_imageContains
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)}
+    (hτ :
+      AffineIndependent ℝ
+        (fun v : (τ.carrier : Set Vertex) =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)))
+    (hx :
+      ¬ τ.ImageContains (T := T) φ x) :
+    ((x : RealPoint dimension) ∉
+      (carrierImageSimplex (T := T) τ φ hτ).closedInterior) := by
+  intro hxclosed
+  exact
+    hx
+      (imageContains_of_mem_closedInterior_carrierImageSimplex
+        (T := T) (τ := τ) (φ := φ) (x := x) hτ hxclosed)
+
 theorem mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_of_pos
     {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
     {x : RentDivision (dimension + 1)}
@@ -4730,6 +4747,59 @@ structure ChosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntry
       ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
         ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
           (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+
+/--
+Literal carrier-image simplex-entry version of the endpoint-entry theorem.
+
+At this point the remaining geometry is no longer about affine independence or away-from-boundary
+directly. Those hypotheses already imply that `b_k` lies in the interior of the carrier-image
+simplex of `ν.face`, while failure of lower-milestone containment says that `b_{k-1}` is not in
+its closed interior. The unresolved local statement is exactly that such a segment must meet a
+codimension-`1` face.
+-/
+structure ChosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec where
+  exists_codimOneSubface_meets_segment_of_mem_interior_carrierImageSimplex_and_lowerMilestone_not_mem_closedInterior :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      (hcarrier : AffineIndependent ℝ
+        (fun v : (ν.face.carrier : Set Vertex) =>
+          ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension))) →
+      let sx :=
+        SubdivisionFace.carrierImageSimplex
+          (T := T) ν.face φ.vertexMap
+          hcarrier
+      (((chosenMilestoneChain (φ := φ)).point ν.level.succ :
+          RentDivision (dimension + 1)) : RealPoint dimension) ∈ sx.interior →
+      (((chosenMilestoneChain (φ := φ)).point ν.level.castSucc :
+          RentDivision (dimension + 1)) : RealPoint dimension) ∉ sx.closedInterior →
+      ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+        ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+
+def
+    chosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec_of_carrierImageSimplexInteriorEntry
+    (hentry :
+      ChosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk _ haway hlower _ hcarrier
+  refine
+    hentry.exists_codimOneSubface_meets_segment_of_mem_interior_carrierImageSimplex_and_lowerMilestone_not_mem_closedInterior
+      ν hk hcarrier ?_ ?_
+  · exact
+      SubdivisionFace.mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_of_pos
+        (T := T) (τ := ν.face) (φ := φ.vertexMap)
+        (x := (chosenMilestoneChain (φ := φ)).point ν.level.succ)
+        hcarrier
+        (by simpa [ν.face_dim] using Nat.succ_pos ν.level.1)
+        haway
+  · exact
+      SubdivisionFace.not_mem_closedInterior_carrierImageSimplex_of_not_imageContains
+        (T := T) (τ := ν.face) (φ := φ.vertexMap)
+        (x := (chosenMilestoneChain (φ := φ)).point ν.level.castSucc)
+        hcarrier hlower
 
 def
     chosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec_of_carrierAffineIndependentEndpointEntry

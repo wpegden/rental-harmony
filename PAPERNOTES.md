@@ -219,7 +219,11 @@
   mere simplex membership to actual simplex interior. So the remaining next-milestone geometry is
   now sharply one barycentric/simplex-entry lemma: if `b_{k-1}` is not already in `λ(σ)` but
   `b_k` is an interior point of that affine simplex, then the segment `[b_{k-1}, b_k]` must meet
-  some codimension-`1` face of `σ`.
+  some codimension-`1` face of `σ`. The new theorem
+  `SubdivisionFace.not_mem_closedInterior_carrierImageSimplex_of_not_imageContains`
+  confirms the complementary half of that picture inside Lean as well, so the remaining checked
+  local frontier is now exactly the project-specific simplex-entry package
+  `ChosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec`.
 - Formalization note after the latest higher-dimensional obstruction reduction:
   in the range `2 < dimension`, the current Section 5 development now reduces pure terminal
   existence to one explicit direct-route theorem:

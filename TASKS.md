@@ -159,6 +159,14 @@
   image of `σ`. So the first unresolved next-milestone bridge is now exactly the simplex-entry
   theorem that if `b_{k-1}` is not already in `λ(σ)` but `b_k` is an interior point of that
   carrier-image simplex, then the segment `[b_{k-1}, b_k]` meets some codimension-`1` face.
+  The new theorem
+  `SubdivisionFace.not_mem_closedInterior_carrierImageSimplex_of_not_imageContains`
+  and the wrapper
+  `chosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec_of_carrierImageSimplexInteriorEntry`
+  now make that reduction literal inside Lean: the current endpoint-entry package is implied by
+  the exact local simplex theorem
+  `ChosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec.
+  exists_codimOneSubface_meets_segment_of_mem_interior_carrierImageSimplex_and_lowerMilestone_not_mem_closedInterior`.
   The exact remaining direct-route subcases are therefore:
   the level-`0` base case, the positive-level next-milestone lower-milestone-containment branch,
   and the positive-level open-crossing lower-milestone-containment branch.

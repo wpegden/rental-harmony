@@ -299,7 +299,13 @@
   `SubdivisionFace.mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_of_pos`
   upgrades away-from-boundary at positive level to actual simplex interior. So the remaining
   next-milestone local theorem is now a genuine barycentric/simplex-entry statement rather than
-  another support-selection reformulation.
+  another support-selection reformulation. The new theorem
+  `SubdivisionFace.not_mem_closedInterior_carrierImageSimplex_of_not_imageContains`
+  and the reduction
+  `chosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec_of_carrierImageSimplexInteriorEntry`
+  sharpen this one step further: the current local frontier is exactly the interior-point theorem
+  `ChosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec.
+  exists_codimOneSubface_meets_segment_of_mem_interior_carrierImageSimplex_and_lowerMilestone_not_mem_closedInterior`.
   The second bridge is now reduced further too. The theorem
   `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex_of_entranceCarrier` and the
   wrapper
