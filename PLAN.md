@@ -1070,6 +1070,20 @@
   Thus the next exact local theorem should either be an affine-span-restricted boundary-entry
   lemma, or an independent proof that `b_{k-1}` lies in that affine span in the next-milestone
   branch.
+- That affine-span obstruction is now resolved. The new generic simplex theorem
+  `Affine.Simplex.exists_boundaryPoint_mem_segment_of_mem_interior_of_mem_affineSpan_of_not_mem_closedInterior`
+  proves exactly the needed boundary-entry statement once the lower endpoint is known to lie in
+  the affine span of the carrier-image simplex, and the chosen-chain theorem
+  `SubdivisionFace.milestone_castSucc_mem_affineSpan_carrierImageSimplex_of_subdividesPrefixFace_and_dim`
+  supplies that span hypothesis in the next-milestone branch. Consequently the concrete wrappers
+  `chosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec_of_affineSpanBoundaryEntry`,
+  `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_boundaryEntry`, and
+  `chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_boundaryEntry`
+  now discharge the first route-changed entrance-face gap. The next exact frontier is therefore no
+  longer the entrance-face theorem itself, but the second local bridge
+  `ChosenMilestoneChainNextMilestoneAmbientFacetFreshPrefixVertexSpec.
+  exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier`, after which Lean can already
+  reassemble the same-level continuation package.
 
 ## Current input status
 - No proposed axioms.

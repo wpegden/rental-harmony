@@ -3735,6 +3735,98 @@ theorem mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_o
     exact ⟨hwpos i, hwlt i⟩
   simpa [sx] using (hwx ▸ hxint)
 
+theorem carrierImageSimplex_affineSpan_eq_prefixVertexFinset_affineSpan_of_subdividesPrefixFace_and_dim
+    {τ : SubdivisionFace T} (φ : PiecewiseLinearSimplexMap T) {k : Fin dimension}
+    (hτdim : τ.dim = k.1 + 1)
+    (hsub : τ.SubdividesPrefixFace (T := T) k.succ)
+    (hτ :
+      AffineIndependent ℝ
+        (fun v : (τ.carrier : Set Vertex) =>
+          ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension))) :
+    affineSpan ℝ
+        (Set.range (carrierImageSimplex (T := T) τ φ.vertexMap hτ).points) =
+      affineSpan ℝ
+        (((prefixVertexFinset (dimension := dimension) k.succ :
+            Finset (RealPoint dimension)) : Set (RealPoint dimension))) := by
+  let sx := carrierImageSimplex (T := T) τ φ.vertexMap hτ
+  let sp :=
+    affineSpan ℝ
+      (((prefixVertexFinset (dimension := dimension) k.succ :
+          Finset (RealPoint dimension)) : Set (RealPoint dimension)))
+  have hsxle : affineSpan ℝ (Set.range sx.points) ≤ sp := by
+    refine affineSpan_le.2 ?_
+    rintro _ ⟨i, rfl⟩
+    let v : Vertex :=
+      (((carrierSubtypeEquivFin (T := T) τ).symm i : (τ.carrier : Set Vertex)) : Vertex)
+    have hv : v ∈ τ.carrier :=
+      (((carrierSubtypeEquivFin (T := T) τ).symm i : (τ.carrier : Set Vertex))).property
+    let z : PrefixFace (dimension := dimension) k.succ :=
+      SubdivisionFace.prefixImageVertex (T := T) φ τ hsub v hv
+    have hz :
+        (((z.1 : RentDivision (dimension + 1)) : RealPoint dimension) ∈ sp) := by
+      dsimp [sp]
+      exact PrefixFace.mem_affineSpan_prefixVertexFinset (dimension := dimension) k.succ z
+    simpa [z] using hz
+  have hprefixind :
+      AffineIndependent ℝ
+        (fun x :
+          (((prefixVertexFinset (dimension := dimension) k.succ :
+              Finset (RealPoint dimension)) : Set (RealPoint dimension))) =>
+          (x : RealPoint dimension)) :=
+    affineIndependent_prefixVertexFinset (dimension := dimension) k.succ
+  have hprefixcard :
+      Fintype.card
+          (((prefixVertexFinset (dimension := dimension) k.succ :
+              Finset (RealPoint dimension)) : Set (RealPoint dimension))) =
+        k.succ.1 + 1 := by
+    classical
+    simpa using prefixVertexFinset_card (dimension := dimension) k.succ
+  have hrange :
+      Set.range
+          (fun x :
+            (((prefixVertexFinset (dimension := dimension) k.succ :
+                Finset (RealPoint dimension)) : Set (RealPoint dimension))) =>
+            (x : RealPoint dimension)) =
+        (((prefixVertexFinset (dimension := dimension) k.succ :
+            Finset (RealPoint dimension)) : Set (RealPoint dimension))) := by
+    ext x
+    constructor
+    · rintro ⟨y, rfl⟩
+      exact y.property
+    · intro hx
+      exact ⟨⟨x, hx⟩, rfl⟩
+  have hspfinrank : Module.finrank ℝ sp.direction = k.succ.1 := by
+    dsimp [sp]
+    rw [direction_affineSpan]
+    rw [← hrange]
+    exact hprefixind.finrank_vectorSpan (n := k.succ.1) hprefixcard
+  have hsxcard :
+      Fintype.card (Fin (τ.dim + 1)) = Module.finrank ℝ sp.direction + 1 := by
+    calc
+      Fintype.card (Fin (τ.dim + 1)) = τ.dim + 1 := by simp
+      _ = k.succ.1 + 1 := by simpa [hτdim]
+      _ = Module.finrank ℝ sp.direction + 1 := by rw [hspfinrank]
+  exact sx.independent.affineSpan_eq_of_le_of_card_eq_finrank_add_one hsxle hsxcard
+
+theorem milestone_castSucc_mem_affineSpan_carrierImageSimplex_of_subdividesPrefixFace_and_dim
+    {c : Section5MilestoneChain (dimension := dimension)} {τ : SubdivisionFace T}
+    (φ : PiecewiseLinearSimplexMap T) {k : Fin dimension}
+    (hτdim : τ.dim = k.1 + 1)
+    (hsub : τ.SubdividesPrefixFace (T := T) k.succ)
+    (hτ :
+      AffineIndependent ℝ
+        (fun v : (τ.carrier : Set Vertex) =>
+          ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension))) :
+    (((c.point k.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+      affineSpan ℝ
+        (Set.range (carrierImageSimplex (T := T) τ φ.vertexMap hτ).points)) := by
+  rw [carrierImageSimplex_affineSpan_eq_prefixVertexFinset_affineSpan_of_subdividesPrefixFace_and_dim
+    (T := T) (τ := τ) φ (k := k) hτdim hsub hτ]
+  apply PrefixFace.mem_affineSpan_prefixVertexFinset_of_coord_eq_zero
+    (dimension := dimension) (k := k.succ)
+  intro i hi
+  exact c.point_subdividesPrefixFace k.castSucc i (Nat.lt_trans (Nat.lt_succ_self _) hi)
+
 end SubdivisionFace
 
 theorem Affine.Simplex.exists_mem_faceOpposite_closedInterior_of_mem_closedInterior_of_not_mem_interior
@@ -3789,6 +3881,123 @@ theorem Affine.Simplex.exists_mem_faceOpposite_closedInterior_of_mem_closedInter
         exact hj (by simp [hne])
       simpa [hji] using hwi0
   simpa [Affine.Simplex.faceOpposite] using hfaceclosed
+
+theorem Affine.Simplex.exists_boundaryPoint_mem_segment_of_mem_interior_of_mem_affineSpan_of_not_mem_closedInterior
+    {n : ℕ} [NeZero n] {s : Affine.Simplex ℝ (RealPoint dimension) n}
+    {x y : RealPoint dimension}
+    (hy : y ∈ s.interior)
+    (hxspan : x ∈ affineSpan ℝ (Set.range s.points))
+    (hxnot : x ∉ s.closedInterior) :
+    ∃ z : RealPoint dimension,
+      z ∈ s.closedInterior ∧
+      z ∉ s.interior ∧
+      z ∈ segment ℝ x y := by
+  rcases hy with ⟨wy, hwy, hwy01, hyeq⟩
+  rcases eq_affineCombination_of_mem_affineSpan_of_fintype hxspan with ⟨wx, hwx, hxeq⟩
+  have hxneg : ∃ i, wx i < 0 := by
+    by_contra hxneg
+    push_neg at hxneg
+    apply hxnot
+    rw [hxeq, s.affineCombination_mem_closedInterior_iff hwx]
+    intro i
+    refine ⟨hxneg i, ?_⟩
+    have hsingle : wx i ≤ ∑ j, wx j := by
+      exact Finset.single_le_sum (fun j _ => hxneg j) (Finset.mem_univ i)
+    simpa [hwx] using hsingle
+  let threshold : Fin (n + 1) → ℝ := fun i =>
+    if hneg : wx i < 0 then
+      -wx i / (wy i - wx i)
+    else
+      0
+  let t0 : ℝ := Finset.univ.sup' Finset.univ_nonempty threshold
+  obtain ⟨ineg, hineg⟩ := hxneg
+  have hthreshold_pos : 0 < threshold ineg := by
+    have hdenpos : 0 < wy ineg - wx ineg := by
+      linarith [hineg, (hwy01 ineg).1]
+    simp [threshold, hineg, div_pos (neg_pos.mpr hineg) hdenpos]
+  have ht0_pos : 0 < t0 := by
+    exact lt_of_lt_of_le hthreshold_pos (Finset.le_sup' threshold (Finset.mem_univ ineg))
+  have ht0_nonneg : 0 ≤ t0 := ht0_pos.le
+  have ht0_le_one : t0 ≤ 1 := by
+    refine Finset.sup'_le Finset.univ_nonempty threshold ?_
+    intro i hi
+    by_cases hneg : wx i < 0
+    · have hdenpos : 0 < wy i - wx i := by
+        linarith [hneg, (hwy01 i).1]
+      have hupper : -wx i ≤ wy i - wx i := by
+        linarith [(hwy01 i).1.le]
+      simp [threshold, hneg]
+      exact (div_le_iff₀ hdenpos).2 (by simpa using hupper)
+    · simp [threshold, hneg]
+  obtain ⟨i0, hi0mem, hi0eq⟩ := Finset.exists_mem_eq_sup' Finset.univ_nonempty threshold
+  have ht0_eq_sup : t0 = threshold i0 := by
+    simpa [t0] using hi0eq
+  have hneg0 : wx i0 < 0 := by
+    by_contra hneg0
+    have : threshold i0 = 0 := by
+      simp [threshold, hneg0]
+    rw [ht0_eq_sup, this] at ht0_pos
+    exact lt_irrefl _ ht0_pos
+  let wz : Fin (n + 1) → ℝ := fun i => AffineMap.lineMap (wx i) (wy i) t0
+  let z : RealPoint dimension := AffineMap.lineMap x y t0
+  have hwz : ∑ i, wz i = 1 := by
+    rw [show (∑ i, wz i) = AffineMap.lineMap (∑ i, wx i) (∑ i, wy i) t0 by
+      simp [wz, AffineMap.lineMap_apply_ring, Finset.sum_add_distrib,
+        Finset.mul_sum, Finset.sum_mul]]
+    simp [AffineMap.lineMap_apply_ring, hwx, hwy]
+  have hz_eq :
+      Finset.univ.affineCombination ℝ s.points wz = z := by
+    dsimp [z]
+    rw [hxeq, ← hyeq]
+    exact
+      (s.independent.affineCombination_eq_lineMap_iff_weight_lineMap
+        (s := Finset.univ) (w := wz) (w₁ := wx) (w₂ := wy) hwz hwx hwy t0).2
+        (by intro i hi; simp [wz])
+  have hwz_nonneg : ∀ i, 0 ≤ wz i := by
+    intro i
+    by_cases hneg : wx i < 0
+    · have hdenpos : 0 < wy i - wx i := by
+        linarith [hneg, (hwy01 i).1]
+      have hthreshold_le : threshold i ≤ t0 := Finset.le_sup' threshold (Finset.mem_univ i)
+      have hlin :
+          0 ≤ AffineMap.lineMap (wx i) (wy i) t0 := by
+        rw [AffineMap.lineMap_apply_ring]
+        have hfrac : -wx i / (wy i - wx i) ≤ t0 := by
+          simpa [threshold, hneg] using hthreshold_le
+        have hmul : -wx i ≤ t0 * (wy i - wx i) := by
+          exact (div_le_iff₀ hdenpos).1 hfrac
+        linarith
+      simpa [wz] using hlin
+    · have hnonneg : 0 ≤ wx i := le_of_not_gt hneg
+      rw [show wz i = AffineMap.lineMap (wx i) (wy i) t0 by rfl, AffineMap.lineMap_apply_ring]
+      nlinarith [(hwy01 i).1, hnonneg, ht0_nonneg, ht0_le_one]
+  have hwz_zero : wz i0 = 0 := by
+    have ht0_eq : t0 = -wx i0 / (wy i0 - wx i0) := by
+      simpa [threshold, hneg0] using ht0_eq_sup
+    have hdenpos : 0 < wy i0 - wx i0 := by
+      linarith [hneg0, (hwy01 i0).1]
+    have hzero :
+        AffineMap.lineMap (wx i0) (wy i0) (-wx i0 / (wy i0 - wx i0)) = 0 := by
+      rw [AffineMap.lineMap_apply_ring]
+      field_simp [show wy i0 - wx i0 ≠ 0 by linarith]
+      ring_nf
+    simpa [wz, ht0_eq] using hzero
+  have hz_closed : z ∈ s.closedInterior := by
+    rw [← hz_eq, s.affineCombination_mem_closedInterior_iff hwz]
+    intro i
+    refine ⟨hwz_nonneg i, ?_⟩
+    have hsingle : wz i ≤ ∑ j, wz j := by
+      exact Finset.single_le_sum (fun j _ => hwz_nonneg j) (Finset.mem_univ i)
+    simpa [hwz] using hsingle
+  have hz_not_int : z ∉ s.interior := by
+    intro hzint
+    rw [← hz_eq, s.affineCombination_mem_interior_iff hwz] at hzint
+    have : 0 < wz i0 := (hzint i0).1
+    simpa [hwz_zero] using this
+  have hz_seg : z ∈ segment ℝ x y := by
+    rw [segment_eq_image_lineMap]
+    exact Set.mem_image_of_mem _ ⟨ht0_nonneg, ht0_le_one⟩
+  exact ⟨z, hz_closed, hz_not_int, hz_seg⟩
 
 theorem not_exists_smaller_support_of_pair_of_mem_openSegment
     (pfun : Vertex → RealPoint dimension)
@@ -4914,6 +5123,33 @@ structure ChosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec 
         z ∉ sx.interior ∧
         z ∈ (chosenMilestoneChain (φ := φ)).segment ν.level
 
+def chosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec_of_affineSpanBoundaryEntry :
+    ChosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hcarrier
+  dsimp
+  intro hupper hintlower
+  let sx :=
+    SubdivisionFace.carrierImageSimplex
+      (T := T) ν.face φ.vertexMap
+      hcarrier
+  have hdimpos : 0 < ν.face.dim := by
+    simpa [ν.face_dim] using Nat.succ_pos ν.level.1
+  letI : NeZero ν.face.dim := ⟨Nat.ne_of_gt hdimpos⟩
+  have hlowerSpan :
+      (((chosenMilestoneChain (φ := φ)).point ν.level.castSucc :
+          RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        affineSpan ℝ (Set.range sx.points) := by
+    dsimp [sx]
+    exact
+      SubdivisionFace.milestone_castSucc_mem_affineSpan_carrierImageSimplex_of_subdividesPrefixFace_and_dim
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (τ := ν.face) φ
+        (k := ν.level) ν.face_dim ν.subdivides hcarrier
+  simpa [sx, Section5MilestoneChain.segment] using
+    (Affine.Simplex.exists_boundaryPoint_mem_segment_of_mem_interior_of_mem_affineSpan_of_not_mem_closedInterior
+      (s := sx) hupper hlowerSpan hintlower)
+
 def chosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec_of_boundaryEntry
     (hboundary :
       ChosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec
@@ -5035,6 +5271,20 @@ def chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndepende
       (affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary
         (T := T) haway)
 
+def chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_boundaryEntry :
+    ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry
+    (T := T) (φ := φ)
+    (chosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec_of_carrierAffineIndependentEndpointEntry
+      (T := T) (φ := φ)
+      (chosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec_of_carrierImageSimplexInteriorEntry
+        (T := T) (φ := φ)
+        (chosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec_of_boundaryEntry
+          (T := T) (φ := φ)
+          (chosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec_of_affineSpanBoundaryEntry
+            (T := T) (φ := φ)))))
+
 structure ChosenMilestoneChainNextMilestoneEntranceFaceSpec where
   exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary :
     ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
@@ -5067,6 +5317,17 @@ def chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier
   · exact
       hendpoint.exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone
         ν hk hνdim haway hlower hνterm
+
+def chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_boundaryEntry
+    (hlarge :
+      FaceLocalLargeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneEntranceFaceSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_endpointEntrance
+    (T := T) (φ := φ) hlarge
+    (chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_boundaryEntry
+      (T := T) (φ := φ))
 
 /--
 Ambient-facet prefix-extension theorem in the current-prefix next-milestone branch.

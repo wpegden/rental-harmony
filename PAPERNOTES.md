@@ -1222,3 +1222,21 @@
   ambient visibility argument; it needs either an affine-span-restricted version of the boundary
   entry lemma, or an extra geometric statement placing `b_{k-1}` in the affine span of the image
   simplex before visibility can be applied there.
+- Formalization note after resolving that affine-span issue:
+  the next-milestone boundary-entry theorem is now proved in exactly the affine-span-restricted
+  form suggested by the previous diagnosis. The new generic simplex theorem
+  `Affine.Simplex.exists_boundaryPoint_mem_segment_of_mem_interior_of_mem_affineSpan_of_not_mem_closedInterior`
+  shows that if `b_k` lies in the interior of the carrier-image simplex, `b_{k-1}` lies in its
+  affine span, and `b_{k-1}` is outside the closed interior, then the segment `[b_{k-1}, b_k]`
+  contains a boundary point of that simplex. The chosen-chain theorem
+  `SubdivisionFace.milestone_castSucc_mem_affineSpan_carrierImageSimplex_of_subdividesPrefixFace_and_dim`
+  supplies the affine-span input from the Section 5 prefix-face data, so Lean now reassembles the
+  whole first route-changed bridge via
+  `chosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec_of_affineSpanBoundaryEntry`,
+  `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_boundaryEntry`, and
+  `chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_boundaryEntry`.
+  Thus the manuscript-faithful entrance-face theorem is no longer the blocker. The remaining
+  next-milestone local gap has moved cleanly to the second bridge:
+  produce a fresh current-prefix ambient-facet vertex for the resulting entrance carrier, i.e.
+  `ChosenMilestoneChainNextMilestoneAmbientFacetFreshPrefixVertexSpec.
+  exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier`.

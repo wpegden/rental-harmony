@@ -10,43 +10,25 @@
 <!-- SUPERVISOR_TASKS:END -->
 
 ## Worker Tasks
-- [ ] Route-changed next-milestone entrance frontier:
-  `exists_codimOneSubface_meets_segment_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec`
-  now discharges the lower-milestone-present subcase of the entrance-face theorem from the
-  existing large-lower-prefix carrier API, and
-  `chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_endpointEntrance`
-  reduces the full next-milestone entrance package to one exact complementary local bridge:
-  `ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec.
-  exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
-  The new theorem
-  `affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary` now sharpens that endpoint
-  case further: away-from-boundary at `b_k` already forces the image vertices of `σ` to form an
-  affine-independent simplex, and
-  the companion carrier-indexed theorems
-  `affineIndependent_carrierImage_of_imageContainsPointAwayFromBoundary` and
-  `affineIndependent_carrierImage_of_imageContainsMilestoneAwayFromBoundary`
-  put the same fact in the exact indexing format needed for local face-wise simplex arguments.
-  The stronger barycentric-coordinate / affine-basis packaging was tested but is not part of the
-  checked frontier yet; the surviving Lean reduction is still the affine-independence step itself.
-  Consequently,
-  `chosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec_of_carrierAffineIndependentEndpointEntry`
-  now converts a carrier-indexed local theorem directly into the older image-indexed endpoint
-  statement, so future local simplex-entry work can stay in the more natural carrier format.
-  Concretely, the exact remaining theorem can now be treated as
-  `ChosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec.
-  exists_codimOneSubface_meets_segment_of_affineIndependentCarrierImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`,
-  with the image-indexed spec retained only as a compatibility wrapper.
-  Consequently,
-  `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry`
-  reduces the remaining local geometry to the affine-simplex entry statement
-  `ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec.
-  exists_codimOneSubface_meets_segment_of_affineIndependentImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
-  So the first unresolved route-changed next-milestone theorem is no longer the whole entrance-face
-  package, nor even the full endpoint-entry case, but specifically the affine-independent
-  endpoint-entry case where `b_k` lies away from the boundary of `λ(σ)` and `σ` does not already
-  contain `b_{k-1}`. After that, the second bridge remains
+- [x] Close the route-changed next-milestone entrance-face bridge. The generic simplex theorem
+  `Affine.Simplex.exists_boundaryPoint_mem_segment_of_mem_interior_of_mem_affineSpan_of_not_mem_closedInterior`
+  now resolves the affine-span obstruction, and the concrete wrappers
+  `chosenMilestoneChainNextMilestoneCarrierImageSimplexBoundaryEntrySpec_of_affineSpanBoundaryEntry`,
+  `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_boundaryEntry`, and
+  `chosenMilestoneChainNextMilestoneEntranceFaceSpec_of_largeLowerPrefixCarrier_and_boundaryEntry`
+  expose that result as the actual next-milestone entrance package for the chosen chain.
+- [ ] Route-changed next-milestone continuation frontier:
+  with the entrance-face theorem now available, the first exact unresolved local bridge is
   `ChosenMilestoneChainNextMilestoneAmbientFacetFreshPrefixVertexSpec.
   exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier`.
+  Once that fresh current-prefix ambient-facet vertex exists, Lean already converts it into
+  `ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec` via
+  `chosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec_of_freshPrefixVertex`, and
+  then into the manuscript-faithful same-level continuation theorem via
+  `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_prefixExtension`.
+  So the next concrete job is to prove the fresh-prefix-vertex theorem from the Section 5 face
+  geometry, and only after that decide how to feed the resulting same-level continuation package
+  back into the below-top-dimensional direct route.
 - [ ] Exact higher-dimensional deleted-spur frontier:
   prove the two fields of
   `Section5GraphNode.ChosenMilestoneChainDeletedSpurNoEscapeSpec`.
