@@ -258,6 +258,16 @@
   concrete chain. So the remaining Section 5 milestone work is now the complementary open-segment
   clause together with the short graph-genericity packaging needed to build a full
   `Section5GraphNode.MilestoneSegmentTransversality` witness for `chosenMilestoneChain`.
+- The next reduction step is now formalized too:
+  `imageMeetsOpenMilestoneSegment_of_meets_of_not_containsMilestones`
+  shows that the concrete open-segment goal is equivalent to excluding both segment endpoints from
+  the face image, and
+  `chosenMilestoneChain_openSegment_of_missingNextMilestone_of_not_lowerMilestone`
+  specializes this to the chosen chain. This sharpened the remaining blocker enough to reveal a
+  likely support-layer mismatch: the current
+  `MilestoneSegmentTransversality.open_crossing_of_missing_nextMilestone` field demands more than
+  the paper's local graph argument, because Section 5 still allows the lower endpoint `b_k` to act
+  as a vertical door when the next milestone `b_{k+1}` is absent.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -291,8 +301,10 @@
   convex hulls. That smaller-simplex convex-hull avoidance theorem is now proved, so the next
   missing argument is the proof that the concrete chain `chosenMilestoneChain` witnesses
   `Section5GraphNode.MilestoneSegmentTransversality`. The away-from-boundary half of that claim is
-  now formalized; the remaining blocker is the open-segment half and the resulting final
-  packaging into the terminal-node / surjectivity wrappers.
+  now formalized, and the remaining open-segment half has been reduced to lower-milestone
+  exclusion. That reduction in turn suggests that the current transversality package is too strong
+  for the paper's actual argument, so the next step is likely to weaken/refactor the missing-next
+  case so it counts doors at `b_k` rather than forbidding them outright.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
 - Turn the Hall witness wrapper theorems into actual proofs by extracting the paper's

@@ -925,6 +925,22 @@ lemma imageMeetsMilestoneSegment_of_imageMeetsOpenMilestoneSegment
   rcases hτ with ⟨x, hxseg, -, -, himg⟩
   exact ⟨x, hxseg, himg⟩
 
+lemma imageMeetsOpenMilestoneSegment_of_meets_of_not_containsMilestones
+    {c : Section5MilestoneChain (dimension := dimension)} {τ : SubdivisionFace T}
+    {φ : Vertex → RentDivision (dimension + 1)} {k : Fin dimension}
+    (hτ : τ.ImageMeetsMilestoneSegment (T := T) c φ k)
+    (hlower : ¬ τ.ImageContainsMilestone (T := T) c φ k.castSucc)
+    (hupper : ¬ τ.ImageContainsMilestone (T := T) c φ k.succ) :
+    τ.ImageMeetsOpenMilestoneSegment (T := T) c φ k := by
+  rcases hτ with ⟨x, hxseg, himg⟩
+  refine ⟨x, hxseg, ?_, ?_, himg⟩
+  · intro hx
+    apply hlower
+    simpa [SubdivisionFace.ImageContainsMilestone, hx, SubdivisionFace.ImageContains] using himg
+  · intro hx
+    apply hupper
+    simpa [SubdivisionFace.ImageContainsMilestone, hx, SubdivisionFace.ImageContains] using himg
+
 lemma imageContainsMilestone_of_imageContainsMilestoneAwayFromBoundary
     {c : Section5MilestoneChain (dimension := dimension)} {τ : SubdivisionFace T}
     {φ : Vertex → RentDivision (dimension + 1)} {k : Fin (dimension + 1)}
@@ -1408,6 +1424,20 @@ theorem chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
       chosenMilestoneChain_point,
       imagePoints_eq_prefixImageVertices (T := T) (φ := φ) ρ hρsub] using hρcontains
   exact havoid hmil
+
+theorem chosenMilestoneChain_openSegment_of_missingNextMilestone_of_not_lowerMilestone
+    {ν : Section5PositiveNode (c := chosenMilestoneChain (φ := φ)) φ}
+    (hlower :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ) :
+    ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+      (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level := by
+  exact
+    SubdivisionFace.imageMeetsOpenMilestoneSegment_of_meets_of_not_containsMilestones
+      (T := T) ν.meets_segment hlower hupper
 
 /--
 Local degree data expected from the geometric genericity analysis in Section 5.

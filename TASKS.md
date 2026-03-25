@@ -14,9 +14,12 @@
 - [ ] Prove the actual milestone-chain geometric/transversality consequences that imply `Section5GraphNode.MilestoneSegmentTransversality`.
 - [ ] Instantiate `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality` from the milestone-chain genericity proof to obtain the Section 5 terminal-node / barycenter-face existence statement.
 - [ ] Finish the concrete `chosenMilestoneChain` transversality proof.
-  Current blocker: the nonterminal away-from-boundary clause is now proved, but the open-segment
-  clause and the remaining graph-genericity consequences still need to be extracted from the same
-  milestone-avoidance data.
+  Current blocker: the nonterminal away-from-boundary clause is proved, and the open-segment
+  clause has now been reduced to excluding the lower milestone from the same face image, but that
+  exposed a support-layer mismatch: the current
+  `Section5GraphNode.MilestoneSegmentTransversality.open_crossing_of_missing_nextMilestone` field
+  is stronger than the paper's local door-count argument, which still allows a vertical door at
+  the lower endpoint `b_k`.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
@@ -85,6 +88,11 @@
   `chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal` now turns the forbidden-family
   avoidance theorem into the `ImageContainsMilestoneAwayFromBoundary` conclusion needed for the
   vertical-door side of the graph argument.
+- [x] Reduced the remaining concrete open-segment goal to endpoint exclusion:
+  `imageMeetsOpenMilestoneSegment_of_meets_of_not_containsMilestones`
+  and
+  `chosenMilestoneChain_openSegment_of_missingNextMilestone_of_not_lowerMilestone`
+  isolate the exact missing statement as lower-milestone noncontainment.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made

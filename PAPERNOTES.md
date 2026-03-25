@@ -283,3 +283,16 @@
   statement for faces missing the next milestone, then package the resulting concrete chain into a
   full `Section5GraphNode.MilestoneSegmentTransversality` witness and push it through the already
   formalized terminal-node / parity wrappers.
+- Formalization note after the latest open-segment reduction:
+  the remaining missing-next-milestone case has now been reduced to one precise endpoint
+  obstruction.
+  `imageMeetsOpenMilestoneSegment_of_meets_of_not_containsMilestones`
+  shows that an open crossing follows as soon as both endpoints are excluded from the face image,
+  and
+  `chosenMilestoneChain_openSegment_of_missingNextMilestone_of_not_lowerMilestone`
+  specializes this to the chosen milestone chain. But this sharpened reduction also exposed a
+  likely support-layer mismatch with the paper: Section 5 allows the lower endpoint `b_k` to serve
+  as a vertical door when `b_{k+1}` is absent, whereas the current field
+  `MilestoneSegmentTransversality.open_crossing_of_missing_nextMilestone` rules that case out
+  completely. So the remaining blocker may be a local-definition repair rather than one more
+  convexity lemma.
