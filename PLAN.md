@@ -346,6 +346,12 @@
   cannot turn zero image coordinates into zero domain coordinates. So the real missing ingredient
   remains a genuine domain preimage point with face-local barycentric support, or an explicit local
   affine API strong enough to recover one.
+- The second stuck-recovery route is blocked for a similar reason. The present
+  `SimplicialSubdivision` interface does not assert that facet vertex positions are affinely
+  independent, that a facet convex hull is a genuine simplex with dense relative interior, or that
+  a relative-interior point chooses a unique containing facet. Without those properties, the
+  proposed proof that `φ.toFun` restricts on each facet to the corresponding local affine map
+  cannot be carried out from the current abstractions.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

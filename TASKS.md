@@ -62,7 +62,11 @@
   `x ∈ convexHull (facetVertexPoints T σ) -> baryCoord v x = 0` for all `v ∉ σ`. Focused recovery
   experiment result: a purely image-local support witness from `Finset.mem_convexHull'` is not
   enough for Section 5, because `boundary_preserving` only implies `imageSupport ⊆ domainSupport`;
-  it does not let zero image coordinates force lower-prefix domain vertices.
+  it does not let zero image coordinates force lower-prefix domain vertices. The next recovery route
+  is blocked too under the current API: proving a facet-restriction theorem for `φ.toFun` would
+  need nondegenerate facets and unique containing facets on relative interiors, but
+  `SimplicialSubdivision` currently stores neither affine independence of facet vertex positions nor
+  any uniqueness theorem for relative-interior points.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for

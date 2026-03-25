@@ -413,3 +413,13 @@
   prove that the corresponding domain vertices lie in the lower prefix face. The blocked step
   really does require a genuine domain preimage point with face-local barycentric support, or a
   stronger local affine API that supplies such a point.
+- Recovery attempt 2 diagnosis:
+  the suggested relative-interior / continuity route also stops at the abstract subdivision API.
+  `SimplicialSubdivision` records only that each facet has `dimension + 1` vertices and covers the
+  simplex; it does not assert that the geometric points of a facet are affinely independent, that
+  its convex hull is a genuine `dimension`-simplex, or that a point in the relative interior of a
+  facet determines that facet uniquely. Without those nondegeneracy/uniqueness properties, there is
+  no available path to prove that `φ.toFun` agrees on a chosen facet with the corresponding local
+  affine extension and then extend by continuity. So the current obstruction is not just a missing
+  lemma name; the existing abstract `SimplicialSubdivision` interface is too weak for both the
+  global-support route and the relative-interior affine-restriction route.
