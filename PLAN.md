@@ -814,6 +814,17 @@
   `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_and_bypass`
   shows that once such a bypass spec is proved, the current chosen-chain alternative local theory
   is already sufficient for terminal-node existence.
+- The bypass frontier is now sharpened one more step inside the obstruction branch itself.
+  `existsUnique_graphNeighbor_ne_counterexampleNode_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData`
+  proves that once one descends from a packaged obstruction node `ν` to its canonical vertical
+  neighbor `μ`, that lower node has a unique continuation neighbor distinct from `ν`. The new
+  reductions
+  `exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_continuationNeighbor`
+  and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_continuationNeighborTerminal`
+  show that pure terminal existence now reduces exactly to proving eventual terminal existence from
+  that continuation neighbor. So the remaining Section 5 gap is no longer an unspecified bypass;
+  it is the continuation-neighbor theorem after the forced vertical descent.
 
 ## Current input status
 - No proposed axioms.

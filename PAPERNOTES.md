@@ -895,3 +895,14 @@
   shows that no additional local geometry is needed once one can turn explicit packaged
   obstruction data into eventual terminal existence. This is the exact current frontier of the
   formalization.
+- The bypass frontier is now sharper inside the obstruction case itself. Lean proves
+  `existsUnique_graphNeighbor_ne_counterexampleNode_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData`:
+  after descending from the boundary-only unique-carrier obstruction node `ν` to its canonical
+  vertical neighbor `μ`, there is a unique second door out of `μ` distinct from `ν`.
+  Consequently
+  `exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_continuationNeighbor`
+  and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_continuationNeighborTerminal`
+  reduce the whole remaining Section 5 mismatch to one even more specific statement:
+  following that unique continuation neighbor after the forced descent must preserve eventual
+  terminal-node existence.

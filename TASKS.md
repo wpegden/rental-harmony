@@ -71,7 +71,15 @@
   `ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec` and reduction
   `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_and_bypass`
   now package that missing step as one clean theorem: given a way to consume explicit obstruction
-  data, the whole chosen-chain terminal-existence argument goes through again.
+  data, the whole chosen-chain terminal-existence argument goes through again. The new theorems
+  `existsUnique_graphNeighbor_ne_counterexampleNode_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData`,
+  `exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_continuationNeighbor`,
+  and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_continuationNeighborTerminal`
+  sharpen that frontier once more: after descending to the canonical vertical neighbor `μ`, Lean
+  can now isolate a unique continuation door `w ≠ ν`. So the exact remaining bypass theorem is no
+  longer "get a terminal from the vertical neighbor" but "get a terminal after following the
+  continuation neighbor of that vertical descent." This is the current precise graph-level gap.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,
