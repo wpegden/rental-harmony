@@ -2629,6 +2629,48 @@ structure LocalDegreeHypotheses where
           Adj (T := T) c φ (.positive ν) w → w = a ∨ w = b
 
 /--
+Minimal abstract replacement for `LocalDegreeHypotheses` if top-dimensional forced-descent nodes
+must be allowed.
+
+The start room still has exactly one door. Every nonterminal positive room either has the usual
+two-door continuation pattern, or else has a unique vertical descent door to a lower-level room.
+-/
+structure LocalDegreeOrDescentHypotheses where
+  start_neighbor : Section5PositiveNode c φ
+  start_adj :
+    Adj (T := T) c φ .start (.positive start_neighbor)
+  start_unique :
+    ∀ w : Section5GraphNode c φ,
+      Adj (T := T) c φ .start w → w = .positive start_neighbor
+  nonterminal_two_neighbors_or_forced_verticalDescent :
+    ∀ ν : Section5PositiveNode c φ,
+      ¬ IsTerminal (T := T) c φ (.positive ν) →
+      (∃ a b : Section5GraphNode c φ,
+        a ≠ b ∧
+        Adj (T := T) c φ (.positive ν) a ∧
+        Adj (T := T) c φ (.positive ν) b ∧
+        ∀ w : Section5GraphNode c φ,
+          Adj (T := T) c φ (.positive ν) w → w = a ∨ w = b) ∨
+        ∃! μ : Section5PositiveNode c φ, μ.VerticalAdj (T := T) c φ ν
+
+def localDegreeHypotheses_of_localDegreeOrDescentHypotheses_and_noForcedVerticalDescent
+    (hdeg : LocalDegreeOrDescentHypotheses (T := T) (c := c) (φ := φ))
+    (hno :
+      ∀ ν : Section5PositiveNode c φ,
+        ¬ IsTerminal (T := T) c φ (.positive ν) →
+        ¬ ∃! μ : Section5PositiveNode c φ, μ.VerticalAdj (T := T) c φ ν) :
+    LocalDegreeHypotheses (T := T) (c := c) (φ := φ) := by
+  refine
+    { start_neighbor := hdeg.start_neighbor
+      start_adj := hdeg.start_adj
+      start_unique := hdeg.start_unique
+      nonterminal_two_neighbors := ?_ }
+  intro ν hν
+  rcases hdeg.nonterminal_two_neighbors_or_forced_verticalDescent ν hν with htwo | hdescent
+  · exact htwo
+  · exact False.elim (hno ν hν hdescent)
+
+/--
 Casewise local-genericity hypotheses matching the paper's Section 5 discussion.
 
 The paper distinguishes two local situations for a positive graph node `ν`.
@@ -4913,6 +4955,52 @@ structure ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec where
         ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
           Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
 
+def chosenMilestoneChain_localDegreeOrDescentHypotheses_of_alternativeSpecs
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ)) :
+    LocalDegreeOrDescentHypotheses
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) := by
+  refine
+    { start_neighbor := hzero.start_neighbor
+      start_adj := hzero.start_adj
+      start_unique := hzero.start_unique
+      nonterminal_two_neighbors_or_forced_verticalDescent := ?_ }
+  intro ν hν
+  by_cases hnext :
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ
+  · left
+    exact
+      haway.two_doors_of_nextMilestone_awayFromBoundary ν
+        (chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
+          (T := T) (φ := φ) hnext hν)
+        hν
+  · by_cases hopenν :
+      ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+    · left
+      exact hopen.two_doors_of_missing_nextMilestone_openCrossing ν hnext hopenν
+    · by_cases hk : 0 < ν.level.1
+      · rcases
+            halt.two_doors_or_topDimBoundaryOnlyUniqueCarrierCounterexample_of_not_openCrossing
+              ν hk hnext hopenν with
+          hdoors | ⟨hdata, hdataEq⟩
+        · exact Or.inl hdoors
+        · subst hdataEq
+          exact Or.inr <|
+            existsUnique_verticalAdj_of_boundaryOnlyUniqueCarrierCounterexampleData
+              (T := T) (φ := φ) hdata
+      · left
+        exact
+          hzero.two_doors_of_missing_nextMilestone_level_zero ν
+            (Nat.eq_zero_of_not_pos hk) hnext
+            (chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
+              (T := T) (φ := φ) (ν := ν) hnext hopenν)
+
 def chosenMilestoneChainPositiveLevelSpec_of_openCrossing_and_lowerMilestone_and_awayFromBoundary
     (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
     (hlower : ChosenMilestoneChainPositiveLevelLowerMilestoneSpec (T := T) (φ := φ))
@@ -5172,6 +5260,21 @@ lemma odd_degree_start
   rw [degree_start_eq_one (T := T) (c := c) (φ := φ) hdeg]
   decide
 
+lemma not_isTerminal_of_topDim_missing_nextMilestone
+    {ν : Section5PositiveNode c φ}
+    (hνdim : ν.face.dim = dimension)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.succ) :
+    ¬ IsTerminal (T := T) c φ (.positive ν) := by
+  intro hν
+  rcases hν with ⟨-, hνterm⟩
+  have hlast : ν.level.succ = Fin.last dimension := by
+    apply Fin.ext
+    have hval : ν.level.1 + 1 = dimension := by
+      simpa [ν.face_dim] using hνdim
+    simpa using hval
+  exact hupper (by simpa [hlast] using hνterm)
+
 lemma degree_positive_eq_two
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
     (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ))
@@ -5195,6 +5298,26 @@ lemma degree_positive_eq_two
   rw [← G.card_neighborFinset_eq_degree, hfinset]
   simp [hab]
 
+lemma degree_positive_eq_one_of_existsUnique_graphNeighbor
+    [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
+    (ν : Section5PositiveNode c φ)
+    (huniq : ∃! w : Section5GraphNode c φ, Adj (T := T) c φ (.positive ν) w) :
+    (graph (T := T) c φ).degree (.positive ν) = 1 := by
+  classical
+  let G : SimpleGraph (Section5GraphNode c φ) := graph (T := T) c φ
+  rcases huniq with ⟨w, hw, huniqw⟩
+  have hfinset : G.neighborFinset (.positive ν) = ({w} : Finset (Section5GraphNode c φ)) := by
+    ext u
+    rw [SimpleGraph.mem_neighborFinset]
+    constructor
+    · intro hu
+      simpa [Finset.mem_singleton] using huniqw u hu
+    · intro hu
+      rw [Finset.mem_singleton] at hu
+      simpa [hu] using hw
+  rw [← G.card_neighborFinset_eq_degree, hfinset]
+  simp
+
 lemma even_degree_of_not_terminal
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]
     (hdeg : LocalDegreeHypotheses (T := T) (c := c) (φ := φ))
@@ -5202,6 +5325,50 @@ lemma even_degree_of_not_terminal
     (hν : ¬ IsTerminal (T := T) c φ (.positive ν)) :
     Even ((graph (T := T) c φ).degree (.positive ν)) := by
   rw [degree_positive_eq_two (T := T) (c := c) (φ := φ) hdeg ν hν]
+  decide
+
+theorem not_localDegreeHypotheses_of_boundaryOnlyUniqueCarrierCounterexampleData
+    (hdata :
+      TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ))
+    (hdeg :
+      LocalDegreeHypotheses
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)) :
+    False := by
+  have hnotterm :
+      ¬ IsTerminal (T := T) (c := chosenMilestoneChain (φ := φ)) φ (.positive hdata.ν) :=
+    not_isTerminal_of_topDim_missing_nextMilestone
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+      hdata.hνdim hdata.hupper
+  rcases hdeg.nonterminal_two_neighbors hdata.ν hnotterm with
+    ⟨a, b, hab, ha, hb, -⟩
+  rcases existsUnique_graphNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ) hdata with
+    ⟨w, hw, huniq⟩
+  exact hab ((huniq a ha).trans (huniq b hb).symm)
+
+lemma degree_positive_eq_one_of_boundaryOnlyUniqueCarrierCounterexampleData
+    [Fintype (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    [DecidableRel (graph (T := T) (chosenMilestoneChain (φ := φ)) φ).Adj]
+    (hdata :
+      TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ)) :
+    (graph (T := T) (chosenMilestoneChain (φ := φ)) φ).degree (.positive hdata.ν) = 1 := by
+  exact degree_positive_eq_one_of_existsUnique_graphNeighbor
+    (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hdata.ν
+    (existsUnique_graphNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ) hdata)
+
+theorem not_even_degree_of_boundaryOnlyUniqueCarrierCounterexampleData
+    [Fintype (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    [DecidableRel (graph (T := T) (chosenMilestoneChain (φ := φ)) φ).Adj]
+    (hdata :
+      TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ)) :
+    ¬ Even
+      ((graph (T := T) (chosenMilestoneChain (φ := φ)) φ).degree (.positive hdata.ν)) := by
+  rw [degree_positive_eq_one_of_boundaryOnlyUniqueCarrierCounterexampleData
+    (T := T) (φ := φ) hdata]
   decide
 
 theorem exists_terminal_of_local_degree_lemmas

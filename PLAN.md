@@ -787,6 +787,18 @@
   either derive a genuine exclusion of the packaged obstruction from the paper's geometry, or
   replace the present parity/local-degree package by a contraction argument that consumes this
   forced-descent alternative.
+- The parity mismatch is now isolated exactly rather than heuristically. The abstract structure
+  `LocalDegreeOrDescentHypotheses` and the concrete theorem
+  `chosenMilestoneChain_localDegreeOrDescentHypotheses_of_alternativeSpecs`
+  show that the chosen-chain geometry already reaches the correct local continuation interface
+  supported by Lean. On the other hand,
+  `not_localDegreeHypotheses_of_boundaryOnlyUniqueCarrierCounterexampleData`,
+  `degree_positive_eq_one_of_boundaryOnlyUniqueCarrierCounterexampleData`, and
+  `not_even_degree_of_boundaryOnlyUniqueCarrierCounterexampleData`
+  prove that a boundary-only unique-carrier obstruction is a genuine nonterminal degree-`1` node.
+  So the exact remaining Section 5 theorem is now the graph-level contraction/descent step that
+  bypasses such nodes in the terminal-node existence argument; the current parity package fails
+  there for a precise structural reason, not because of another unresolved local geometry detail.
 
 ## Current input status
 - No proposed axioms.

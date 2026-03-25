@@ -869,3 +869,12 @@
   excluding this obstruction from the paper's intended genericity hypotheses, or by replacing the
   current parity/local-degree argument with a contraction lemma that can absorb forced-descent
   nodes.
+- The exact downstream incompatibility is now formalized as well. Lean proves
+  `not_localDegreeHypotheses_of_boundaryOnlyUniqueCarrierCounterexampleData`,
+  `degree_positive_eq_one_of_boundaryOnlyUniqueCarrierCounterexampleData`, and
+  `not_even_degree_of_boundaryOnlyUniqueCarrierCounterexampleData`:
+  the packaged obstruction is still nonterminal, but it has graph degree `1`. So the present
+  failure is not merely that the local two-door theorem is too strong; it is that the old parity
+  pipeline literally uses the wrong local invariant at such a node. Any faithful continuation of
+  the paper's Section 5 argument now needs either an explicit geometric exclusion of this pattern
+  or a graph-level contraction/descent lemma replacing the old even-degree step.

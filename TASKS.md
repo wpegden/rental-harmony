@@ -49,6 +49,18 @@
   `b_{k+1}`. Their combined theorem
   `not_boundaryOnlyUniqueCarrierCounterexampleData_of_segmentInteriorWitness_and_escape`
   shows that this witness-plus-escape pair is precisely what would kill the packaged obstruction.
+  The exact downstream blocker is now formalized too. The weaker abstract package
+  `LocalDegreeOrDescentHypotheses` and the chosen-chain constructor
+  `chosenMilestoneChain_localDegreeOrDescentHypotheses_of_alternativeSpecs`
+  show that Lean already supports a "two doors or unique forced vertical descent" continuation law.
+  Meanwhile
+  `not_localDegreeHypotheses_of_boundaryOnlyUniqueCarrierCounterexampleData`,
+  `degree_positive_eq_one_of_boundaryOnlyUniqueCarrierCounterexampleData`, and
+  `not_even_degree_of_boundaryOnlyUniqueCarrierCounterexampleData`
+  show that the packaged obstruction makes a nonterminal node of graph degree `1`. So the next
+  proof obligation is not another local exclusion theorem by default; it is the graph-level
+  contraction/descent lemma that replaces the old even-degree use of
+  `LocalDegreeHypotheses.nonterminal_two_neighbors`.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,
