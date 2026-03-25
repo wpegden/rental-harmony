@@ -604,3 +604,10 @@
   carrying the lower milestone. So the next missing theorem is no longer about lower-prefix
   reflection or open-segment geometry; it is about codimension-`1` incidence uniqueness in the
   subdivision-face layer.
+- Following the stuck-recovery prompt, the support file now also contains a carrier-normalized
+  codimension-`1` object `SubdivisionFace.CarrierCodimOneSubface`. This removes dependence on how a
+  raw `SubdivisionFace` was manufactured and packages only the carrier-level codimension-`1` data.
+  The remaining no-open-crossing hypothesis is therefore stated more cleanly as
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec`:
+  a normalized codimension-`1` carrier face containing the lower milestone should admit a unique
+  same-level continuation coface. This is the next exact abstract theorem to prove or assume.

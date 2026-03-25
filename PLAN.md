@@ -489,6 +489,13 @@
   or exactly two incident cofaces. The no-open-crossing positive-level theorem therefore appears to
   need a stronger simplicial-complex/pseudomanifold incidence API, or an explicit local contract
   asserting that the lower-milestone codimension-`1` face has unique continuation.
+- The first repair step for that issue is now in place. The support file contains a normalized
+  codimension-`1` carrier object `SubdivisionFace.CarrierCodimOneSubface`, together with the new
+  carrier-level contract
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec`.
+  So the remaining no-open-crossing frontier is now phrased at the correct carrier/incidence layer:
+  prove unique same-level continuation across the normalized lower-milestone codimension-`1` face,
+  then use it to recover the graph-door count.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

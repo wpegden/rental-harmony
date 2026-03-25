@@ -157,6 +157,46 @@ lemma erase_isCodimOneSubface (τ : SubdivisionFace T) {v : Vertex} (hv : v ∈ 
     rw [Finset.card_erase_of_mem hv]
     exact Nat.sub_add_cancel (Nat.le_of_lt hτ)
 
+/--
+Carrier-normalized codimension-`1` subfaces of a fixed subdivision face.
+
+This removes dependence on which ambient facet proof was used to manufacture a raw
+`SubdivisionFace` and keeps only the carrier-level data relevant to local continuation arguments.
+-/
+structure CarrierCodimOneSubface (τ : SubdivisionFace T) where
+  carrier : Finset Vertex
+  nonempty : carrier.Nonempty
+  subset : carrier ⊆ τ.carrier
+  card : carrier.card + 1 = τ.carrier.card
+
+namespace CarrierCodimOneSubface
+
+def toSubdivisionFace {τ : SubdivisionFace T} (ρ : CarrierCodimOneSubface τ) : SubdivisionFace T :=
+  τ.ofSubset ρ.carrier ρ.subset ρ.nonempty
+
+@[simp] lemma toSubdivisionFace_carrier {τ : SubdivisionFace T} (ρ : CarrierCodimOneSubface τ) :
+    ρ.toSubdivisionFace.carrier = ρ.carrier :=
+  rfl
+
+lemma isCodimOneSubface {τ : SubdivisionFace T} (ρ : CarrierCodimOneSubface τ) :
+    ρ.toSubdivisionFace.IsCodimOneSubface τ := by
+  constructor
+  · exact ρ.subset
+  · simpa [toSubdivisionFace] using ρ.card
+
+def ofIsCodimOneSubface {τ ρ : SubdivisionFace T} (h : ρ.IsCodimOneSubface τ) :
+    CarrierCodimOneSubface τ where
+  carrier := ρ.carrier
+  nonempty := ρ.nonempty
+  subset := h.1
+  card := h.2
+
+@[simp] lemma ofIsCodimOneSubface_carrier {τ ρ : SubdivisionFace T} (h : ρ.IsCodimOneSubface τ) :
+    (ofIsCodimOneSubface h).carrier = ρ.carrier :=
+  rfl
+
+end CarrierCodimOneSubface
+
 end SubdivisionFace
 
 end Faces
@@ -2573,6 +2613,27 @@ structure ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec where
         Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b ∧
         ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
           Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
+
+/--
+Carrier-level continuation contract for the no-open-crossing positive-level branch.
+
+This records the codimension-`1` carrier face carrying the lower milestone and asks for a unique
+same-level continuation across that normalized carrier object.
+-/
+structure ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec where
+  unique_sameLevelContinuation_of_not_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+        ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc ∧
+        ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc ∧
+        ∃! μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+          μ ≠ ν ∧ μ.level = ν.level ∧ ρ.carrier ⊆ μ.face.carrier
 
 def chosenMilestoneChainPositiveLevelLowerMilestoneSpec_of_doorSpec
     (hdoor : ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec (T := T) (φ := φ)) :

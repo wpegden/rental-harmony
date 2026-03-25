@@ -313,3 +313,9 @@
   distinct codimension-`1` subsets or several cofaces through the same lower milestone can create
   spurious extra doors, so the no-open-crossing branch is not derivable from the current abstract
   face/incidence layer alone.
+- [x] Introduced the carrier-normalized codimension-`1` support object
+  `SubdivisionFace.CarrierCodimOneSubface` and the carrier-level continuation contract
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec`.
+  This packages the next blocker at the right layer: not raw `SubdivisionFace` syntax, but the
+  unique same-level continuation across a normalized codimension-`1` carrier face that contains
+  the lower milestone.
