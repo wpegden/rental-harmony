@@ -316,8 +316,13 @@
   `exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone` shows that once one has an
   exact-size lower-prefix carrier subset of a positive face whose image convex hull contains the
   lower milestone, the codimension-`1` / vertical-door machinery is complete. So the remaining
-  chosen-chain gap is no longer a vague lower-door existence statement; it is specifically the
-  extraction of such an exact-size lower-prefix support in the complementary all-image-lower case.
+  chosen-chain gap is no longer a vague lower-door existence statement. The new enlargement lemma
+  `exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone` now isolates
+  the real remaining issue even more tightly: it is enough to show that the lower-milestone
+  support extracted in the all-image-lower case sits inside some lower-prefix carrier set of size
+  at least `k + 1`. So the frontier is now the existence of a sufficiently large lower-prefix
+  carrier set in that complementary case, or a local repair of the vertical-door interface if the
+  paper's Section 5 wording does not actually imply such a domain-side lower-prefix set.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

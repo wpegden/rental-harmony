@@ -2057,6 +2057,42 @@ theorem exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone
   exact exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone
     (T := T) (c := c) (φ := φ) hk hρ hρsub hρmil
 
+theorem exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    {s u : Finset Vertex}
+    (hsu : s ⊆ u)
+    (hu : u ⊆ ν.face.carrier)
+    (hscard : s.card ≤ ν.level.succ.1)
+    (hucard : ν.level.succ.1 ≤ u.card)
+    (hulower :
+      ∀ v ∈ u,
+        (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0)
+    (himg :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (s : Set Vertex)))) :
+    ∃ w : Section5GraphNode c φ,
+      w ≠ .positive ν ∧ Adj (T := T) c φ (.positive ν) w := by
+  obtain ⟨t, hst, htu, htcard⟩ := Finset.exists_subsuperset_card_eq hsu hscard hucard
+  have ht_lower :
+      ∀ v ∈ t,
+        (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0 :=
+    fun v hv => hulower v (htu hv)
+  have ht_img :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (t : Set Vertex))) := by
+    exact convexHull_mono (by
+      intro x hx
+      rcases hx with ⟨v, hv, rfl⟩
+      exact ⟨v, hst hv, rfl⟩) himg
+  exact exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone
+    (T := T) (c := c) (φ := φ) hk (htu.trans hu) htcard ht_lower ht_img
+
 theorem chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
     {ν : Section5PositiveNode (c := chosenMilestoneChain (φ := φ)) φ}
     (hcontains :

@@ -361,3 +361,15 @@
   specifically the extraction of a carrier subset of size `k + 1` whose vertices lie in the lower
   prefix face and whose image convex hull still contains the lower milestone in the complementary
   all-image-lower case.
+- Formalization note after the latest exact-size packaging repair:
+  the exact-cardinality part of that lower-door step is now factored out cleanly.
+  `exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone`
+  enlarges any milestone-carrying lower-prefix support inside a larger lower-prefix carrier set to
+  the exact cardinality `k + 1`, then invokes the existing codimension-`1` / vertical-door bridge.
+  So the remaining obstacle is no longer finitary bookkeeping. It is the genuinely geometric
+  question whether, in the all-image-lower case, one can always find a lower-prefix carrier set of
+  size at least `k + 1` containing the needed support. The paper's Section 5 wording at lines
+  389-393 only says there is a graph edge from a `k`-face `σ` to a `(k-1)`-face `τ` when `τ` is a
+  face of `σ` and `b_k ∈ λ(τ)`; it does not explicitly restate that `τ` must itself subdivide the
+  lower prefix face. That omission may matter formally here, because the current Lean graph still
+  encodes that stronger domain-side lower-prefix condition.
