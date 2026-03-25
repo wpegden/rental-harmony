@@ -695,3 +695,8 @@
   with `ν.face ⊆ σ`, the paper's geometric picture predicts that the milestone segment exits `σ`
   through a second codimension-`1` facet distinct from `ν.face`. The coface-extension and
   no-open-crossing wrapper chain is now routed through that ambient-facet formulation as well.
+- That ambient-facet formulation has now been sharpened once more to
+  `ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec`: the genuinely
+  missing step is only the existence of a same-level prefix-face coface inside `σ`. The image-side
+  fact that this coface is again a positive graph node is automatic from lower-milestone
+  monotonicity once the carrier inclusion is known.

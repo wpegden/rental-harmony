@@ -620,6 +620,11 @@
   same-level coface inside one ambient facet `σ` containing `ν.face`. The existing coface-
   extension and no-open-crossing wrapper chain is routed through that ambient-facet interface, so a
   future simplex-level segment-exit lemma can plug in without changing downstream statements.
+- Even that ambient-facet theorem has now been split into a purely domain-side extension statement
+  `ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec` plus automatic
+  image-side promotion: once a same-level face inside `σ` contains the lower-milestone carrier, it
+  automatically becomes a positive node by monotonicity of `ImageContainsMilestone`. The remaining
+  local geometric burden is therefore the existence of that same-level prefix-face coface.
 
 ## Current input status
 - No proposed axioms.

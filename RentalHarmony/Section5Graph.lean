@@ -2814,6 +2814,20 @@ is precisely the missing upward extension step dual to
 `SubdivisionFace.subdividesPrefixFace_of_subface`: extend a codimension-`1` prefix-face carrier to
 a distinct same-level prefix-face coface.
 -/
+structure ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec where
+  exists_sameLevelPrefixFace_in_ambientFacet_of_carrier :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face} {σ : Finset Vertex},
+      σ ∈ T.facets →
+      ν.face.carrier ⊆ σ →
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc →
+      ∃ μface : SubdivisionFace T,
+        μface ≠ ν.face ∧
+        μface.dim = ν.level.1 + 1 ∧
+        μface.SubdividesPrefixFace (T := T) ν.level.succ ∧
+        ρ.toSubdivisionFace.IsCodimOneSubface μface ∧
+        μface.carrier ⊆ σ
+
 structure ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec where
   exists_sameLevelCoface_in_ambientFacet_of_carrier :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
@@ -2828,6 +2842,43 @@ structure ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec wher
         μ.level = ν.level ∧
         ρ.toSubdivisionFace.IsCodimOneSubface μ.face ∧
         μ.face.carrier ⊆ σ
+
+def chosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec_of_prefixExtension
+    (hext :
+      ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν ρ σ hσ hνσ hρsub hρmil
+  rcases hext.exists_sameLevelPrefixFace_in_ambientFacet_of_carrier ν hσ hνσ hρsub with
+    ⟨μface, hμne, hμdim, hμsub, hρμ, hμσ⟩
+  have hμmil :
+      μface.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc := by
+    exact SubdivisionFace.imageContainsMilestone_mono (T := T) hρμ.1 hρmil
+  have hμseg :
+      μface.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level := by
+    refine ⟨chosenMilestoneChain (φ := φ).point ν.level.castSucc, ?_, ?_⟩
+    · exact left_mem_segment ℝ
+        (((chosenMilestoneChain (φ := φ)).point ν.level.castSucc :
+            RentDivision (dimension + 1)) : RealPoint dimension)
+        (((chosenMilestoneChain (φ := φ)).point ν.level.succ :
+            RentDivision (dimension + 1)) : RealPoint dimension)
+    · simpa [SubdivisionFace.ImageContainsMilestone] using hμmil
+  let μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ := {
+    level := ν.level
+    face := μface
+    face_dim := hμdim
+    subdivides := hμsub
+    meets_segment := hμseg
+  }
+  refine ⟨μ, ?_, rfl, ?_, ?_⟩
+  · intro hμeq
+    exact hμne (congrArg Section5PositiveNode.face hμeq)
+  · simpa [μ] using hρμ
+  · simpa [μ] using hμσ
 
 /--
 This packages the paper's facet-local segment-exit picture inside one ambient simplex.
@@ -2859,6 +2910,17 @@ def chosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec_of_ambientF
   rcases hexit.exists_sameLevelCoface_in_ambientFacet_of_carrier ν hσ hνσ hρsub hρmil with
     ⟨μ, hne, hlevel, hρμ, -⟩
   exact ⟨μ, hne, hlevel, hρμ⟩
+
+def chosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec_of_prefixExtension
+    (hext :
+      ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec_of_ambientFacetExit
+    (T := T) (φ := φ)
+    (chosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec_of_prefixExtension
+      (T := T) (φ := φ) hext)
 
 /--
 Candidate-level version of the fixed-carrier coface-extension theorem.
@@ -2894,6 +2956,17 @@ def chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_am
     (T := T) (φ := φ)
     (chosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec_of_ambientFacetExit
       (T := T) (φ := φ) hexit)
+
+def chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_prefixExtension
+    (hext :
+      ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_ambientFacetExit
+    (T := T) (φ := φ)
+    (chosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec_of_prefixExtension
+      (T := T) (φ := φ) hext)
 
 /--
 Uniqueness half of the filtered same-level continuation theorem.
@@ -2993,6 +3066,20 @@ def chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_refl
     (chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_ambientFacetExit
       (T := T) (φ := φ) hexit)
 
+def chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierPrefixExtension
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hext :
+      ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierContinuation
+    (T := T) (φ := φ) hreflect
+    (chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_prefixExtension
+      (T := T) (φ := φ) hext)
+
 def
     chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_existence_and_uniqueness
     (hexists :
@@ -3067,6 +3154,25 @@ def
     (T := T) (φ := φ) hreflect
     (chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_ambientFacetExit
       (T := T) (φ := φ) hexit)
+    huniq
+
+def
+    chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_reflection_and_fixedCarrierPrefixExtension_and_uniqueness
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hext :
+      ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ))
+    (huniq :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_reflection_and_fixedCarrierContinuation_and_uniqueness
+    (T := T) (φ := φ) hreflect
+    (chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_prefixExtension
+      (T := T) (φ := φ) hext)
     huniq
 
 lemma isCodimOneSubface_of_sameLevelCarrierContinuationCandidate

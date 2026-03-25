@@ -432,3 +432,8 @@
   extension / filtered-wrapper chain is routed through it via
   `chosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec_of_ambientFacetExit` and the
   corresponding no-open-crossing wrapper theorems.
+- [x] Separate the remaining domain-side extension theorem from the image-side positivity step:
+  `ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec` now asks only for
+  a same-level prefix-face coface inside the ambient facet `σ`, and the ambient-facet exit /
+  coface-extension / filtered-wrapper chain is routed through it. Once such a face exists, the
+  lower-milestone carrier automatically makes it a positive graph node.
