@@ -437,3 +437,9 @@
   a same-level prefix-face coface inside the ambient facet `σ`, and the ambient-facet exit /
   coface-extension / filtered-wrapper chain is routed through it. Once such a face exists, the
   lower-milestone carrier automatically makes it a positive graph node.
+- [x] Prove the first genuinely new geometric helper toward that theorem:
+  `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex` now constructs the required
+  same-level face explicitly from one fresh vertex of the ambient facet already lying in the larger
+  prefix face, and
+  `chosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec_of_freshPrefixVertex`
+  shows the full prefix-extension contract follows from this concrete vertex-existence lemma.

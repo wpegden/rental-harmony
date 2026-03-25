@@ -1146,6 +1146,12 @@ lemma subdividesPrefixFace_of_subface {τ σ : SubdivisionFace T} (hτσ : τ.Is
   intro v hv i hi
   exact hσ v (hτσ hv) i hi
 
+lemma subdividesPrefixFace_succ_of_castSucc {τ : SubdivisionFace T} {k : Fin dimension}
+    (hτ : τ.SubdividesPrefixFace (T := T) k.castSucc) :
+    τ.SubdividesPrefixFace (T := T) k.succ := by
+  intro v hv i hi
+  exact hτ v hv i (lt_trans (Nat.lt_succ_self k.1) hi)
+
 /-- The image of a subdivision face meets one of the chosen Section 5 milestone segments. -/
 def ImageMeetsMilestoneSegment (c : Section5MilestoneChain (dimension := dimension))
     (τ : SubdivisionFace T) (φ : Vertex → RentDivision (dimension + 1)) (k : Fin dimension) :
@@ -2827,6 +2833,97 @@ structure ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensi
         μface.SubdividesPrefixFace (T := T) ν.level.succ ∧
         ρ.toSubdivisionFace.IsCodimOneSubface μface ∧
         μface.carrier ⊆ σ
+
+theorem exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex
+    (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face} {σ : Finset Vertex}
+    (hσ : σ ∈ T.facets)
+    (hνσ : ν.face.carrier ⊆ σ)
+    (hρsub : ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    {v : Vertex}
+    (hvσ : v ∈ σ)
+    (hvν : v ∉ ν.face.carrier)
+    (hvprefix :
+      (SubdivisionFace.singleton (T := T) v).SubdividesPrefixFace (T := T) ν.level.succ) :
+    ∃ μface : SubdivisionFace T,
+      μface ≠ ν.face ∧
+      μface.dim = ν.level.1 + 1 ∧
+      μface.SubdividesPrefixFace (T := T) ν.level.succ ∧
+      ρ.toSubdivisionFace.IsCodimOneSubface μface ∧
+      μface.carrier ⊆ σ := by
+  have hvρ : v ∉ ρ.carrier := by
+    intro hvρ
+    exact hvν (ρ.subset hvρ)
+  let σface : SubdivisionFace T := SubdivisionFace.ofFacet (T := T) σ hσ
+  let μface : SubdivisionFace T :=
+    σface.ofSubset (insert v ρ.carrier)
+      (by
+        intro w hw
+        rcases Finset.mem_insert.mp hw with rfl | hwρ
+        · exact hvσ
+        · exact hνσ (ρ.subset hwρ))
+      (Finset.insert_nonempty v ρ.carrier)
+  have hμne : μface ≠ ν.face := by
+    intro hEq
+    have hvμ : v ∈ μface.carrier := by
+      change v ∈ insert v ρ.carrier
+      exact Finset.mem_insert_self v ρ.carrier
+    exact hvν (by simpa [hEq] using hvμ)
+  have hμcard : μface.carrier.card = ν.level.1 + 2 := by
+    change (insert v ρ.carrier).card = ν.level.1 + 2
+    rw [Finset.card_insert_of_notMem hvρ]
+    calc
+      ρ.carrier.card + 1 = ν.face.carrier.card := ρ.card
+      _ = ν.level.1 + 2 := by
+        rw [ν.face.card_eq_dim_succ, ν.face_dim]
+  have hμdim : μface.dim = ν.level.1 + 1 := by
+    have hμdim' : μface.dim + 1 = ν.level.1 + 2 := by
+      calc
+        μface.dim + 1 = μface.carrier.card := by symm; exact μface.card_eq_dim_succ
+        _ = ν.level.1 + 2 := hμcard
+    omega
+  have hρsub' :
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.succ :=
+    SubdivisionFace.subdividesPrefixFace_succ_of_castSucc (T := T) hρsub
+  have hμsub : μface.SubdividesPrefixFace (T := T) ν.level.succ := by
+    intro w hw i hi
+    rcases Finset.mem_insert.mp hw with hwv | hwρ
+    · have hwsingle : w ∈ (SubdivisionFace.singleton (T := T) v).carrier := by
+        simpa [SubdivisionFace.singleton_carrier, hwv]
+      exact hvprefix w hwsingle i hi
+    · exact hρsub' w hwρ i hi
+  have hρμ : ρ.toSubdivisionFace.IsCodimOneSubface μface := by
+    constructor
+    · intro w hw
+      have hwρ : w ∈ ρ.carrier := by
+        simpa [SubdivisionFace.CarrierCodimOneSubface.toSubdivisionFace_carrier] using hw
+      change w ∈ insert v ρ.carrier
+      exact Finset.mem_insert_of_mem hwρ
+    · change ρ.carrier.card + 1 = (insert v ρ.carrier).card
+      rw [Finset.card_insert_of_notMem hvρ]
+  have hμσ : μface.carrier ⊆ σ := by
+    intro w hw
+    rcases Finset.mem_insert.mp hw with hwv | hwρ
+    · exact hwv ▸ hvσ
+    · exact hνσ (ρ.subset hwρ)
+  exact ⟨μface, hμne, hμdim, hμsub, hρμ, hμσ⟩
+
+theorem chosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec_of_freshPrefixVertex
+    (hvertex :
+      ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+        {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face} {σ : Finset Vertex},
+        σ ∈ T.facets →
+        ν.face.carrier ⊆ σ →
+        ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc →
+        ∃ v ∈ σ, v ∉ ν.face.carrier ∧
+          (SubdivisionFace.singleton (T := T) v).SubdividesPrefixFace (T := T) ν.level.succ) :
+    ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν ρ σ hσ hνσ hρsub
+  rcases hvertex ν hσ hνσ hρsub with ⟨v, hvσ, hvν, hvprefix⟩
+  exact exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex
+    (T := T) (φ := φ) ν hσ hνσ hρsub hvσ hvν hvprefix
 
 structure ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetExitSpec where
   exists_sameLevelCoface_in_ambientFacet_of_carrier :

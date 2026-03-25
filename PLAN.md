@@ -625,6 +625,12 @@
   image-side promotion: once a same-level face inside `σ` contains the lower-milestone carrier, it
   automatically becomes a positive node by monotonicity of `ImageContainsMilestone`. The remaining
   local geometric burden is therefore the existence of that same-level prefix-face coface.
+- The direct proof is now reduced one concrete step further without changing the interface: the new
+  helper `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex` shows that a single
+  fresh vertex of the ambient facet already lying in the larger prefix face is enough to build the
+  required same-level coface explicitly. Thus the unresolved content of
+  `ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec` is now exactly the
+  existence of such a fresh prefix-face vertex in the chosen ambient facet.
 
 ## Current input status
 - No proposed axioms.

@@ -700,3 +700,9 @@
   missing step is only the existence of a same-level prefix-face coface inside `σ`. The image-side
   fact that this coface is again a positive graph node is automatic from lower-milestone
   monotonicity once the carrier inclusion is known.
+- A first concrete step toward that theorem is now formalized: the helper
+  `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex` shows that if the chosen
+  ambient facet `σ` contains one extra vertex outside `ν.face` that already lies in the larger
+  prefix face, then the required same-level prefix-face coface can be built explicitly. The
+  remaining obstruction is therefore the existence of such a fresh prefix-face vertex, not the
+  coface construction itself.
