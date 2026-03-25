@@ -304,3 +304,12 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec_noOpenCrossing`
   shows that the downstream barycenter-cell theorem now depends on the no-open-crossing branch
   rather than on the older lower-milestone door formulation.
+- [ ] Direct attempt on `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingSpec`
+  now isolates a new support-layer gap: the current `SubdivisionFace` API treats codimension-`1`
+  faces only as arbitrary nonempty subsets of facets, so it provides no simplicial-complex
+  incidence uniqueness. In the no-open-crossing lower-endpoint case, one needs at least a theorem
+  saying that the codimension-`1` face carrying the lower milestone is geometrically unique and is
+  incident to exactly one other relevant positive face. Without that, several syntactically
+  distinct codimension-`1` subsets or several cofaces through the same lower milestone can create
+  spurious extra doors, so the no-open-crossing branch is not derivable from the current abstract
+  face/incidence layer alone.

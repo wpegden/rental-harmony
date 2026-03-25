@@ -482,6 +482,13 @@
   shows that the Section 5 barycenter-cell pipeline closes under that sharper complement-case
   contract together with the existing reflection, level-`0` boundary, open-crossing, and
   away-from-boundary inputs.
+- A direct check of that complement-case branch now identifies the next missing abstract theorem:
+  genuine codimension-`1` incidence uniqueness in the prefix-face subdivision. The current
+  `SubdivisionFace` layer only remembers that a face is a nonempty subset of some facet, so it
+  does not know that a geometric codimension-`1` face should have a unique carrier representation
+  or exactly two incident cofaces. The no-open-crossing positive-level theorem therefore appears to
+  need a stronger simplicial-complex/pseudomanifold incidence API, or an explicit local contract
+  asserting that the lower-milestone codimension-`1` face has unique continuation.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

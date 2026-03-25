@@ -595,3 +595,12 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec_noOpenCrossing`
   confirms that the downstream parity argument uses exactly that complement-case input together
   with the separate away-from-boundary theorem, not a broader mixed positive-level package.
+- A direct attempt on that no-open-crossing branch exposes a new support-layer deficiency. The
+  current `SubdivisionFace` notion is purely "nonempty subset of one facet", so it has no built-in
+  simplicial-complex incidence uniqueness: the same geometric codimension-`1` face may appear via
+  several carrier subsets, and nothing says a codimension-`1` face in the interior of a prefix
+  subdivision has exactly two incident cofaces. But the no-open-crossing lower-endpoint argument
+  needs precisely that kind of uniqueness/continuation statement at the codimension-`1` face
+  carrying the lower milestone. So the next missing theorem is no longer about lower-prefix
+  reflection or open-segment geometry; it is about codimension-`1` incidence uniqueness in the
+  subdivision-face layer.
