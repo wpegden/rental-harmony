@@ -2635,6 +2635,51 @@ structure ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec
         ∃! μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
           μ ≠ ν ∧ μ.level = ν.level ∧ ρ.carrier ⊆ μ.face.carrier
 
+/--
+Graph-relevant same-level continuations of a normalized codimension-`1` carrier face.
+
+These are the only cofaces that could contribute a second door in the no-open-crossing
+positive-level branch: same level as `ν`, distinct from `ν`, and containing the normalized
+carrier face.
+-/
+def IsSameLevelCarrierContinuationCandidate
+    (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    (ρ : SubdivisionFace.CarrierCodimOneSubface ν.face)
+    (μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ) : Prop :=
+  μ ≠ ν ∧ μ.level = ν.level ∧ ρ.carrier ⊆ μ.face.carrier
+
+/--
+Sharper carrier-level continuation contract isolating exactly the graph-relevant same-level
+cofaces in the no-open-crossing branch.
+-/
+structure ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec where
+  exists_unique_candidate_of_not_openCrossing :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+        ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc ∧
+        ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc ∧
+        ∃! μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+          IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ
+
+def chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_filteredSpec
+    (hfiltered :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hupper hclosed
+  rcases hfiltered.exists_unique_candidate_of_not_openCrossing ν hk hupper hclosed with
+    ⟨ρ, hρsub, hρmil, huniq⟩
+  refine ⟨ρ, hρsub, hρmil, ?_⟩
+  simpa [IsSameLevelCarrierContinuationCandidate] using huniq
+
 def chosenMilestoneChainPositiveLevelLowerMilestoneSpec_of_doorSpec
     (hdoor : ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec (T := T) (φ := φ)) :
     ChosenMilestoneChainPositiveLevelLowerMilestoneSpec (T := T) (φ := φ) := by

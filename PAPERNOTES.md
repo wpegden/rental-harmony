@@ -619,3 +619,13 @@
   unique same-level continuation coface. The remaining obstruction is therefore a genuine missing
   pseudomanifold/simplicial-complex incidence axiom, not another artifact of raw `SubdivisionFace`
   syntax.
+- A follow-up refinement shows that generic coface uniqueness is stronger than the Section 5 proof
+  actually needs. The support file now defines the graph-filtered predicate
+  `Section5GraphNode.IsSameLevelCarrierContinuationCandidate` and the sharper contract
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec`.
+  This asks only for uniqueness among same-level positive cofaces through the normalized
+  codimension-`1` carrier that could contribute a second graph door in the no-open-crossing
+  branch. The old carrier-continuation theorem is now derived from this filtered version, so the
+  precise remaining question is whether chosen-milestone geometry plus existing carrier-containment
+  lemmas already force at most one graph-relevant same-level continuation. If not, exactly that
+  filtered continuation statement should remain as the next minimal internal hypothesis.

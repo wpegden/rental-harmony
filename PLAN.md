@@ -504,6 +504,16 @@
   codimension-`1` coface uniqueness, or keep
   `ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec` as the minimal extra
   internal hypothesis.
+- The next refinement sharpens that requirement to the graph-relevant part actually used by the
+  Section 5 parity argument. `RentalHarmony/Section5Graph.lean` now defines
+  `Section5GraphNode.IsSameLevelCarrierContinuationCandidate` and packages the filtered theorem
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec`,
+  which asks only for uniqueness among same-level positive cofaces through the normalized carrier
+  that could contribute a second graph door. The older carrier-continuation contract is now derived
+  from this filtered version by
+  `Section5GraphNode.chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_filteredSpec`.
+  So the remaining no-open-crossing plan is now even sharper: prove or assume filtered
+  graph-relevant continuation uniqueness, not blanket coface uniqueness in the subdivision.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

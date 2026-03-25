@@ -327,3 +327,17 @@
   `ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec` is not derivable from
   the present abstract support layer either; it is now the exact missing carrier-incidence
   theorem.
+- [x] Sharpened that no-open-crossing carrier-incidence frontier once more. The support file now
+  isolates only graph-relevant same-level continuations across the normalized codimension-`1`
+  carrier face via
+  `Section5GraphNode.IsSameLevelCarrierContinuationCandidate` and
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec`, and
+  proves
+  `Section5GraphNode.chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_filteredSpec`.
+  So the old carrier-continuation theorem now reduces to uniqueness among graph doors compatible
+  with the chosen-milestone geometry, not among all abstract cofaces of the carrier.
+- [ ] Current exact blocker: prove that filtered same-level continuation theorem, or keep it as the
+  minimal extra internal contract. In the no-open-crossing positive-level lower-endpoint case, one
+  must show that any third same-level positive coface through the normalized carrier either forces
+  an open crossing, exits the current level/boundary regime, or collapses to the already chosen
+  continuation. This is now the sharpest remaining statement on that branch.
