@@ -120,9 +120,15 @@
   `degree_positive_eq_two_of_not_terminal_belowTopDim_positive_of_alternativeSpecs`, so a direct
   full-graph parity restart from an arbitrary below-top-dimensional positive node cannot work:
   such a node is even-degree unless it is already terminal. The backup component-restricted parity
-  restart therefore still looks like the minimal abstract repair, and currently breaks first at
-  the missing transport theorem equating degree/oddness facts between `C.toSimpleGraph` on `↥C`
-  and the induced graph on `↑C`.
+  restart therefore still looks like the minimal abstract repair. The first attempted
+  `ConnectedComponent` transport theorem really does break exactly at the coercion/typeclass
+  mismatch between `↥C` and `↑C.supp`, so the backup route has now been repackaged without that
+  wrapper: the new abstract theorem
+  `exists_terminal_or_boundary_in_induce_of_odd_start_and_nonterminal_even_off_boundary`
+  restarts parity directly on an induced subgraph of an arbitrary subset. So the next backup-step
+  theorem is no longer a degree-transport lemma; it is to identify the connected-component support
+  of the continuation node in the graph with the obstruction spur `{ν, μ}` deleted and then apply
+  this induced-subgraph parity theorem there.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,

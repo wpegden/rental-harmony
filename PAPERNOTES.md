@@ -188,6 +188,16 @@
   graph degree exactly `2`. Therefore a direct full-graph parity restart from such a node cannot
   work; any restart must happen in a modified graph/component where one incident edge has been
   removed.
+- Formalization note after the latest backup-route repair:
+  the first attempted component-restricted parity restart really did break at the tiny theorem
+  `SimpleGraph.ConnectedComponent.degree_toSimpleGraph_eq_degree`: Lean could not robustly
+  transport degree facts across the coercion from a connected component as a sort `↥C` to its
+  support subtype `↑C.supp`. Rather than keep fighting that wrapper, the support file now contains
+  the more direct abstract theorem
+  `exists_terminal_or_boundary_in_induce_of_odd_start_and_nonterminal_even_off_boundary`, which
+  restarts the odd/even argument on an induced subgraph of any chosen subset. So the backup route
+  no longer needs a generic `ConnectedComponent` transport lemma; it only needs the deleted-spur
+  continuation component to be presented as such a subset.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those

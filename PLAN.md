@@ -136,10 +136,14 @@
   full-graph route really does fail at the first parity step: an arbitrary below-top-dimensional
   nonterminal positive node is even-degree, not an odd start. The likely minimal replacement is
   still a parity theorem on the connected component of the continuation node in the graph obtained
-  by deleting the obstruction spur `{ν, μ}`. In that reduced graph the continuation node should
-  become the new odd start, so the remaining plan is either to formalize that reduced-graph /
-  component theorem or to find a stronger local Section 5 continuation principle that avoids
-  parity restart entirely.
+  by deleting the obstruction spur `{ν, μ}`. A first attempt to package that via
+  `ConnectedComponent.toSimpleGraph` failed exactly at a coercion/typeclass transport between
+  `↥C` and `↑C.supp`, so the backup route is now recast in a simpler form: the new abstract lemma
+  `exists_terminal_or_boundary_in_induce_of_odd_start_and_nonterminal_even_off_boundary`
+  restarts parity directly on induced subgraphs of arbitrary subsets. The remaining backup plan is
+  therefore to identify the relevant deleted-spur connected-component support as such a subset and
+  instantiate this induced-subgraph theorem there, unless a stronger local Section 5 continuation
+  principle eliminates the restart entirely.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:

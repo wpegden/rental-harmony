@@ -2,6 +2,7 @@ import Mathlib.Analysis.Convex.Caratheodory
 import Mathlib.Analysis.Convex.Combination
 import Mathlib.Analysis.Convex.Intrinsic
 import Mathlib.Combinatorics.SimpleGraph.Basic
+import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
 import Mathlib.Combinatorics.SimpleGraph.DegreeSum
 import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
 import RentalHarmony.PaperDefinitions
@@ -1719,6 +1720,32 @@ theorem exists_terminal_or_boundary_of_odd_start_and_nonterminal_even_off_bounda
   · by_cases hboundary : boundary v
     · exact ⟨v, hv, Or.inr hboundary⟩
     · exact False.elim ((Nat.not_even_iff_odd.mpr hoddv) (heven v hv hboundary hterm))
+
+theorem exists_terminal_or_boundary_in_induce_of_odd_start_and_nonterminal_even_off_boundary
+    {s : Set V} (start : s) (terminal boundary : V → Prop)
+    (hstart : Odd (G.degree start.1))
+    (hsubset : ∀ v : s, G.neighborSet v.1 ⊆ s)
+    (heven : ∀ v : s, v ≠ start → ¬ boundary v.1 → ¬ terminal v.1 → Even (G.degree v.1)) :
+    ∃ v : s, v ≠ start ∧ (terminal v.1 ∨ boundary v.1) := by
+  classical
+  letI : Fintype s := Subtype.fintype (Membership.mem s)
+  have hstart' : Odd ((G.induce s).degree start) := by
+    convert hstart using 1
+    exact SimpleGraph.degree_induce_of_neighborSet_subset (G := G) (s := s) (v := start)
+      (hsubset start)
+  have heven' :
+      ∀ v : s, v ≠ start →
+        ¬ (fun w : s => boundary w.1) v →
+        ¬ (fun w : s => terminal w.1) v →
+        Even ((G.induce s).degree v) := by
+    intro v hv hboundary hterminal
+    convert heven v hv hboundary hterminal using 1
+    exact SimpleGraph.degree_induce_of_neighborSet_subset (G := G) (s := s) (v := v)
+      (hsubset v)
+  simpa using
+    exists_terminal_or_boundary_of_odd_start_and_nonterminal_even_off_boundary
+      (G := G.induce s) start (fun w : s => terminal w.1) (fun w : s => boundary w.1)
+      hstart' heven'
 
 end Parity
 
