@@ -269,6 +269,18 @@
   neighbor is below top dimension. So the local no-escape fields remain the exact missing backup-
   route statements, but they no longer represent a logically independent obstruction from the
   direct route.
+- Formalization note after rereading the paper against that comparison:
+  the first local theorem that still does not crystallize from the current deleted-spur component
+  API is exactly
+  `ChosenMilestoneChainDeletedSpurNoEscapeSpec.no_start_of_positiveContinuationNeighbor`. The
+  paper's higher-dimensional discussion does not appear to isolate a separate argument for that
+  exclusion; after the 2-dimensional degree-count argument it simply says that the same reasoning
+  applies in higher dimensions. So unless the companion field
+  `no_boundaryOnlyUniqueCarrierCounterexampleNode_of_positiveContinuationNeighbor` turns out to be
+  materially easier, the Lean frontier now points back to the direct theorem
+  `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim` as
+  the genuine remaining Section 5 statement, with the deleted-spur no-escape package functioning
+  mainly as a local reformulation of that unresolved continuation theorem.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those

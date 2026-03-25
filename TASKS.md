@@ -26,6 +26,12 @@
   `exists_terminal_of_positiveContinuationNeighbor_of_alternativeSpecs_of_belowTopDimPositiveTerminalSpec`
   now shows that both escape branches already collapse to the direct route
   `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim`.
+  After the latest proof search, the first local statement that still does not crystallize from
+  the current reduced-graph/component API is exactly
+  `ChosenMilestoneChainDeletedSpurNoEscapeSpec.no_start_of_positiveContinuationNeighbor`.
+  Unless the obstruction-exclusion field turns out to be substantially easier, this is now
+  evidence that the direct-route theorem is the genuine remaining frontier and the deleted-spur
+  no-escape fields are only alternate reformulations of that gap.
   If either fails from the current API, record that exact theorem statement as the first missing
   local continuation principle.
 - [ ] Finish the positive-level no-open-crossing support at the exact graph interface.

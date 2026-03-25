@@ -189,7 +189,16 @@
   `exists_terminal_of_positiveContinuationNeighbor_of_alternativeSpecs_of_belowTopDimPositiveTerminalSpec`
   also shows that these two escape branches are not separate from the older direct route: if the
   below-top-dimensional positive-node terminal theorem is available, then both `.start`-escape and
-  further-obstruction escape in the deleted-spur component are already harmless.
+  further-obstruction escape in the deleted-spur component are already harmless. After the latest
+  proof search, the first local deleted-spur field that still does not crystallize from the
+  current reduced-graph/component API is exactly
+  `ChosenMilestoneChainDeletedSpurNoEscapeSpec.no_start_of_positiveContinuationNeighbor`. Unless
+  `no_boundaryOnlyUniqueCarrierCounterexampleNode_of_positiveContinuationNeighbor` turns out to be
+  substantially easier, this is now strong evidence that the genuine remaining higher-dimensional
+  frontier is the older direct-route theorem
+  `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim`,
+  with the deleted-spur no-escape fields serving only as alternate local reformulations of that
+  same gap.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:
