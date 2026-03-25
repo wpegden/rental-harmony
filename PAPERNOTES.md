@@ -404,3 +404,12 @@
   `x ∈ convexHull (facetVertexPoints T σ) -> baryCoord v x = 0` for `v ∉ σ`.
   This is exactly the theorem needed to convert a specified face-image containment witness into a
   preimage whose barycentric support stays inside that chosen face.
+- Recovery experiment conclusion:
+  replacing the global `supportingFacet` route by a face-local convex-combination witness on the
+  image does not by itself unblock the Section 5 lower-door proof. A witness from
+  `Finset.mem_convexHull'` on `ν.face.imagePoints` only certifies weights on image vertices, and
+  `boundary_preserving` is one-way: it says `imageSupport ⊆ domainSupport`, but zero image
+  coordinates do not force zero domain coordinates. So a purely image-local support witness cannot
+  prove that the corresponding domain vertices lie in the lower prefix face. The blocked step
+  really does require a genuine domain preimage point with face-local barycentric support, or a
+  stronger local affine API that supplies such a point.

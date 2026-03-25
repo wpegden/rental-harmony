@@ -59,7 +59,10 @@
   now reduces to one missing support theorem:
   `x ∈ convexHull (facetVertexPoints T σ) -> supportingFacet x ⊆ σ`
   or equivalently
-  `x ∈ convexHull (facetVertexPoints T σ) -> baryCoord v x = 0` for all `v ∉ σ`.
+  `x ∈ convexHull (facetVertexPoints T σ) -> baryCoord v x = 0` for all `v ∉ σ`. Focused recovery
+  experiment result: a purely image-local support witness from `Finset.mem_convexHull'` is not
+  enough for Section 5, because `boundary_preserving` only implies `imageSupport ⊆ domainSupport`;
+  it does not let zero image coordinates force lower-prefix domain vertices.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for

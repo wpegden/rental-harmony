@@ -340,6 +340,12 @@
   `x ∈ convexHull (facetVertexPoints T σ) -> baryCoord v x = 0` for every `v ∉ σ`.
   The present `SimplicialSubdivision` API does not include that property, so the current Section 5
   frontier is blocked exactly on this local-barycentric compatibility theorem.
+- The suggested fallback of using a purely image-local support witness from
+  `Finset.mem_convexHull'` does not by itself solve the all-image-lower case. Such a witness only
+  gives weights on image vertices, while the current `boundary_preserving` field is one-way and
+  cannot turn zero image coordinates into zero domain coordinates. So the real missing ingredient
+  remains a genuine domain preimage point with face-local barycentric support, or an explicit local
+  affine API strong enough to recover one.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
