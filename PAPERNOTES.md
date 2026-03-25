@@ -727,3 +727,14 @@
   below-top-dimensional continuation argument, with
   `chosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec_of_topDim_and_belowTopDim` recombining
   them into the unchanged lower-milestone door theorem used downstream.
+- The top-dimensional branch has now been sharpened further to a purely codimension-`1`
+  multiplicity question. The new internal contract
+  `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec` asks only for two
+  distinct codimension-`1` lower-prefix subfaces of a top-dimensional positive face whose images
+  both contain the lower milestone. Lean now shows that this is already enough for the graph step:
+  `verticalNeighborOfCodimOneSubfaceContainsLowerMilestone` constructs the corresponding vertical
+  neighbor from each such carrier, and
+  `exists_two_distinct_verticalNeighbors_of_topDimLowerMilestoneCarrierMultiplicity` upgrades the
+  pair of distinct carriers to two distinct vertical doors. So the remaining top-dimensional gap
+  is exactly the geometric multiplicity of lower-milestone codimension-`1` carriers, not another
+  graph-theoretic conversion lemma.

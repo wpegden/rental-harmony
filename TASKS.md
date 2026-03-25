@@ -10,6 +10,19 @@
 <!-- SUPERVISOR_TASKS:END -->
 
 ## Worker Tasks
+- [ ] Finish the split positive-level lower-milestone door support.
+  Top-dimensional branch:
+  prove `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec`.
+  The new constructor
+  `verticalNeighborOfCodimOneSubfaceContainsLowerMilestone`
+  and theorem
+  `exists_two_distinct_verticalNeighbors_of_topDimLowerMilestoneCarrierMultiplicity`
+  already reduce that multiplicity statement to two distinct vertical doors.
+  Below-top-dimensional branch:
+  finish
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec`
+  by finding a fresh ambient-facet vertex whose singleton already subdivides the larger prefix
+  face `ν.level.succ`.
 - [ ] Prove the actual Section 5 surjectivity theorem for the barycentric-coordinate `PiecewiseLinearSimplexMap`.
 - [ ] Prove the actual milestone-chain geometric/transversality consequences that imply `Section5GraphNode.MilestoneSegmentTransversality`.
 - [ ] Instantiate `Section5GraphNode.exists_terminal_of_milestoneSegmentTransversality` from the milestone-chain genericity proof to obtain the Section 5 terminal-node / barycenter-face existence statement.
@@ -466,3 +479,9 @@
   `chosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec_of_topDim_and_belowTopDim` recombines
   them into the unchanged paper-facing
   `ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec`.
+- [x] Isolated the first missing top-dimensional input as
+  `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec`, and proved the
+  reusable bridge from two distinct codimension-`1` lower-milestone carriers to two distinct
+  vertical graph neighbors via
+  `verticalNeighborOfCodimOneSubfaceContainsLowerMilestone` and
+  `exists_two_distinct_verticalNeighbors_of_topDimLowerMilestoneCarrierMultiplicity`.

@@ -653,6 +653,15 @@
   `ChosenMilestoneChainPositiveLevelBelowTopDimLowerMilestoneDoorSpec` isolates the surviving
   below-top-dimensional continuation route. The original paper-facing lower-milestone contract is
   recovered by `chosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec_of_topDim_and_belowTopDim`.
+- The top-dimensional branch has now been sharpened once more to the exact first missing local
+  input. `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec` asks only
+  for two distinct codimension-`1` lower-prefix carriers of the top-dimensional face that both
+  contain the lower milestone. The new constructor
+  `verticalNeighborOfCodimOneSubfaceContainsLowerMilestone` and theorem
+  `exists_two_distinct_verticalNeighbors_of_topDimLowerMilestoneCarrierMultiplicity` show that
+  this multiplicity statement is already sufficient to produce two distinct vertical graph doors.
+  So the remaining top-dimensional work is no longer general graph bookkeeping; it is the
+  geometric multiplicity theorem for lower-milestone codimension-`1` subfaces.
 
 ## Current input status
 - No proposed axioms.

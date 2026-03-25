@@ -2086,13 +2086,13 @@ theorem exists_codimOneSubface_contains_lowerMilestone_of_exists_upperCoord_ne_z
   exact exists_codimOneSubface_contains_lowerMilestone_of_subset
     (T := T) (c := c) (φ := φ) hs hcard himg
 
-theorem exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone
+def verticalNeighborOfCodimOneSubfaceContainsLowerMilestone
     {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
     {ρ : SubdivisionFace T}
     (hρ : ρ.IsCodimOneSubface ν.face)
     (hρsub : ρ.SubdividesPrefixFace (T := T) ν.level.castSucc)
     (hρmil : ρ.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc) :
-    ∃ μ : Section5PositiveNode c φ, μ.VerticalAdj (T := T) c φ ν := by
+    Section5PositiveNode c φ := by
   let lowerLevel : Fin dimension :=
     ⟨ν.level.1 - 1, by
       simpa [Nat.pred_eq_sub_one] using
@@ -2120,15 +2120,46 @@ theorem exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone
           (((c.point lowerLevel.castSucc : RentDivision (dimension + 1)) : RealPoint dimension))
           (((c.point lowerLevel.succ : RentDivision (dimension + 1)) : RealPoint dimension)))
     · simpa [SubdivisionFace.ImageContainsMilestone, hsucc] using hρmil
-  refine ⟨
+  exact
     { level := lowerLevel
       face := ρ
       face_dim := hρdim
       subdivides := by simpa [hsucc] using hρsub
-      meets_segment := hρmeets }, ?_⟩
+      meets_segment := hρmeets }
+
+theorem verticalNeighborOfCodimOneSubfaceContainsLowerMilestone_verticalAdj
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    {ρ : SubdivisionFace T}
+    (hρ : ρ.IsCodimOneSubface ν.face)
+    (hρsub : ρ.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    (hρmil : ρ.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc) :
+    (verticalNeighborOfCodimOneSubfaceContainsLowerMilestone
+      (T := T) (c := c) (φ := φ) hk hρ hρsub hρmil).VerticalAdj (T := T) c φ ν := by
+  let lowerLevel : Fin dimension :=
+    ⟨ν.level.1 - 1, by
+      simpa [Nat.pred_eq_sub_one] using
+        lt_trans (Nat.pred_lt (Nat.ne_of_gt hk)) ν.level.2⟩
+  have hk_le : 1 ≤ ν.level.1 := Nat.succ_le_of_lt hk
+  have hsucc : lowerLevel.succ = ν.level.castSucc := by
+    apply Fin.ext
+    simp [lowerLevel, Nat.sub_add_cancel hk_le]
   refine ⟨?_, hρ, ?_⟩
-  · simp [lowerLevel, Nat.sub_add_cancel hk_le]
-  · simpa [hsucc] using hρmil
+  · simp [verticalNeighborOfCodimOneSubfaceContainsLowerMilestone, Nat.sub_add_cancel hk_le]
+  · simpa [verticalNeighborOfCodimOneSubfaceContainsLowerMilestone, lowerLevel, hsucc]
+      using hρmil
+
+theorem exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    {ρ : SubdivisionFace T}
+    (hρ : ρ.IsCodimOneSubface ν.face)
+    (hρsub : ρ.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    (hρmil : ρ.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc) :
+    ∃ μ : Section5PositiveNode c φ, μ.VerticalAdj (T := T) c φ ν := by
+  refine ⟨
+    verticalNeighborOfCodimOneSubfaceContainsLowerMilestone
+      (T := T) (c := c) (φ := φ) hk hρ hρsub hρmil, ?_⟩
+  exact verticalNeighborOfCodimOneSubfaceContainsLowerMilestone_verticalAdj
+    (T := T) (c := c) (φ := φ) hk hρ hρsub hρmil
 
 theorem exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone
     {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
@@ -2747,6 +2778,33 @@ structure ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneDoorSpec where
           Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
 
 /--
+First missing geometric input for the top-dimensional lower-milestone branch.
+
+This isolates exactly the multiplicity statement suggested by the paper's endpoint picture:
+the lower milestone should lie on two distinct codimension-`1` lower-prefix carriers of the
+top-dimensional face.
+-/
+structure ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec where
+  exists_two_distinct_codimOneSubfaces_of_missing_nextMilestone_positiveLevel_topDim_contains_lowerMilestone :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim = dimension →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ∃ ρ₁ ρ₂ : SubdivisionFace T,
+        ρ₁ ≠ ρ₂ ∧
+        ρ₁.IsCodimOneSubface ν.face ∧
+        ρ₂.IsCodimOneSubface ν.face ∧
+        ρ₁.SubdividesPrefixFace (T := T) ν.level.castSucc ∧
+        ρ₂.SubdividesPrefixFace (T := T) ν.level.castSucc ∧
+        ρ₁.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc ∧
+        ρ₂.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc
+
+/--
 Below-top-dimensional lower-milestone door theorem for the positive-level missing-next branch.
 
 This is the branch where the fresh-prefix-vertex continuation route still makes sense.
@@ -2782,6 +2840,73 @@ def chosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec_of_topDim_and_belowT
       lt_of_le_of_ne ν.face.dim_le (fun h => htopdim h)
     exact hbelow.two_doors_of_missing_nextMilestone_positiveLevel_belowTopDim_contains_lowerMilestone
       ν hk hbelowdim hupper hlower
+
+theorem exists_two_distinct_verticalNeighbors_of_two_distinct_codimOneSubfaces_contains_lowerMilestone
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    {ρ₁ ρ₂ : SubdivisionFace T}
+    (hρ₁ : ρ₁.IsCodimOneSubface ν.face)
+    (hρ₂ : ρ₂.IsCodimOneSubface ν.face)
+    (hρ₁sub : ρ₁.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    (hρ₂sub : ρ₂.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    (hρ₁mil :
+      ρ₁.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (hρ₂mil :
+      ρ₂.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (hρne : ρ₁ ≠ ρ₂) :
+    ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      a ≠ b ∧
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b := by
+  let μ₁ :=
+    verticalNeighborOfCodimOneSubfaceContainsLowerMilestone
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hk hρ₁ hρ₁sub hρ₁mil
+  let μ₂ :=
+    verticalNeighborOfCodimOneSubfaceContainsLowerMilestone
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hk hρ₂ hρ₂sub hρ₂mil
+  have hμ₁ :
+      μ₁.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ ν :=
+    verticalNeighborOfCodimOneSubfaceContainsLowerMilestone_verticalAdj
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hk hρ₁ hρ₁sub hρ₁mil
+  have hμ₂ :
+      μ₂.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ ν :=
+    verticalNeighborOfCodimOneSubfaceContainsLowerMilestone_verticalAdj
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hk hρ₂ hρ₂sub hρ₂mil
+  have hμne : μ₁ ≠ μ₂ := by
+    intro hEq
+    apply hρne
+    simpa [μ₁, μ₂, verticalNeighborOfCodimOneSubfaceContainsLowerMilestone] using
+      congrArg Section5PositiveNode.face hEq
+  refine ⟨.positive μ₁, .positive μ₂, ?_, ?_, ?_⟩
+  · intro hEq
+    injection hEq with hEq'
+    exact hμne hEq'
+  · exact Or.inr (Or.inr hμ₁)
+  · exact Or.inr (Or.inr hμ₂)
+
+theorem exists_two_distinct_verticalNeighbors_of_topDimLowerMilestoneCarrierMultiplicity
+    (hmult : ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec
+      (T := T) (φ := φ))
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    (hνdim : ν.face.dim = dimension)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hlower :
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc) :
+    ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      a ≠ b ∧
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b := by
+  rcases hmult.exists_two_distinct_codimOneSubfaces_of_missing_nextMilestone_positiveLevel_topDim_contains_lowerMilestone
+      ν hk hνdim hupper hlower with
+    ⟨ρ₁, ρ₂, hρne, hρ₁, hρ₂, hρ₁sub, hρ₂sub, hρ₁mil, hρ₂mil⟩
+  exact exists_two_distinct_verticalNeighbors_of_two_distinct_codimOneSubfaces_contains_lowerMilestone
+    (T := T) (φ := φ) hk hρ₁ hρ₂ hρ₁sub hρ₂sub hρ₁mil hρ₂mil hρne
 
 /--
 The positive-level missing-next branch after removing the already-isolated open-crossing case.
