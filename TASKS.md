@@ -154,7 +154,16 @@
   neighbor set. So the next exact theorem is now the component-level restart:
   use those lemmas to show the connected component of `ξ` in the deleted-spur subgraph has odd
   start `ξ`, even nonterminal vertices away from the deleted-spur boundary, and no fatal escape to
-  another odd obstruction such as `.start`.
+  another odd obstruction such as `.start`. The new theorems
+  `mem_boundaryOnlyUniqueCarrierDeletedSpurSupport_of_mem_connectedComponent_boundaryOnlyUniqueCarrierDeletedSpurSubgraph`,
+  `exists_terminal_or_start_or_boundaryOnlyUniqueCarrierCounterexampleNode_in_deletedSpurComponent_of_positiveContinuationNeighbor_of_alternativeSpecs`,
+  and
+  `exists_terminal_of_positiveContinuationNeighbor_of_no_start_or_boundaryOnlyUniqueCarrierCounterexampleEscape_in_deletedSpurComponent_of_alternativeSpecs`
+  now package that restart precisely: inside the deleted-spur continuation component, Lean already
+  proves a terminal node unless the component escapes either to `.start` or to another
+  `IsBoundaryOnlyUniqueCarrierCounterexampleNode`. So the exact higher-dimensional frontier is no
+  longer the parity restart itself; it is to rule out those two explicit escape branches and then
+  repackage the result as the final bypass theorem.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,

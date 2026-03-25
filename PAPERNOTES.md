@@ -233,6 +233,17 @@
   component of `ξ` in this deleted-spur subgraph, with the only remaining unresolved issue being
   whether another odd vertex such as `.start` or a further top-dimensional obstruction can still
   lie in that same component.
+- Formalization note after the latest deleted-spur component restart:
+  that parity theorem is now proved up to the exact escape cases. The new lemma
+  `mem_boundaryOnlyUniqueCarrierDeletedSpurSupport_of_mem_connectedComponent_boundaryOnlyUniqueCarrierDeletedSpurSubgraph`
+  shows that the connected component of the continuation node `ξ` in the deleted-spur graph never
+  leaves the reduced support. Then
+  `exists_terminal_or_start_or_boundaryOnlyUniqueCarrierCounterexampleNode_in_deletedSpurComponent_of_positiveContinuationNeighbor_of_alternativeSpecs`
+  proves that this component already contains either a genuine terminal node, `.start`, or another
+  `IsBoundaryOnlyUniqueCarrierCounterexampleNode`; equivalently, the parity restart itself no
+  longer needs any further graph transport. So the exact remaining mathematical question in the
+  higher-dimensional obstruction branch is now whether Section 5's geometry excludes those two
+  escape outcomes inside the continuation component.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those

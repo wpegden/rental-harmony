@@ -169,7 +169,16 @@
   now even sharper: instantiate the connected-component parity theorem on the component of `ξ` in
   this deleted-spur subgraph, using unique reduced adjacency for oddness at `ξ` and preserved
   neighbor sets for evenness away from the deleted-spur boundary, while ruling out any residual
-  escape to `.start` or another odd obstruction inside that component.
+  escape to `.start` or another odd obstruction inside that component. This restart is now proved
+  up to those exact escape cases:
+  `mem_boundaryOnlyUniqueCarrierDeletedSpurSupport_of_mem_connectedComponent_boundaryOnlyUniqueCarrierDeletedSpurSubgraph`
+  shows that the whole continuation component stays inside the deleted-spur support, and
+  `exists_terminal_or_start_or_boundaryOnlyUniqueCarrierCounterexampleNode_in_deletedSpurComponent_of_positiveContinuationNeighbor_of_alternativeSpecs`
+  proves that the component already contains either a genuine terminal node, `.start`, or another
+  `IsBoundaryOnlyUniqueCarrierCounterexampleNode`. The immediate corollary
+  `exists_terminal_of_positiveContinuationNeighbor_of_no_start_or_boundaryOnlyUniqueCarrierCounterexampleEscape_in_deletedSpurComponent_of_alternativeSpecs`
+  shows that the only remaining higher-dimensional work is to exclude those two escape branches,
+  after which the deleted-spur bypass theorem can be repackaged cleanly.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:
