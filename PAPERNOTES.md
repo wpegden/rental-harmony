@@ -368,8 +368,20 @@
   the exact cardinality `k + 1`, then invokes the existing codimension-`1` / vertical-door bridge.
   So the remaining obstacle is no longer finitary bookkeeping. It is the genuinely geometric
   question whether, in the all-image-lower case, one can always find a lower-prefix carrier set of
-  size at least `k + 1` containing the needed support. The paper's Section 5 wording at lines
-  389-393 only says there is a graph edge from a `k`-face `σ` to a `(k-1)`-face `τ` when `τ` is a
-  face of `σ` and `b_k ∈ λ(τ)`; it does not explicitly restate that `τ` must itself subdivide the
-  lower prefix face. That omission may matter formally here, because the current Lean graph still
-  encodes that stronger domain-side lower-prefix condition.
+  size at least `k + 1` containing the needed support.
+- Manuscript clarification after rereading lines 385-393:
+  the stronger lower-prefix requirement remains the right Lean target. The vertical clause
+  ("there is an edge between `k`-face `σ` and `(k-1)`-face `τ` if ... `b_k ∈ λ(τ)`") still defines
+  an edge in the already-declared graph `G`, whose vertices were introduced one sentence earlier as
+  faces subdividing the chosen prefix chain and intersecting the relevant barycenter segments. So
+  formally `τ` must still be a vertex of `G`, hence must still subdivide the lower prefix face;
+  the paper simply omits restating that hypothesis in the vertical-edge sentence.
+- Formalization blocker after settling that fork:
+  the missing theorem is now a domain-side local-affinity/preimage statement, not another graph
+  lemma. To finish the all-image-lower case, one needs to turn
+  `ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc` into an actual point
+  `x ∈ ν.face` with `φ.toFun x = c.point ν.level.castSucc`; then the existing barycentric-support
+  lemma `vertexPos_coord_eq_zero_of_baryCoord_ne_zero_of_coord_eq_zero` would show that every
+  vertex of `T.supportingFacet x` with positive barycentric weight lies in the lower prefix face,
+  yielding the desired large lower-prefix carrier set. The current repo does not yet package this
+  face-local affine-preimage theorem for `SubdivisionFace.ImageContains`.

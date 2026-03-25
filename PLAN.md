@@ -320,9 +320,15 @@
   `exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone` now isolates
   the real remaining issue even more tightly: it is enough to show that the lower-milestone
   support extracted in the all-image-lower case sits inside some lower-prefix carrier set of size
-  at least `k + 1`. So the frontier is now the existence of a sufficiently large lower-prefix
-  carrier set in that complementary case, or a local repair of the vertical-door interface if the
-  paper's Section 5 wording does not actually imply such a domain-side lower-prefix set.
+  at least `k + 1`.
+- Rereading the manuscript settles that fork in favor of the stronger condition. In lines 385-393
+  of the paper, the vertical clause still describes an edge of the already-defined graph `G`, so
+  the lower `(k-1)`-face must itself be one of the graph vertices and thus still subdivide the
+  lower prefix face. Therefore the frontier is no longer a graph-interface question. The exact
+  missing ingredient is now a domain-side local-affinity/preimage theorem: from
+  `ν.face.ImageContainsMilestone ... ν.level.castSucc`, extract an actual preimage point in
+  `ν.face` whose positive barycentric support lies in the lower prefix face, yielding the needed
+  lower-prefix carrier set of cardinality at least `k + 1`.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

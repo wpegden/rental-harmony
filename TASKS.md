@@ -44,9 +44,14 @@
   `exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone`
   show that once a milestone-carrying support sits inside a lower-prefix carrier set of size at
   least `k + 1`, the codimension-`1`/vertical-door machinery finishes the neighbor construction.
-  So the remaining work is precisely to prove that such a large lower-prefix carrier set exists in
-  the complementary all-image-lower case, or else repair the graph-side notion of a vertical door
-  if the paper's Section 5 argument does not actually force domain-side lower-prefix containment.
+  After rereading paper lines 385-393, the graph-side fork is now settled: the vertical edge is
+  still an edge in `G`, so the lower face must itself be one of the previously declared graph
+  vertices and therefore still satisfy the lower-prefix condition. So the remaining work is
+  precisely to prove that such a large lower-prefix carrier set exists in the complementary
+  all-image-lower case. The sharpened missing lemma is no longer graph-theoretic: it is a
+  domain-side preimage/local-affinity statement showing that if a face image contains the lower
+  milestone, then some actual preimage point in that face has barycentric support contained in the
+  lower prefix face, yielding at least `k + 1` lower-prefix carrier vertices.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
