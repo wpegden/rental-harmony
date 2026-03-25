@@ -228,7 +228,11 @@
   `chosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplitLowerMilestone`
   shows that those exact containment fields are enough to recover the older strict-descent
   interface, and `contains_lowerMilestone_of_exists_lowerLevel_positive` records the converse
-  necessity of lower-milestone containment for any descent proof. So the sharpest current
+  necessity of lower-milestone containment for any descent proof. A fresh direct proof attempt of
+  the next-milestone containment field still fails at the same exact boundary: every current
+  codimension-`1` / lower-carrier theorem already takes lower-milestone containment as an input,
+  so the existing support layer has no lemma that starts from next-milestone-away-from-boundary
+  data and produces `ξ.face.ImageContainsMilestone ... ξ.level.castSucc`. So the sharpest current
   direct-route frontier is now the trio of remaining local
   subcases: the level-`0` base case, the positive-level next-milestone lower-milestone-containment
   branch, and the positive-level open-crossing lower-milestone-containment branch.

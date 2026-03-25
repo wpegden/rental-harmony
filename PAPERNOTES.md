@@ -319,7 +319,11 @@
   matches the manuscript gap: in the higher-dimensional trap-door paragraph, the paper explains
   that a `k`-face meeting `[b_{k-1}, b_k]` has one or two doors through faces meeting
   `[b_k, b_{k+1}]`, but it never separately proves the current missing implication from the
-  next-milestone branch back down to containment of `b_{k-1}`.
+  next-milestone branch back down to containment of `b_{k-1}`. A new direct Lean attempt confirms
+  the same exact failure point internally: every reusable codimension-`1` / lower-carrier lemma in
+  the current Section 5 support layer already assumes lower-milestone containment, so none of them
+  can derive `ξ.face.ImageContainsMilestone ... ξ.level.castSucc` from
+  `ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec` alone.
   So the exact remaining direct-route local
   subcases are now the level-`0` base case, the positive-level next-milestone
   lower-milestone-containment branch, and the positive-level open-crossing
