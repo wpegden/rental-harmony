@@ -567,3 +567,14 @@
   shows that once those two inputs are supplied alongside
   `PositiveFaceLowerPrefixReflection` and the level-`0` boundary contract, the downstream Section 5
   parity argument again reaches a barycenter-containing facet with no further hidden blockers.
+- The positive-level package can also be reduced using already-proved geometry: for a positive node
+  missing the next milestone, the support file already proves
+  `chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone`. So the
+  genuinely unresolved positive-level continuation is not the whole old package, but only two
+  sharper branches: the lower-endpoint continuation case
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelLowerMilestoneSpec` and the
+  next-milestone interior case
+  `Section5GraphNode.ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec`. The new wrapper
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'''`
+  confirms that these are the exact remaining higher-dimensional inputs after factoring out the
+  open-crossing branch.

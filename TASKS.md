@@ -280,3 +280,12 @@
   now shows that the downstream barycenter-cell conclusion already follows from
   `PositiveFaceLowerPrefixReflection`, the level-`0` boundary contract, this new open-crossing
   contract, and the positive-level continuation package.
+- [x] Reduced the positive-level continuation contract further using the already-proved split
+  `chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone`.
+  The new `Section5GraphNode.ChosenMilestoneChainPositiveLevelLowerMilestoneSpec` records only the
+  missing-next / lower-milestone continuation branch, and
+  `Section5GraphNode.ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec` isolates the
+  next-milestone / away-from-boundary branch. The wrapper
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'''`
+  shows that these two sharper contracts, together with the existing reflection, level-`0`
+  boundary, and open-crossing specs, are already sufficient for the barycenter-cell conclusion.

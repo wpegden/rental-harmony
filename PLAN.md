@@ -458,6 +458,14 @@
   explicit internal contracts only: lower-prefix reflection, the normalized level-`0` boundary
   model, the open-crossing transversality input, and the remaining positive-level continuation
   package.
+- The positive-level continuation package has now been reduced one step further using the proved
+  theorem `chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone`.
+  The genuinely remaining positive-level inputs are now only
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelLowerMilestoneSpec` and
+  `Section5GraphNode.ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec`; the open-crossing
+  branch no longer belongs to that package. The new wrapper
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'''`
+  shows that these sharper contracts suffice for the downstream barycenter-cell theorem.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
