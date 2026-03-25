@@ -181,6 +181,18 @@
   This matches the paper's trap-door picture more closely: the unresolved geometry is now exactly
   the claim that when the segment ends inside `λ(σ)` at `b_k` and `σ` does not already contain
   `b_{k-1}`, the segment must still enter through some codimension-`1` face.
+- Formalization note after sharpening that endpoint-entry theorem:
+  the new theorem
+  `affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary` shows that the
+  away-from-boundary hypothesis at `b_k` already forces the image vertices of `σ` to form an
+  affine-independent simplex. So the remaining next-milestone entrance geometry is no longer a
+  completely general convex-hull question. The reduction
+  `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry`
+  packages the first unresolved bridge as the more explicit simplex-entry statement
+  `ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec.
+  exists_codimOneSubface_meets_segment_of_affineIndependentImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
+  In manuscript terms, the surviving gap is now the codimension-`1` entry-face claim for a
+  genuine simplex image whose final endpoint `b_k` lies in the relative interior of that simplex.
 - Formalization note after the latest higher-dimensional obstruction reduction:
   in the range `2 < dimension`, the current Section 5 development now reduces pure terminal
   existence to one explicit direct-route theorem:

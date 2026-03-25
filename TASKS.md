@@ -18,9 +18,18 @@
   reduces the full next-milestone entrance package to one exact complementary local bridge:
   `ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec.
   exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
+  The new theorem
+  `affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary` now sharpens that endpoint
+  case further: away-from-boundary at `b_k` already forces the image vertices of `σ` to form an
+  affine-independent simplex, and
+  `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry`
+  reduces the remaining local geometry to the affine-simplex entry statement
+  `ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec.
+  exists_codimOneSubface_meets_segment_of_affineIndependentImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
   So the first unresolved route-changed next-milestone theorem is no longer the whole entrance-face
-  package, but specifically the endpoint-entry case where `b_k` lies away from the boundary of
-  `λ(σ)` and `σ` does not already contain `b_{k-1}`. After that, the second bridge remains
+  package, nor even the full endpoint-entry case, but specifically the affine-independent
+  endpoint-entry case where `b_k` lies away from the boundary of `λ(σ)` and `σ` does not already
+  contain `b_{k-1}`. After that, the second bridge remains
   `ChosenMilestoneChainNextMilestoneAmbientFacetFreshPrefixVertexSpec.
   exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier`.
 - [ ] Exact higher-dimensional deleted-spur frontier:
@@ -117,9 +126,14 @@
   show that the ambient-facet extension input can itself be reduced to a simpler current-prefix
   witness: given an entrance carrier `ρ`, it is enough to find one fresh ambient-facet vertex
   outside `ν.face.carrier` whose singleton still subdivides the current prefix face
-  `conv{e_1, ..., e_{k+1}}`. So the first unresolved next-milestone theorem is still
-  `ChosenMilestoneChainNextMilestoneEntranceFaceSpec.exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary`,
-  while the second one is now naturally viewed through that fresh-prefix-vertex reformulation.
+  `conv{e_1, ..., e_{k+1}}`. The new theorem
+  `affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary` now sharpens the first
+  bridge too: the remaining entrance theorem should be treated as a genuine affine-simplex entry
+  problem, formalized by
+  `ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec.
+  exists_codimOneSubface_meets_segment_of_affineIndependentImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`,
+  rather than as unrestricted convex-hull geometry. The second bridge is still naturally viewed
+  through the fresh-prefix-vertex reformulation.
   The exact remaining direct-route subcases are therefore:
   the level-`0` base case, the positive-level next-milestone lower-milestone-containment branch,
   and the positive-level open-crossing lower-milestone-containment branch.

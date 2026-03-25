@@ -3236,6 +3236,80 @@ theorem exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image
   refine ⟨s', hs'_subset, Nat.succ_le_of_lt (by simpa [hs'_card] using ht_card_lt_s), ?_⟩
   simpa [hs'_image_set] using ht_mem
 
+theorem affineIndependent_image_of_imageContainsPointAwayFromBoundary
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)}
+    (hxaway : τ.ImageContainsPointAwayFromBoundary (T := T) φ x) :
+    AffineIndependent ℝ
+      (fun y : (((τ.carrier.image fun v : Vertex =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)) :
+            Finset (RealPoint dimension)) : Set (RealPoint dimension)) =>
+        (y : RealPoint dimension)) := by
+  classical
+  let pfun : Vertex → RealPoint dimension := fun v =>
+    ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)
+  have hxconv :
+      (x : RealPoint dimension) ∈ convexHull ℝ (pfun '' (τ.carrier : Set Vertex)) := by
+    simpa [SubdivisionFace.ImageContains, SubdivisionFace.imagePoints, pfun] using hxaway.1
+  by_contra hdep
+  rcases
+      exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image
+        (pfun := pfun) hxconv hdep with
+    ⟨s, hs, hcard, hsconv⟩
+  have hspos : 0 < s.card := by
+    by_contra hspos
+    have hszero : s.card = 0 := Nat.eq_zero_of_not_pos hspos
+    have hs_empty : s = ∅ := Finset.card_eq_zero.mp hszero
+    have :
+        (x : RealPoint dimension) ∈ convexHull ℝ (pfun '' ((∅ : Finset Vertex) : Set Vertex)) := by
+      simpa [hs_empty] using hsconv
+    simpa using this
+  have hτcard : 1 < τ.carrier.card := by
+    have : 2 ≤ τ.carrier.card := by
+      calc
+        2 = 1 + 1 := by norm_num
+        _ ≤ s.card + 1 := Nat.succ_le_succ hspos
+        _ ≤ τ.carrier.card := hcard
+    omega
+  have hslt : s.card < τ.carrier.card := by
+    exact lt_of_lt_of_le (Nat.lt_succ_self s.card) hcard
+  rcases Finset.exists_mem_notMem_of_card_lt_card hslt with ⟨v, hvτ, hvs⟩
+  let ρ : SubdivisionFace T :=
+    τ.ofSubset (τ.carrier.erase v) (Finset.erase_subset _ _) (by
+      apply Finset.card_pos.mp
+      rw [Finset.card_erase_of_mem hvτ]
+      exact Nat.sub_pos_of_lt hτcard)
+  have hρ : ρ.IsCodimOneSubface τ := τ.erase_isCodimOneSubface hvτ hτcard
+  have hsρ : s ⊆ ρ.carrier := by
+    intro w hw
+    refine Finset.mem_erase.mpr ⟨?_, hs hw⟩
+    intro hwv
+    exact hvs (hwv ▸ hw)
+  have hρx : ρ.ImageContains (T := T) φ x := by
+    change
+      ((x : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun w : Vertex =>
+              ((φ w : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            ((τ.carrier.erase v : Finset Vertex) : Set Vertex)))
+    exact convexHull_mono (by
+      intro y hy
+      rcases hy with ⟨w, hw, rfl⟩
+      exact ⟨w, hsρ hw, rfl⟩) hsconv
+  exact hxaway.2 ρ hρ hρx
+
+theorem affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary
+    {c : Section5MilestoneChain (dimension := dimension)} {τ : SubdivisionFace T}
+    {φ : Vertex → RentDivision (dimension + 1)} {k : Fin (dimension + 1)}
+    (hτ : τ.ImageContainsMilestoneAwayFromBoundary (T := T) c φ k) :
+    AffineIndependent ℝ
+      (fun y : (((τ.carrier.image fun v : Vertex =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)) :
+            Finset (RealPoint dimension)) : Set (RealPoint dimension)) =>
+        (y : RealPoint dimension)) :=
+  affineIndependent_image_of_imageContainsPointAwayFromBoundary
+    (T := T) hτ
+
 theorem not_exists_smaller_support_of_pair_of_mem_openSegment
     (pfun : Vertex → RealPoint dimension)
     {u v : Vertex} (huv : pfun u ≠ pfun v)
@@ -4251,6 +4325,47 @@ structure ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec where
       ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
         ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
           (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+
+/--
+Affine-independent version of the endpoint-entry theorem.
+
+The new theorem `affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary` shows that the
+next milestone being away from the boundary already forces the image vertices of `ν.face` to form
+an affine-independent simplex. This structure isolates the remaining geometric entry argument
+after that reduction.
+-/
+structure ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec where
+  exists_codimOneSubface_meets_segment_of_affineIndependentImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim < dimension →
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
+      AffineIndependent ℝ
+        (fun y : (((ν.face.carrier.image fun v : Vertex =>
+            ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) :
+              Finset (RealPoint dimension)) : Set (RealPoint dimension)) =>
+          (y : RealPoint dimension)) →
+      ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+        ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+
+def chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry
+    (hentry :
+      ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hνdim haway hlower hνterm
+  exact
+    hentry.exists_codimOneSubface_meets_segment_of_affineIndependentImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone
+      ν hk hνdim haway hlower hνterm
+      (affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary
+        (T := T) haway)
 
 structure ChosenMilestoneChainNextMilestoneEntranceFaceSpec where
   exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary :

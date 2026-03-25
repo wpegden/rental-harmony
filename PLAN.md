@@ -266,9 +266,18 @@
   reduces the full entrance package to the exact complementary endpoint-entry theorem
   `ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec.
   exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
-  So the current first local route-change frontier is the codimension-`1` entrance-face existence
-  theorem specifically for the case where `b_k` lies away from the boundary of `λ(σ)` but
-  `σ` does not already contain `b_{k-1}`.
+  The new theorem
+  `affineIndependent_image_of_imageContainsMilestoneAwayFromBoundary` now sharpens that endpoint
+  case further: the away-from-boundary hypothesis at `b_k` already forces the image vertices of
+  `σ` to be affine independent, and
+  `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry`
+  reduces the remaining first bridge to the affine-simplex entry theorem
+  `ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec.
+  exists_codimOneSubface_meets_segment_of_affineIndependentImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
+  So the current first local route-change frontier is no longer arbitrary endpoint-entry convex
+  geometry, but precisely the simplex-entry theorem for the case where `b_k` lies away from the
+  boundary of `λ(σ)`, `σ` does not already contain `b_{k-1}`, and the image simplex is already
+  known affine independent. This keeps the route change aligned with paper-faithful same-level
   continuation rather than overstrong lower-milestone containment in that branch.
   The second bridge is now reduced further too. The theorem
   `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex_of_entranceCarrier` and the
