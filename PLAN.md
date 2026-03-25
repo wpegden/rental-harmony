@@ -275,6 +275,13 @@
   put the same reduction in the exact local-face format needed for later simplex-entry work. A
   first attempt to package this as a full affine-basis / barycentric-coordinate API was not kept:
   the checked support layer still stops at affine independence itself. Thus
+  `chosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec_of_carrierAffineIndependentEndpointEntry`
+  now refines the local input format once more: the exact geometric bridge can be attacked in the
+  carrier-indexed form
+  `ChosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec.
+  exists_codimOneSubface_meets_segment_of_affineIndependentCarrierImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`,
+  while the older image-indexed theorem remains a wrapper layer for compatibility with the
+  existing entrance-face reduction. Thus
   `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry`
   reduces the remaining first bridge to the affine-simplex entry theorem
   `ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec.

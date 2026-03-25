@@ -29,6 +29,14 @@
   The stronger barycentric-coordinate / affine-basis packaging was tested but is not part of the
   checked frontier yet; the surviving Lean reduction is still the affine-independence step itself.
   Consequently,
+  `chosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec_of_carrierAffineIndependentEndpointEntry`
+  now converts a carrier-indexed local theorem directly into the older image-indexed endpoint
+  statement, so future local simplex-entry work can stay in the more natural carrier format.
+  Concretely, the exact remaining theorem can now be treated as
+  `ChosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec.
+  exists_codimOneSubface_meets_segment_of_affineIndependentCarrierImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`,
+  with the image-indexed spec retained only as a compatibility wrapper.
+  Consequently,
   `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry`
   reduces the remaining local geometry to the affine-simplex entry statement
   `ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec.

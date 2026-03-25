@@ -4436,6 +4436,45 @@ structure ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec wh
         ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
           (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
 
+/--
+Carrier-indexed affine-independent version of the endpoint-entry theorem.
+
+This is the same remaining simplex-entry problem, but expressed using the face carrier itself
+rather than its image set. The existing away-from-boundary lemmas already produce affine
+independence in exactly this carrier-indexed format.
+-/
+structure ChosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec where
+  exists_codimOneSubface_meets_segment_of_affineIndependentCarrierImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim < dimension →
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
+      AffineIndependent ℝ
+        (fun v : (ν.face.carrier : Set Vertex) =>
+          ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) →
+      ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+        ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+
+def
+    chosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec_of_carrierAffineIndependentEndpointEntry
+    (hentry :
+      ChosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hνdim haway hlower hνterm _
+  exact
+    hentry.exists_codimOneSubface_meets_segment_of_affineIndependentCarrierImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone
+      ν hk hνdim haway hlower hνterm
+      (affineIndependent_carrierImage_of_imageContainsMilestoneAwayFromBoundary
+        (T := T) haway)
+
 def chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry
     (hentry :
       ChosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec

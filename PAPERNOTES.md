@@ -192,6 +192,13 @@
   for local simplex-entry arguments. A first stronger attempt to build a barycentric-coordinate /
   affine-basis interface on top of this was not retained in the checked support layer, so the
   durable frontier still treats affine independence itself as the last proved step. Thus the
+  new wrapper
+  `chosenMilestoneChainNextMilestoneAffineIndependentEndpointEntrySpec_of_carrierAffineIndependentEndpointEntry`
+  now makes the carrier-indexed formulation the primary local interface: the remaining simplex-entry
+  question can be attacked directly as
+  `ChosenMilestoneChainNextMilestoneCarrierAffineIndependentEndpointEntrySpec.
+  exists_codimOneSubface_meets_segment_of_affineIndependentCarrierImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`,
+  and the older image-indexed theorem is recoverable from it automatically. Thus the
   remaining next-milestone entrance geometry is no longer a completely general convex-hull
   question. The reduction
   `chosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec_of_affineIndependentEndpointEntry`
