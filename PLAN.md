@@ -103,6 +103,15 @@
   prove a reusable face-preserving surjectivity theorem and derive the algorithm later.
 - Fallback route:
   formalize the paper's graph/path-following proof as a self-contained lemma.
+- Latest Section 5 reduction:
+  the concrete chosen-chain proof no longer needs an all-at-once lower-door theorem.
+  `exists_subset_contains_lowerMilestone_of_exists_upperCoord_ne_zero` and
+  `exists_codimOneSubface_contains_lowerMilestone_of_exists_upperCoord_ne_zero`
+  now settle the subcase where a positive face carrying the lower milestone still has some image
+  vertex with nonzero next-coordinate. The remaining case split is therefore precise:
+  either an upper-coordinate survives and codimension-`1` support follows immediately, or every
+  image vertex already lies in the lower target prefix face and one must extract a lower-prefix
+  domain subface from that stronger geometric situation.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:

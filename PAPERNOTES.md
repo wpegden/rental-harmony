@@ -118,6 +118,17 @@
   `boundary_contractible_of_omits_barycenter`. So, under the current library state, the topological
   route appears to require a substantial independent development of sphere noncontractibility rather
   than one more project-specific argument.
+- Formalization note after the latest Section 5 support reduction:
+  the lower-door problem has now split into two genuinely different geometric subcases. If a
+  positive face contains the lower milestone and some image vertex still has nonzero next-coordinate,
+  then one can formally restrict the convex-hull witness to the zero next-coordinate image points
+  and obtain a proper support of size at most `k + 1`; this is now packaged as
+  `exists_subset_contains_lowerMilestone_of_exists_upperCoord_ne_zero`, with the immediate
+  codimension-`1` corollary
+  `exists_codimOneSubface_contains_lowerMilestone_of_exists_upperCoord_ne_zero`.
+  So the only remaining Section 5 support-selection issue is the complementary case where every
+  image vertex of the positive face already lies in the lower target prefix face. The manuscript
+  does not spell out this case separately, but Lean now forces it to be handled explicitly.
 - Formalization note about the alternate Section 5 proof:
   the paper's higher-dimensional trap-door/path-following proof is not blocked by mathematics, but
   it does use more combinatorial structure than the current Lean support files expose. The graph

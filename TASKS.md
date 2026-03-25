@@ -24,8 +24,15 @@
   vertical door / graph neighbor and the remaining two-neighbor packaging. The new reduction lemma
   `exists_codimOneSubface_contains_lowerMilestone_of_subset` shows that it is already enough to
   find a proper carrier subset of size at most `k + 1` whose image convex hull contains the lower
-  milestone; the remaining geometric difficulty is to choose such a subset so that it still
-  subdivides the lower prefix face.
+  milestone. The new theorem
+  `exists_subset_contains_lowerMilestone_of_exists_upperCoord_ne_zero`
+  (and its corollary
+  `exists_codimOneSubface_contains_lowerMilestone_of_exists_upperCoord_ne_zero`)
+  now discharge the whole subcase where some image vertex still has nonzero next-coordinate: then a
+  codimension-`1` supporting face already exists. So the remaining geometric difficulty is now
+  strictly sharper: handle only the complementary case where every image vertex of the positive face
+  already lies in the lower target prefix face, and from that deduce a codimension-`1`
+  lower-prefix supporting subface in the domain.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for

@@ -1371,6 +1371,162 @@ def IsTerminal : Section5GraphNode c φ → Prop
       ν.face.dim = dimension ∧
         ν.face.ImageContainsMilestone (T := T) c φ.vertexMap (Fin.last dimension)
 
+theorem exists_subset_contains_lowerMilestone_of_exists_upperCoord_ne_zero
+    {ν : Section5PositiveNode c φ}
+    (hcontains :
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc)
+    (hupperVertex :
+      ∃ v ∈ ν.face.carrier,
+        (((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) ≠ 0) :
+    ∃ s : Finset Vertex,
+      s ⊆ ν.face.carrier ∧
+      s.card ≤ ν.level.succ.1 ∧
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (s : Set Vertex))) := by
+  classical
+  let pfun : Vertex → RealPoint dimension := fun v =>
+    ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)
+  let img : Finset (RealPoint dimension) := ν.face.carrier.image pfun
+  let imgZero : Finset (RealPoint dimension) := img.filter fun y => y ν.level.succ = 0
+  have hcontains_img :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ ((img : Finset (RealPoint dimension)) : Set (RealPoint dimension))) := by
+    simpa [SubdivisionFace.ImageContains, SubdivisionFace.imagePoints, img, pfun] using hcontains
+  rcases (Finset.mem_convexHull' (R := ℝ) (s := img)).1 hcontains_img with
+    ⟨w, hw_nonneg, hw_sum, hw_repr⟩
+  have hmilestone_zero :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension)
+        ν.level.succ) = 0 := by
+    exact c.point_subdividesPrefixFace ν.level.castSucc ν.level.succ (by simp)
+  have hcoord_sum :
+      ∑ y ∈ img, w y * y ν.level.succ = 0 := by
+    have hcoord := congrArg (fun z : RealPoint dimension => z ν.level.succ) hw_repr
+    simp [Pi.smul_apply, smul_eq_mul, hmilestone_zero] at hcoord
+    exact hcoord
+  have hterm_nonneg :
+      ∀ y ∈ img, 0 ≤ w y * y ν.level.succ := by
+    intro y hy
+    rcases Finset.mem_image.mp hy with ⟨v, hv, rfl⟩
+    exact mul_nonneg (hw_nonneg _ (Finset.mem_image_of_mem _ hv)) ((φ.vertexMap v).2.1 _)
+  have hterm_zero :
+      ∀ y ∈ img, w y * y ν.level.succ = 0 := by
+    exact (Finset.sum_eq_zero_iff_of_nonneg hterm_nonneg).mp hcoord_sum
+  have hw_zero_of_coord_ne_zero :
+      ∀ y ∈ img, y ν.level.succ ≠ 0 → w y = 0 := by
+    intro y hy hy0
+    have hzero := hterm_zero y hy
+    exact mul_right_cancel₀ hy0 (by simpa [hzero] using hzero)
+  have hsum_imgZero : ∑ y ∈ imgZero, w y = 1 := by
+    have hsplit := Finset.sum_filter_add_sum_filter_not img (fun y => y ν.level.succ = 0) w
+    have hnotZero :
+        ∑ y ∈ img.filter fun y => ¬ y ν.level.succ = 0, w y = 0 := by
+      apply Finset.sum_eq_zero
+      intro y hy
+      exact hw_zero_of_coord_ne_zero y
+        ((Finset.mem_filter.mp hy).1)
+        (by simpa using (Finset.mem_filter.mp hy).2)
+    have hsum' :
+        (∑ y ∈ imgZero, w y) +
+            ∑ y ∈ img.filter (fun y => ¬ y ν.level.succ = 0), w y = 1 := by
+      simpa [imgZero] using hsplit.trans hw_sum
+    simpa [hnotZero] using hsum'
+  have hw_repr_imgZero :
+      ∑ y ∈ imgZero, w y • y =
+        (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension)) := by
+    have hsplit := Finset.sum_filter_add_sum_filter_not img
+      (fun y => y ν.level.succ = 0) (fun y => w y • y)
+    have hnotZero :
+        ∑ y ∈ img.filter fun y => ¬ y ν.level.succ = 0, w y • y = 0 := by
+      apply Finset.sum_eq_zero
+      intro y hy
+      have hw0 : w y = 0 :=
+        hw_zero_of_coord_ne_zero y (Finset.mem_filter.mp hy).1 (by simpa using (Finset.mem_filter.mp hy).2)
+      simp [hw0]
+    have hrepr' :
+        (∑ y ∈ imgZero, w y • y) +
+            ∑ y ∈ img.filter (fun y => ¬ y ν.level.succ = 0), w y • y =
+          (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension)) := by
+      simpa [imgZero] using hsplit.trans hw_repr
+    simpa [hnotZero] using hrepr'
+  have hcontains_imgZero :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ ((imgZero : Finset (RealPoint dimension)) : Set (RealPoint dimension))) := by
+    exact (Finset.mem_convexHull' (R := ℝ) (s := imgZero)).2
+      ⟨w, fun y hy => hw_nonneg _ (by exact (Finset.mem_filter.mp hy).1), hsum_imgZero, hw_repr_imgZero⟩
+  rcases hupperVertex with ⟨v0, hv0, hv0neq⟩
+  have hv0img : pfun v0 ∈ img := Finset.mem_image_of_mem _ hv0
+  have hv0not : pfun v0 ∉ imgZero := by
+    intro hv
+    exact hv0neq ((Finset.mem_filter.mp hv).2)
+  have hcard_imgZero_lt_img : imgZero.card < img.card := by
+    exact Finset.card_lt_card <|
+      (Finset.ssubset_iff_of_subset (by
+        intro y hy
+        exact (Finset.mem_filter.mp hy).1)).2 ⟨pfun v0, hv0img, hv0not⟩
+  have hcard_img_le_face : img.card ≤ ν.face.carrier.card := by
+    exact Finset.card_image_le
+  have hcard_imgZero_le :
+      imgZero.card ≤ ν.level.succ.1 := by
+    have hfacecard : ν.face.carrier.card = ν.level.succ.1 + 1 := by
+      rw [ν.face.card_eq_dim_succ, ν.face_dim]
+      simp
+    have hlt_face : imgZero.card < ν.face.carrier.card :=
+      lt_of_lt_of_le hcard_imgZero_lt_img hcard_img_le_face
+    exact Nat.lt_succ_iff.mp (by simpa [hfacecard] using hlt_face)
+  let chooseVertex : {y // y ∈ imgZero} → Vertex := fun y =>
+    Classical.choose (Finset.mem_image.mp ((Finset.mem_filter.mp y.2).1))
+  have hchoose_mem :
+      ∀ y : {y // y ∈ imgZero}, chooseVertex y ∈ ν.face.carrier := by
+    intro y
+    exact (Classical.choose_spec (Finset.mem_image.mp ((Finset.mem_filter.mp y.2).1))).1
+  have hchoose_image :
+      ∀ y : {y // y ∈ imgZero}, pfun (chooseVertex y) = y.1 := by
+    intro y
+    exact (Classical.choose_spec (Finset.mem_image.mp ((Finset.mem_filter.mp y.2).1))).2
+  have hchoose_injective : Function.Injective chooseVertex := by
+    intro y z hEq
+    apply Subtype.ext
+    simpa [hchoose_image y, hchoose_image z] using congrArg pfun hEq
+  let s : Finset Vertex := imgZero.attach.image chooseVertex
+  have hs_subset : s ⊆ ν.face.carrier := by
+    intro u hu
+    rcases Finset.mem_image.mp hu with ⟨y, hy, rfl⟩
+    exact hchoose_mem y
+  have hs_card : s.card = imgZero.card := by
+    simpa [s] using
+      Finset.card_image_of_injective (s := imgZero.attach) (f := chooseVertex) hchoose_injective
+  have hs_image :
+      s.image pfun = imgZero := by
+    apply Finset.ext
+    intro y
+    constructor
+    · intro hy
+      rcases Finset.mem_image.mp hy with ⟨u, hu, rfl⟩
+      rcases Finset.mem_image.mp hu with ⟨z, hz, hEq⟩
+      have huEq : pfun u = z.1 := by simpa [hEq] using hchoose_image z
+      simpa [huEq] using z.2
+    · intro hy
+      refine Finset.mem_image.mpr ?_
+      refine ⟨chooseVertex ⟨y, hy⟩, ?_, ?_⟩
+      · exact Finset.mem_image.mpr ⟨⟨y, hy⟩, by simp, rfl⟩
+      · simpa [hchoose_image ⟨y, hy⟩]
+  have hs_image_set :
+      ((fun v : Vertex => pfun v) '' (s : Set Vertex)) =
+        ((imgZero : Finset (RealPoint dimension)) : Set (RealPoint dimension)) := by
+    ext y
+    constructor
+    · rintro ⟨x, hx, rfl⟩
+      have hx' : pfun x ∈ s.image pfun := Finset.mem_image_of_mem _ hx
+      simpa [hs_image] using hx'
+    · intro hy
+      have hy' : y ∈ s.image pfun := by simpa [hs_image] using hy
+      simpa using hy'
+  refine ⟨s, hs_subset, by simpa [hs_card] using hcard_imgZero_le, ?_⟩
+  simpa [SubdivisionFace.ImageContains, pfun, hs_image_set] using hcontains_imgZero
+
 theorem exists_codimOneSubface_contains_lowerMilestone_of_subset
     {ν : Section5PositiveNode c φ} {s : Finset Vertex}
     (hs : s ⊆ ν.face.carrier)
@@ -1427,6 +1583,21 @@ theorem exists_codimOneSubface_contains_lowerMilestone_of_subset
               ((φ.vertexMap w : RentDivision (dimension + 1)) : RealPoint dimension)) ''
             ((ν.face.carrier.erase v : Finset Vertex) : Set Vertex)))
     exact himg'
+
+theorem exists_codimOneSubface_contains_lowerMilestone_of_exists_upperCoord_ne_zero
+    {ν : Section5PositiveNode c φ}
+    (hcontains :
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc)
+    (hupperVertex :
+      ∃ v ∈ ν.face.carrier,
+        (((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) ≠ 0) :
+    ∃ ρ : SubdivisionFace T,
+      ρ.IsCodimOneSubface ν.face ∧
+        ρ.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc := by
+  rcases exists_subset_contains_lowerMilestone_of_exists_upperCoord_ne_zero
+      (T := T) (c := c) (φ := φ) hcontains hupperVertex with ⟨s, hs, hcard, himg⟩
+  exact exists_codimOneSubface_contains_lowerMilestone_of_subset
+    (T := T) (c := c) (φ := φ) hs hcard himg
 
 theorem exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone
     {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
