@@ -2141,6 +2141,30 @@ case.
 The current abstract subdivision API does not supply this large lower-prefix carrier set, but once
 it is available the lower-milestone branch can be fed into the existing enlargement lemma above.
 -/
+structure FaceLocalLargeLowerPrefixCarrierSpec : Prop where
+  exists_support_in_largeLowerPrefixCarrier_of_contains_lowerMilestone :
+    ∀ {ν : Section5PositiveNode c φ},
+      0 < ν.level.1 →
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc →
+      ∃ s u : Finset Vertex,
+        s ⊆ u ∧
+        u ⊆ ν.face.carrier ∧
+        s.card ≤ ν.level.succ.1 ∧
+        ν.level.succ.1 ≤ u.card ∧
+        (∀ v ∈ u,
+          (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)
+            ν.level.succ) = 0) ∧
+        ((((c.point ν.level.castSucc : RentDivision (dimension + 1)) :
+            RealPoint dimension) ∈
+          convexHull ℝ
+            ((fun v : Vertex =>
+                ((φ.vertexMap v : RentDivision (dimension + 1)) :
+                  RealPoint dimension)) '' (s : Set Vertex))))
+
+/--
+This derives the older graph-neighbor contract from the sharper large-lower-prefix carrier-set
+formulation above.
+-/
 structure FaceLocalLowerPrefixCarrierSpec : Prop where
   exists_graphNeighbor_of_contains_lowerMilestone :
     ∀ {ν : Section5PositiveNode c φ},
@@ -2148,6 +2172,16 @@ structure FaceLocalLowerPrefixCarrierSpec : Prop where
       ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc →
       ∃ w : Section5GraphNode c φ,
         w ≠ .positive ν ∧ Adj (T := T) c φ (.positive ν) w
+
+theorem faceLocalLowerPrefixCarrierSpec_of_largeLowerPrefixCarrierSpec
+    (hspec : FaceLocalLargeLowerPrefixCarrierSpec (T := T) (c := c) (φ := φ)) :
+    FaceLocalLowerPrefixCarrierSpec (T := T) (c := c) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hcontains
+  rcases hspec.exists_support_in_largeLowerPrefixCarrier_of_contains_lowerMilestone hk hcontains
+      with ⟨s, u, hsu, hu, hscard, hucard, hulower, himg⟩
+  exact exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone
+    (T := T) (c := c) (φ := φ) hk hsu hu hscard hucard hulower himg
 
 theorem exists_graphNeighbor_of_contains_lowerMilestone_of_faceLocalSpec
     (hspec : FaceLocalLowerPrefixCarrierSpec (T := T) (c := c) (φ := φ))

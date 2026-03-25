@@ -378,6 +378,12 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_doorSpec`
   shows that once the two remaining internal contracts are supplied, the whole Section 5 pipeline
   reaches the paper-faithful `FacetImageContainsBarycenter` conclusion.
+- The lower-door contract has now been sharpened one step further. The genuinely geometric missing
+  input is no longer phrased as a graph-neighbor theorem, but as the new internal support bundle
+  `Section5GraphNode.FaceLocalLargeLowerPrefixCarrierSpec`, whose single field supplies the exact
+  data consumed by
+  `exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone`. The older
+  contract `FaceLocalLowerPrefixCarrierSpec` is now just a derived wrapper.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

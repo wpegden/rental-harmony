@@ -455,3 +455,12 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_doorSpec`
   show that once the lower-door contract and the chosen-chain door-count package are supplied, the
   Section 5 parity pipeline already yields the paper's barycenter-containing facet statement.
+- Formalization note after the latest support-contract refinement:
+  the lower-door blocker is now stated at the genuinely geometric level actually used by the proof.
+  `Section5GraphNode.FaceLocalLargeLowerPrefixCarrierSpec` asks directly for a large lower-prefix
+  carrier set and a milestone-carrying support set inside it, and the old
+  `FaceLocalLowerPrefixCarrierSpec.exists_graphNeighbor_of_contains_lowerMilestone` is now derived
+  from that sharper input by the existing enlargement lemma
+  `exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone`. So the
+  remaining abstract support gap is no longer "produce a graph neighbor somehow", but the more
+  precise large-lower-prefix carrier statement.

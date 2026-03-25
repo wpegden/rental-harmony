@@ -206,7 +206,10 @@
   `FacetImageContainsBarycenter` conclusion rather than only a terminal-milestone facet.
 - [ ] Current concrete frontier: prove or supply the two remaining internal contracts for the
   higher-dimensional Section 5 proof.
-  First, the lower-door support theorem now appears explicitly as
-  `Section5GraphNode.FaceLocalLowerPrefixCarrierSpec.exists_graphNeighbor_of_contains_lowerMilestone`.
+  First, the primitive lower-door support theorem now appears explicitly as
+  `Section5GraphNode.FaceLocalLargeLowerPrefixCarrierSpec.exists_support_in_largeLowerPrefixCarrier_of_contains_lowerMilestone`,
+  from which the older graph-neighbor contract
+  `Section5GraphNode.FaceLocalLowerPrefixCarrierSpec.exists_graphNeighbor_of_contains_lowerMilestone`
+  is now derived automatically.
   Second, the graph-local start/door-count package still has to be produced as
   `Section5GraphNode.ChosenMilestoneChainDoorSpec` for `chosenMilestoneChain`.
