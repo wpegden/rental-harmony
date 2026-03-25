@@ -3045,6 +3045,55 @@ theorem exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image
   refine ⟨s', hs'_subset, Nat.succ_le_of_lt (by simpa [hs'_card] using ht_card_lt_s), ?_⟩
   simpa [hs'_image_set] using ht_mem
 
+theorem not_exists_smaller_support_of_pair_of_mem_openSegment
+    (pfun : Vertex → RealPoint dimension)
+    {u v : Vertex} (huv : pfun u ≠ pfun v)
+    {x : RealPoint dimension}
+    (hx : x ∈ openSegment ℝ (pfun u) (pfun v)) :
+    ¬ ∃ s' : Finset Vertex,
+      s' ⊆ ({u, v} : Finset Vertex) ∧
+      s'.card + 1 ≤ ({u, v} : Finset Vertex).card ∧
+      x ∈ convexHull ℝ (pfun '' (s' : Set Vertex)) := by
+  classical
+  have huv' : u ≠ v := by
+    intro hEq
+    exact huv (by simpa [hEq])
+  have hpaircard : ({u, v} : Finset Vertex).card = 2 := by
+    simp [Finset.card_pair, huv']
+  have hxu : x ≠ pfun u := by
+    intro hEq
+    have hleft : pfun u ∈ openSegment ℝ (pfun u) (pfun v) := by
+      simpa [hEq] using hx
+    exact huv ((left_mem_openSegment_iff.mp hleft))
+  have hxv : x ≠ pfun v := by
+    intro hEq
+    have hright : pfun v ∈ openSegment ℝ (pfun u) (pfun v) := by
+      simpa [hEq] using hx
+    exact huv (right_mem_openSegment_iff.mp hright)
+  rintro ⟨s', hs', hcard, hxconv⟩
+  have hs'le : s'.card ≤ 1 := by
+    have : s'.card + 1 ≤ 2 := by simpa [hpaircard] using hcard
+    omega
+  by_cases hs'zero : s'.card = 0
+  · have hs'empty : s' = ∅ := Finset.card_eq_zero.mp hs'zero
+    have : x ∈ convexHull ℝ (pfun '' ((∅ : Finset Vertex) : Set Vertex)) := by
+      simpa [hs'empty] using hxconv
+    simpa using this
+  · have hs'one : s'.card = 1 := by omega
+    rcases Finset.card_eq_one.mp hs'one with ⟨w, hw⟩
+    have hwpair : w = u ∨ w = v := by
+      have hwmem : w ∈ ({u, v} : Finset Vertex) := by
+        apply hs'
+        simpa [hw]
+      simpa using hwmem
+    have hxw : x = pfun w := by
+      have : x ∈ convexHull ℝ (pfun '' ({w} : Set Vertex)) := by
+        simpa [hw] using hxconv
+      simpa [convexHull_singleton] using this
+    rcases hwpair with rfl | rfl
+    · exact hxu hxw
+    · exact hxv hxw
+
 structure ChosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec where
   exists_subset_in_codimOneSubface_of_point_of_positiveLevel_topDim_of_faceSubdividesLowerPrefix :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)

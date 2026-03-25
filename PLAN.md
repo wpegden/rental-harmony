@@ -728,6 +728,12 @@
   specializes this to the current top-dimensional codimension-`1` face setting. So the remaining
   proof search should now target the image-side statement that the support inside the first
   codimension-`1` face image is affinely dependent under the Section 5 hypotheses.
+- The sharpest obstruction to that route is now formalized too.
+  `not_exists_smaller_support_of_pair_of_mem_openSegment` proves that if the first codimension-`1`
+  face image carries the point `x` by a nondegenerate two-point segment support, then one-vertex
+  drop is impossible. So the next proof search should either derive affine dependence from the
+  Section 5 hypotheses or prove that this nondegenerate segment case cannot occur in the relevant
+  top-dimensional branch.
 
 ## Current input status
 - No proposed axioms.

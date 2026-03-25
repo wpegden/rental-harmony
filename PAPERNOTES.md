@@ -807,3 +807,9 @@
   remaining top-dimensional question is no longer raw support pruning, but whether the image
   support inside the first codimension-`1` face is forced to be affinely dependent by the Section 5
   hypotheses.
+- The simplest obstruction to that affine-dependence route is now also isolated formally.
+  `not_exists_smaller_support_of_pair_of_mem_openSegment` proves that a nondegenerate two-point
+  support carrying `x` along an open segment in the first codimension-`1` face image makes
+  one-vertex drop impossible. So any successful completion of the current top-dimensional branch
+  must either rule out that segment case from the Section 5 hypotheses or replace the current
+  support-pruning target by a weaker route.

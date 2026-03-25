@@ -37,7 +37,12 @@
   `chosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec_of_affineDependentImage`
   shows that the one-vertex-drop contract already follows once the support inside the first
   codimension-`1` face image is affinely dependent. So the remaining top-dimensional task is to
-  prove that affine dependence criterion under the current Section 5 hypotheses. The reductions
+  prove that affine dependence criterion under the current Section 5 hypotheses. The new
+  obstruction theorem `not_exists_smaller_support_of_pair_of_mem_openSegment` shows that this
+  dependence is not formal nonsense: a nondegenerate two-point segment support inside the first
+  codimension-`1` face would defeat one-vertex-drop outright. So the immediate task is to prove
+  that the Section 5 hypotheses rule out that nondegenerate segment case, or more generally force
+  the first codimension-`1` face image support to be affinely dependent. The reductions
   `chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop`,
   `chosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec_of_supportShrink`, and
   `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec_of_boundaryPointMultiplicity`
@@ -552,4 +557,6 @@
   `exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image` and its wrapper
   `chosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec_of_affineDependentImage`
   sharpen the remaining local content again: it is enough to prove that the image support inside
-  the first codimension-`1` face is affinely dependent.
+  the first codimension-`1` face is affinely dependent. The new theorem
+  `not_exists_smaller_support_of_pair_of_mem_openSegment` isolates the simplest obstruction:
+  a two-point open-segment support in that face cannot satisfy one-vertex-drop.
