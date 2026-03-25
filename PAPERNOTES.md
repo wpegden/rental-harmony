@@ -257,6 +257,18 @@
   lifts that local no-escape input to the full higher-dimensional bypass theorem. So the first
   exact statements still missing from the current Section 5 API are now formalized in Lean rather
   than only described informally.
+- Formalization note after comparing the deleted-spur and direct routes:
+  the theorem
+  `exists_terminal_of_positiveContinuationNeighbor_of_alternativeSpecs_of_belowTopDimPositiveTerminalSpec`
+  now proves that the two deleted-spur escape cases are already consumable by the older direct
+  route. If one assumes the global below-top-dimensional continuation theorem
+  `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim`,
+  then a deleted-spur component containing `.start` is harmless because the unique start neighbor
+  is itself below top dimension, and a component containing another
+  `IsBoundaryOnlyUniqueCarrierCounterexampleNode` is harmless because its canonical vertical
+  neighbor is below top dimension. So the local no-escape fields remain the exact missing backup-
+  route statements, but they no longer represent a logically independent obstruction from the
+  direct route.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those

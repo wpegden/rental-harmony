@@ -22,6 +22,10 @@
   `ChosenMilestoneChainDeletedSpurNoEscapeSpec.no_start_of_positiveContinuationNeighbor`
   and
   `ChosenMilestoneChainDeletedSpurNoEscapeSpec.no_boundaryOnlyUniqueCarrierCounterexampleNode_of_positiveContinuationNeighbor`.
+  The new theorem
+  `exists_terminal_of_positiveContinuationNeighbor_of_alternativeSpecs_of_belowTopDimPositiveTerminalSpec`
+  now shows that both escape branches already collapse to the direct route
+  `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim`.
   If either fails from the current API, record that exact theorem statement as the first missing
   local continuation principle.
 - [ ] Finish the positive-level no-open-crossing support at the exact graph interface.

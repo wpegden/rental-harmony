@@ -185,7 +185,11 @@
   `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_deletedSpurNoEscapeSpec_of_two_lt_dimension`
   turns it into the full higher-dimensional bypass theorem. So the exact remaining proof frontier
   is no longer the deleted-spur parity restart itself, but the two specific no-escape fields of
-  `ChosenMilestoneChainDeletedSpurNoEscapeSpec`.
+  `ChosenMilestoneChainDeletedSpurNoEscapeSpec`. The latest comparison theorem
+  `exists_terminal_of_positiveContinuationNeighbor_of_alternativeSpecs_of_belowTopDimPositiveTerminalSpec`
+  also shows that these two escape branches are not separate from the older direct route: if the
+  below-top-dimensional positive-node terminal theorem is available, then both `.start`-escape and
+  further-obstruction escape in the deleted-spur component are already harmless.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:
