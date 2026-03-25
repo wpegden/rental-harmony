@@ -679,3 +679,9 @@
   filtered theorem. A direct search of the current repo still finds no theorem extending a fixed
   codimension-`1` prefix-face carrier to a same-level prefix-face coface, so the present
   existence blocker is now isolated exactly at that fixed-carrier continuation step.
+- Concretely, the current API only contains the downward propagation lemma
+  `SubdivisionFace.subdividesPrefixFace_of_subface` and raw ambient facet existence via
+  `subset_facet`. What is missing is the converse-style upward extension theorem: from a
+  codimension-`1` carrier already known to lie in the relevant prefix face, produce a distinct
+  same-level coface that still lies in that prefix face. This is the exact mathematical content of
+  `ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec`.

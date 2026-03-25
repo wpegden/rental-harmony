@@ -605,6 +605,11 @@
   dependency chain is fully explicit. A direct repo search still finds no theorem extending a
   codimension-`1` prefix-face carrier to a same-level prefix-face coface, which is exactly the
   content now isolated in `ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec`.
+- More precisely, the present API only has the downward lemma
+  `SubdivisionFace.subdividesPrefixFace_of_subface` plus raw ambient-facet existence
+  `subset_facet`; it has no upward extension theorem from a codimension-`1` prefix-face carrier to
+  a distinct same-level prefix-face coface. That asymmetry is now the concrete proof-theoretic
+  reason the fixed-carrier continuation theorem remains open.
 
 ## Current input status
 - No proposed axioms.

@@ -2809,7 +2809,10 @@ Minimal same-level continuation existence once the normalized codimension-`1` ca
 already fixed.
 
 After `PositiveFaceLowerPrefixReflection` has supplied the lower-milestone carrier, the genuinely
-remaining existence theorem no longer depends on the no-open-crossing hypotheses themselves.
+remaining existence theorem no longer depends on the no-open-crossing hypotheses themselves. This
+is precisely the missing upward extension step dual to
+`SubdivisionFace.subdividesPrefixFace_of_subface`: extend a codimension-`1` prefix-face carrier to
+a distinct same-level prefix-face coface.
 -/
 structure ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec where
   exists_candidate_of_carrier :

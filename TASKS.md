@@ -412,3 +412,9 @@
   extending a normalized codimension-`1` prefix-face carrier to a same-level prefix-face coface.
   So the exact remaining existence gap is now a fixed-carrier same-level continuation theorem, not
   carrier construction or door translation.
+- [x] The failed proof step is now pinned down exactly. The current face API has
+  `SubdivisionFace.subdividesPrefixFace_of_subface`, which only pushes prefix-face information
+  downward to smaller carriers, and `subset_facet`, which only places a carrier inside some ambient
+  facet. There is no upward extension theorem turning a codimension-`1` prefix-face carrier into a
+  distinct same-level prefix-face coface, and that is exactly what
+  `ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec` now asks for.
