@@ -329,6 +329,12 @@
   `ν.face.ImageContainsMilestone ... ν.level.castSucc`, extract an actual preimage point in
   `ν.face` whose positive barycentric support lies in the lower prefix face, yielding the needed
   lower-prefix carrier set of cardinality at least `k + 1`.
+- The latest proof search isolates the real missing local statement even further. To derive that
+  preimage point from `SubdivisionFace.ImageContains`, the current abstract subdivision data would
+  need a compatibility theorem saying that when a point lies in the convex hull of a specified
+  face or facet, its global `baryCoord` support can be taken inside that chosen face or facet.
+  Without such a local-barycentric compatibility result, the repo does not yet justify the desired
+  face-local affine/preimage theorem.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

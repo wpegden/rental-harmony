@@ -385,3 +385,12 @@
   vertex of `T.supportingFacet x` with positive barycentric weight lies in the lower prefix face,
   yielding the desired large lower-prefix carrier set. The current repo does not yet package this
   face-local affine-preimage theorem for `SubdivisionFace.ImageContains`.
+- Sharpened support-layer diagnosis after trying to prove that theorem directly:
+  the present `SimplicialSubdivision` interface still lacks a local-barycentric compatibility
+  statement. In particular, there is currently no theorem saying that if a point lies in the
+  convex hull of a specified subdivision face or facet, then the global barycentric support chosen
+  by `T.baryCoord` or `T.supportingFacet` can be taken inside that same face or facet. Without
+  that compatibility, even a facet-level converse to `map_mem_facetImage` is not yet derivable
+  from the existing API, so the intended `SubdivisionFace.ImageContains -> ∃ x, φ.toFun x = ...`
+  step remains blocked on genuinely missing local affine infrastructure rather than on the Section 5
+  graph bookkeeping itself.
