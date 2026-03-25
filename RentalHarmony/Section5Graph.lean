@@ -2129,7 +2129,7 @@ theorem exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone
     exact Section5PositiveNode.not_verticalAdj_self (T := T) (c := c) (φ := φ) ν hμ
   · exact Or.inr (Or.inr hμ)
 
-theorem exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone
+theorem exists_verticalAdj_of_lowerPrefixSubset_contains_lowerMilestone
     {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
     {s : Finset Vertex}
     (hs : s ⊆ ν.face.carrier)
@@ -2143,8 +2143,7 @@ theorem exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone
           ((fun v : Vertex =>
               ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
             (s : Set Vertex)))) :
-    ∃ w : Section5GraphNode c φ,
-      w ≠ .positive ν ∧ Adj (T := T) c φ (.positive ν) w := by
+    ∃ μ : Section5PositiveNode c φ, μ.VerticalAdj (T := T) c φ ν := by
   have hsne : s.Nonempty := by
     apply Finset.card_pos.mp
     rw [hcard]
@@ -2179,8 +2178,67 @@ theorem exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone
     dsimp [ρ]
     simpa [SubdivisionFace.ImageContainsMilestone, SubdivisionFace.ImageContains,
       SubdivisionFace.imagePoints] using himg
-  exact exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone
+  exact exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone
     (T := T) (c := c) (φ := φ) hk hρ hρsub hρmil
+
+theorem exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    {s : Finset Vertex}
+    (hs : s ⊆ ν.face.carrier)
+    (hcard : s.card = ν.level.succ.1)
+    (hslower :
+      ∀ v ∈ s,
+        (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0)
+    (himg :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (s : Set Vertex)))) :
+    ∃ w : Section5GraphNode c φ,
+      w ≠ .positive ν ∧ Adj (T := T) c φ (.positive ν) w := by
+  rcases exists_verticalAdj_of_lowerPrefixSubset_contains_lowerMilestone
+      (T := T) (c := c) (φ := φ) hk hs hcard hslower himg with ⟨μ, hμ⟩
+  refine ⟨.positive μ, ?_, ?_⟩
+  · intro hEq
+    cases hEq
+    exact Section5PositiveNode.not_verticalAdj_self (T := T) (c := c) (φ := φ) ν hμ
+  · exact Or.inr (Or.inr hμ)
+
+theorem exists_verticalAdj_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    {s u : Finset Vertex}
+    (hsu : s ⊆ u)
+    (hu : u ⊆ ν.face.carrier)
+    (hscard : s.card ≤ ν.level.succ.1)
+    (hucard : ν.level.succ.1 ≤ u.card)
+    (hulower :
+      ∀ v ∈ u,
+        (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0)
+    (himg :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (s : Set Vertex)))) :
+    ∃ μ : Section5PositiveNode c φ, μ.VerticalAdj (T := T) c φ ν := by
+  obtain ⟨t, hst, htu, htcard⟩ := Finset.exists_subsuperset_card_eq hsu hscard hucard
+  have ht_lower :
+      ∀ v ∈ t,
+        (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0 :=
+    fun v hv => hulower v (htu hv)
+  have ht_img :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (t : Set Vertex))) := by
+    exact convexHull_mono (by
+      intro x hx
+      rcases hx with ⟨v, hv, rfl⟩
+      exact ⟨v, hst hv, rfl⟩) himg
+  exact exists_verticalAdj_of_lowerPrefixSubset_contains_lowerMilestone
+    (T := T) (c := c) (φ := φ) hk (htu.trans hu) htcard ht_lower ht_img
 
 theorem exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone
     {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
@@ -2200,23 +2258,13 @@ theorem exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerM
             (s : Set Vertex)))) :
     ∃ w : Section5GraphNode c φ,
       w ≠ .positive ν ∧ Adj (T := T) c φ (.positive ν) w := by
-  obtain ⟨t, hst, htu, htcard⟩ := Finset.exists_subsuperset_card_eq hsu hscard hucard
-  have ht_lower :
-      ∀ v ∈ t,
-        (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0 :=
-    fun v hv => hulower v (htu hv)
-  have ht_img :
-      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
-        convexHull ℝ
-          ((fun v : Vertex =>
-              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
-            (t : Set Vertex))) := by
-    exact convexHull_mono (by
-      intro x hx
-      rcases hx with ⟨v, hv, rfl⟩
-      exact ⟨v, hst hv, rfl⟩) himg
-  exact exists_graphNeighbor_of_lowerPrefixSubset_contains_lowerMilestone
-    (T := T) (c := c) (φ := φ) hk (htu.trans hu) htcard ht_lower ht_img
+  rcases exists_verticalAdj_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone
+      (T := T) (c := c) (φ := φ) hk hsu hu hscard hucard hulower himg with ⟨μ, hμ⟩
+  refine ⟨.positive μ, ?_, ?_⟩
+  · intro hEq
+    cases hEq
+    exact Section5PositiveNode.not_verticalAdj_self (T := T) (c := c) (φ := φ) ν hμ
+  · exact Or.inr (Or.inr hμ)
 
 /--
 Internal support-layer contract isolating the remaining lower-door geometry in the all-image-lower
@@ -2297,6 +2345,29 @@ theorem faceLocalLowerPrefixCarrierSpec_of_largeLowerPrefixCarrierSpec
       with ⟨s, u, hsu, hu, hscard, hucard, hulower, himg⟩
   exact exists_graphNeighbor_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone
     (T := T) (c := c) (φ := φ) hk hsu hu hscard hucard hulower himg
+
+theorem exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
+    (hspec : FaceLocalLargeLowerPrefixCarrierSpec (T := T) (c := c) (φ := φ))
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    (hcontains :
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc) :
+    ∃ μ : Section5PositiveNode c φ, μ.VerticalAdj (T := T) c φ ν := by
+  rcases hspec.exists_support_in_largeLowerPrefixCarrier_of_contains_lowerMilestone hk hcontains
+      with ⟨s, u, hsu, hu, hscard, hucard, hulower, himg⟩
+  exact exists_verticalAdj_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone
+    (T := T) (c := c) (φ := φ) hk hsu hu hscard hucard hulower himg
+
+theorem exists_verticalAdj_of_contains_lowerMilestone_of_reflection
+    (hreflect : PositiveFaceLowerPrefixReflection (T := T) (c := c) (φ := φ))
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    (hcontains :
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc) :
+    ∃ μ : Section5PositiveNode c φ, μ.VerticalAdj (T := T) c φ ν := by
+  exact exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
+    (T := T) (c := c) (φ := φ)
+    (faceLocalLargeLowerPrefixCarrierSpec_of_positiveFaceLowerPrefixReflection
+      (T := T) (c := c) (φ := φ) hreflect)
+    hk hcontains
 
 theorem exists_graphNeighbor_of_contains_lowerMilestone_of_faceLocalSpec
     (hspec : FaceLocalLowerPrefixCarrierSpec (T := T) (c := c) (φ := φ))

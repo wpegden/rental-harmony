@@ -353,6 +353,17 @@
   extract such a candidate automatically, but the current abstract support layer still does not
   force that candidate to exist or be unique. This is now the sharpest remaining statement on that
   branch.
+- [x] Formalized the exact output of the lower-prefix reflection machinery:
+  `exists_verticalAdj_of_lowerPrefixSubset_contains_lowerMilestone`,
+  `exists_verticalAdj_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone`,
+  `exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec`, and
+  `exists_verticalAdj_of_contains_lowerMilestone_of_reflection` show that the current
+  lower-prefix support contract yields a downward vertical neighbor by construction.
+- [ ] Recovery-attempt result: the suggested graph-neighbor classification route cannot produce the
+  missing same-level continuation. Reflection does not hand back an unspecified graph neighbor that
+  might be horizontal; it directly constructs a downward vertical neighbor. So the next minimal
+  missing theorem is an independent same-level continuation-existence statement alongside that
+  already-known vertical door, not a reclassification lemma for the reflection neighbor.
 - [ ] Direct proof attempt on that filtered theorem now isolates the first missing half even more
   sharply: existence of a second same-level positive coface through the normalized lower-milestone
   carrier. The current `SimplicialSubdivision` API only records `subset_facet :

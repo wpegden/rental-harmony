@@ -643,3 +643,11 @@
   lemmas already turn any same-level horizontal door into a filtered candidate automatically, the
   first irreducible no-open-crossing gap is now existence of that second same-level continuation,
   not its uniqueness once found.
+- The next recovery experiment also rules out a plausible shortcut through the existing lower-door
+  support theorem. The new theorems
+  `exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec` and
+  `exists_verticalAdj_of_contains_lowerMilestone_of_reflection` show that the current reflection
+  machinery constructs a downward vertical neighbor by design. So one cannot hope to obtain the
+  missing filtered same-level continuation merely by classifying that reflected neighbor: the
+  reflection contract already fixes its type. The genuine remaining theorem is additional
+  same-level continuation existence beside that vertical door.

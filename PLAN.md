@@ -529,6 +529,13 @@
   second same-level positive coface. So the next viable plan is to supply exactly that local
   same-level continuation-existence theorem, or to keep it as the minimal no-open-crossing
   internal contract if it cannot be proved from the present abstract subdivision data.
+- The latest recovery attempt also closes off one tempting false route. The support file now
+  formalizes that the existing lower-prefix reflection machinery yields a downward vertical
+  neighbor, via
+  `exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec` and
+  `exists_verticalAdj_of_contains_lowerMilestone_of_reflection`. So the remaining no-open-crossing
+  existence problem is not to reclassify that reflected neighbor as horizontal; it is to find an
+  additional same-level continuation beyond the already-known vertical door.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
