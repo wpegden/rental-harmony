@@ -393,6 +393,14 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_specs`
   shows that these two refined contracts already suffice for the downstream Section 5 barycenter
   cell conclusion.
+- Recovery attempt 1 on the current stuck episode ruled out the suggested weaker vertex-level
+  route. The repo cannot prove a converse of the form
+  "image vertex has zero `ν.level.succ` coordinate implies domain vertex has zero
+  `ν.level.succ` coordinate", even when the vertex lies in a chosen positive face, because the
+  abstract field `PiecewiseLinearVertexMap.boundary_preserving` is only one-way. So the real
+  remaining theorem is not a pointwise carrier-vertex lemma but a genuinely face-local lower-prefix
+  reflection statement for positive faces: lower-target-prefix image support must yield a lower-
+  domain-prefix carrier subset or subface whose image still contains the same lower milestone.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

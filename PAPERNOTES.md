@@ -474,3 +474,18 @@
   `ChosenMilestoneChainGraphLocalSpec` plus `FaceLocalLowerPrefixCarrierSpec`, and the wrapper
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_specs` shows that these
   two refined contracts already suffice for the downstream barycenter-cell statement.
+- Recovery attempt 1 on the new stuck episode: the weaker vertex-level reflection route also fails
+  under the current abstract interface. Even if one assumes for a carrier vertex
+  `v ∈ ν.face.carrier` that the image vertex `φ.vertexMap v` already lies in the lower target
+  prefix face, i.e.
+  `(((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0`,
+  the repo has no converse theorem forcing
+  `(((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0`.
+  This is not a missed local lemma: `PiecewiseLinearVertexMap.boundary_preserving` only states the
+  forward implication "domain zero coordinate implies image zero coordinate". So the true missing
+  support-layer input is now sharper than before:
+  for a positive face whose image contains the lower milestone, one needs a face-local lower-prefix
+  reflection theorem producing a carrier subset or subface that already lies in the lower domain
+  prefix face and whose image still contains that lower milestone. Without such a converse, even a
+  minimal-support convex-hull witness in the image does not force the corresponding carrier
+  vertices back into the lower domain prefix face.

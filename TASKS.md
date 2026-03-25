@@ -215,3 +215,13 @@
   `Section5GraphNode.ChosenMilestoneChainGraphLocalSpec`, whose level-`0` and positive-level
   missing-next branches combine with the lower-door support contract to derive the older
   `Section5GraphNode.ChosenMilestoneChainDoorSpec` and hence the barycenter-cell wrapper.
+- [ ] Recovery-attempt outcome: the suggested weaker vertex-level converse also fails under the
+  current abstract support API. From
+  `(((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0`
+  for `v ∈ ν.face.carrier`, the repo still cannot prove
+  `(((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) ν.level.succ) = 0`,
+  because `PiecewiseLinearVertexMap.boundary_preserving` only gives the forward implication
+  "domain zero coordinate implies image zero coordinate". So the first irreducible missing lemma is
+  now a face-local lower-prefix reflection theorem: if a point or carrier support in the image of
+  a positive face lies in the lower target prefix face, then some carrier subset or subface of that
+  positive face already lies in the lower domain prefix face and still maps onto that point.
