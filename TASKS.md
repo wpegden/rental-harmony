@@ -112,7 +112,13 @@
   should follow inside its connected component. So the next proof search should either formalize
   that reduced-graph/component theorem or show that the stronger current reduction to arbitrary
   below-top-dimensional positive nodes is nevertheless derivable from the existing Section 5 local
-  API.
+  API. The Lean reduction is now packaged explicitly by
+  `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec` and
+  `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveTerminal_of_two_lt_dimension`:
+  in dimensions `2 < dimension`, the whole remaining higher-dimensional proof is reduced to
+  proving `exists_terminal_of_positive_belowTopDim`. A direct attempt to replace that by a
+  component-restricted parity restart currently breaks first at the missing transport theorem
+  equating degree/oddness facts between `C.toSimpleGraph` on `↥C` and the induced graph on `↑C`.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,

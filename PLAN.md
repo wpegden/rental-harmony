@@ -127,6 +127,10 @@
   canonical vertical descent is now proved to be positive, strictly lower-level, and
   below-top-dimensional. This yields the clean reduction
   `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminal_of_two_lt_dimension`.
+  This remaining direct-route input is now packaged explicitly as
+  `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec`, and
+  `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveTerminal_of_two_lt_dimension`
+  shows that it is enough for pure terminal existence under the current alternative local API.
   But the direct recursive proof is still blocked on one exact abstract graph move: restarting the
   parity argument from the obstruction node in the full graph is too weak because the original
   odd start `.start` is still present. The likely minimal replacement is a parity theorem on the

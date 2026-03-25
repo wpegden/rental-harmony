@@ -166,6 +166,21 @@
   designated start vertex has odd degree and every nonterminal vertex has even degree, then some
   terminal vertex exists. Applied to the Section 5 graph, this reduces the remaining work to the
   local geometric degree lemmas rather than a separate global path-construction formalization.
+- Formalization note after the latest higher-dimensional obstruction reduction:
+  in the range `2 < dimension`, the current Section 5 development now reduces pure terminal
+  existence to one explicit direct-route theorem:
+  `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim`.
+  The wrapper theorem
+  `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveTerminal_of_two_lt_dimension`
+  shows that no further top-dimensional obstruction analysis is needed once that below-top-
+  dimensional positive-node terminal theorem is available.
+- Formalization note about the direct-route failure point:
+  a natural alternative is to restart the parity argument on the connected component of the
+  continuation node after deleting the obstruction spur `{ν, μ}`. Lean exploration shows that this
+  route currently breaks first at a small but nontrivial transport issue: one needs a reusable
+  theorem equating degree/oddness facts between `C.toSimpleGraph` on `↥C` and the induced graph on
+  `↑C`. This is a coercion/typeclass problem, not evidence that the mathematical frontier itself is
+  wrong.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those
