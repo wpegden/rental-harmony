@@ -4232,6 +4232,109 @@ structure ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec where
         ρ.toSubdivisionFace.IsCodimOneSubface μface ∧
         μface.carrier ⊆ σ
 
+theorem exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex_of_entranceCarrier
+    (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face} {σ : Finset Vertex}
+    (hσ : σ ∈ T.facets)
+    (hνσ : ν.face.carrier ⊆ σ)
+    (hρsub : ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.succ)
+    {v : Vertex}
+    (hvσ : v ∈ σ)
+    (hvν : v ∉ ν.face.carrier)
+    (hvprefix :
+      (SubdivisionFace.singleton (T := T) v).SubdividesPrefixFace (T := T) ν.level.succ) :
+    ∃ μface : SubdivisionFace T,
+      μface ≠ ν.face ∧
+      μface.dim = ν.level.1 + 1 ∧
+      μface.SubdividesPrefixFace (T := T) ν.level.succ ∧
+      ρ.toSubdivisionFace.IsCodimOneSubface μface ∧
+      μface.carrier ⊆ σ := by
+  have hvρ : v ∉ ρ.carrier := by
+    intro hvρ
+    exact hvν (ρ.subset hvρ)
+  let σface : SubdivisionFace T := SubdivisionFace.ofFacet (T := T) σ hσ
+  let μface : SubdivisionFace T :=
+    σface.ofSubset (insert v ρ.carrier)
+      (by
+        intro w hw
+        rcases Finset.mem_insert.mp hw with rfl | hwρ
+        · exact hvσ
+        · exact hνσ (ρ.subset hwρ))
+      (Finset.insert_nonempty v ρ.carrier)
+  have hμne : μface ≠ ν.face := by
+    intro hEq
+    have hvμ : v ∈ μface.carrier := by
+      change v ∈ insert v ρ.carrier
+      exact Finset.mem_insert_self v ρ.carrier
+    exact hvν (by simpa [hEq] using hvμ)
+  have hμcard : μface.carrier.card = ν.level.1 + 2 := by
+    change (insert v ρ.carrier).card = ν.level.1 + 2
+    rw [Finset.card_insert_of_notMem hvρ]
+    calc
+      ρ.carrier.card + 1 = ν.face.carrier.card := ρ.card
+      _ = ν.level.1 + 2 := by
+        rw [ν.face.card_eq_dim_succ, ν.face_dim]
+  have hμdim : μface.dim = ν.level.1 + 1 := by
+    have hμdim' : μface.dim + 1 = ν.level.1 + 2 := by
+      calc
+        μface.dim + 1 = μface.carrier.card := by symm; exact μface.card_eq_dim_succ
+        _ = ν.level.1 + 2 := hμcard
+    omega
+  have hμsub : μface.SubdividesPrefixFace (T := T) ν.level.succ := by
+    intro w hw i hi
+    rcases Finset.mem_insert.mp hw with hwv | hwρ
+    · have hwsingle : w ∈ (SubdivisionFace.singleton (T := T) v).carrier := by
+        simpa [SubdivisionFace.singleton_carrier, hwv]
+      exact hvprefix w hwsingle i hi
+    · exact hρsub w hwρ i hi
+  have hρμ : ρ.toSubdivisionFace.IsCodimOneSubface μface := by
+    constructor
+    · intro w hw
+      have hwρ : w ∈ ρ.carrier := by
+        simpa [SubdivisionFace.CarrierCodimOneSubface.toSubdivisionFace_carrier] using hw
+      change w ∈ insert v ρ.carrier
+      exact Finset.mem_insert_of_mem hwρ
+    · change ρ.carrier.card + 1 = (insert v ρ.carrier).card
+      rw [Finset.card_insert_of_notMem hvρ]
+  have hμσ : μface.carrier ⊆ σ := by
+    intro w hw
+    rcases Finset.mem_insert.mp hw with hwv | hwρ
+    · exact hwv ▸ hvσ
+    · exact hνσ (ρ.subset hwρ)
+  exact ⟨μface, hμne, hμdim, hμsub, hρμ, hμσ⟩
+
+/--
+Current-prefix ambient-facet extension reduced to one fresh prefix vertex.
+
+This is the route-changed analogue of
+`ChosenMilestoneChainPositiveLevelFixedCarrierAmbientFacetPrefixExtensionSpec_of_freshPrefixVertex`.
+-/
+structure ChosenMilestoneChainNextMilestoneAmbientFacetFreshPrefixVertexSpec where
+  exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face} {σ : Finset Vertex},
+      σ ∈ T.facets →
+      ν.face.carrier ⊆ σ →
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.succ →
+      ∃ v ∈ σ, v ∉ ν.face.carrier ∧
+        (SubdivisionFace.singleton (T := T) v).SubdividesPrefixFace (T := T) ν.level.succ
+
+def chosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec_of_freshPrefixVertex
+    (hvertex :
+      ChosenMilestoneChainNextMilestoneAmbientFacetFreshPrefixVertexSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν ρ σ hσ hνσ hρsub
+  rcases
+      hvertex.exists_freshPrefixVertex_in_ambientFacet_of_entranceCarrier
+        ν hσ hνσ hρsub with
+    ⟨v, hvσ, hvν, hvprefix⟩
+  exact
+    exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex_of_entranceCarrier
+      (T := T) (φ := φ) ν hσ hνσ hρsub hvσ hvν hvprefix
+
 theorem
     exists_sameLevelCarrierContinuationCandidate_of_codimOneSubface_meets_segment_of_lt_topDim_of_prefixExtension
     (hext :

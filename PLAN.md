@@ -259,6 +259,16 @@
   plan is concrete: prove one or both of these local bridge theorems from the existing Section 5
   face geometry, and then refactor the below-top-dimensional direct route to consume same-level
   continuation rather than overstrong lower-milestone containment in that branch.
+  The second bridge is now reduced further too. The theorem
+  `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex_of_entranceCarrier` and the
+  wrapper
+  `chosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec_of_freshPrefixVertex`
+  show that current-prefix ambient-facet extension is equivalent, at this stage, to finding a
+  single fresh ambient-facet vertex outside `ν.face.carrier` whose singleton still subdivides the
+  current prefix face. So the route-changed next-milestone frontier has split cleanly into two
+  geometric bridge questions:
+  first produce the entrance codimension-`1` face meeting `[b_{k-1}, b_k]`,
+  then produce a fresh current-prefix ambient-facet vertex for that entrance face.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:

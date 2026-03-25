@@ -97,6 +97,16 @@
   frontier is no longer "prove lower-milestone containment directly", but rather to prove those
   entrance-face / current-prefix extension inputs and then rebuild the below-top-dimensional
   direct route from the resulting same-level continuation theorem.
+  The second bridge has now been sharpened once more. The new theorem
+  `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex_of_entranceCarrier` and the
+  reduction
+  `chosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec_of_freshPrefixVertex`
+  show that the ambient-facet extension input can itself be reduced to a simpler current-prefix
+  witness: given an entrance carrier `ρ`, it is enough to find one fresh ambient-facet vertex
+  outside `ν.face.carrier` whose singleton still subdivides the current prefix face
+  `conv{e_1, ..., e_{k+1}}`. So the first unresolved next-milestone theorem is still
+  `ChosenMilestoneChainNextMilestoneEntranceFaceSpec.exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary`,
+  while the second one is now naturally viewed through that fresh-prefix-vertex reformulation.
   The exact remaining direct-route subcases are therefore:
   the level-`0` base case, the positive-level next-milestone lower-milestone-containment branch,
   and the positive-level open-crossing lower-milestone-containment branch.

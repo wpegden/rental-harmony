@@ -1132,3 +1132,13 @@
   rather to prove one of these entrance-face / current-prefix extension bridges from the existing
   Section 5 geometry, and then decide how the below-top-dimensional continuation proof should
   iterate that same-level step before any later descent to the lower milestone.
+- Formalization note after sharpening the second bridge:
+  Lean now reduces the current-prefix ambient-facet extension theorem one step further. The new
+  theorem `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex_of_entranceCarrier`
+  shows that, once an entrance codimension-`1` face `ρ` is available, a distinct same-level
+  coface is obtained as soon as one can find a single fresh vertex in an ambient facet of
+  `ν.face` that still lies in the current prefix face `conv{e_1, ..., e_{k+1}}`. The wrapper
+  `chosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec_of_freshPrefixVertex` packages
+  this as the exact remaining version of the second bridge. So the first unresolved
+  next-milestone question is still the entrance-face theorem itself; the second has become the
+  more concrete "fresh current-prefix ambient-facet vertex" problem.
