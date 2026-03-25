@@ -5783,6 +5783,25 @@ theorem
   omega
 
 theorem
+    face_dim_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hξne : ξ ≠ hdata.ν)
+    (hξadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ)) :
+    ξ.face.dim < dimension := by
+  have hlt :=
+    level_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ) hdata hμ hξne hξadj
+  have hνlevel : hdata.ν.level.1 + 1 = dimension := by
+    simpa [hdata.ν.face_dim] using hdata.hνdim
+  calc
+    ξ.face.dim = ξ.level.1 + 1 := ξ.face_dim
+    _ < hdata.ν.level.1 + 1 := by omega
+    _ = dimension := hνlevel
+
+theorem
     not_adj_positive_start_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_level_gt_one
     (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
       (T := T) (φ := φ))
@@ -5936,6 +5955,26 @@ def
   exact
     hcont hdata μ ξ hμ hξne hξadj
       (level_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ) hdata hμ hξne hξadj)
+
+def
+    chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminal_of_two_lt_dimension
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdim : 2 < dimension)
+    (hterm :
+      ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        ξ.face.dim < dimension →
+        ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          v ≠ .start ∧
+            IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v) :
+    ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec (T := T) (φ := φ) := by
+  refine
+    chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_lowerLevelPositiveContinuationNeighborTerminal_of_two_lt_dimension
+      (T := T) (φ := φ) haway hdim ?_
+  intro hdata μ ξ hμ hξne hξadj _
+  exact
+    hterm ξ
+      (face_dim_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
         (T := T) (φ := φ) hdata hμ hξne hξadj)
 
 def chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_continuationNeighborTerminal

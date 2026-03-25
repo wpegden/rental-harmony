@@ -302,6 +302,22 @@
   blocker is now only the final assembly/transversality argument: splice these levelwise choices
   together with the fixed start point `e_1` and fixed terminal barycenter, and prove the resulting
   chain satisfies `Section5GraphNode.MilestoneSegmentTransversality`.
+- Formalization note after the latest obstruction-bypass refinement:
+  the higher-dimensional (`2 < dimension`) bypass problem is now reduced more sharply than before.
+  After descending from exact top-dimensional boundary-only unique-carrier obstruction data to its
+  canonical vertical neighbor, any distinct continuation node is proved to be positive,
+  strictly lower-level, and in fact below top dimension. This yields the clean Lean reduction
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminal_of_two_lt_dimension`:
+  it would now suffice to know terminal existence from an arbitrary below-top-dimensional positive
+  node. But the latest graph analysis also shows that this reduction is probably stronger than the
+  truly minimal abstract need. A direct parity restart from the obstruction node in the full graph
+  is too weak, because the original odd start `.start` remains another odd vertex and can absorb
+  the parity argument. So the exact missing graph theorem now appears to be a component-restricted
+  parity restart after deleting the obstruction spur `{ν, μ}` (the degree-`1` obstruction node and
+  its canonical vertical neighbor): in that reduced graph the continuation node should become the
+  new odd start, and one should then recover a terminal node or a smaller obstruction inside its
+  connected component. The residual low-dimensional issue is separate: only there can the
+  immediate continuation from `μ` still be `.start`.
 - Formalization note after the latest chain-construction step:
   that assembly is now done as well.
   `RentalHarmony/Section5Graph.lean` now defines `chosenPrefixMilestonePoint` and

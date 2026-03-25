@@ -122,6 +122,18 @@
   So the remaining local theorem is now sharper: turn that proper target support into a proper
   carrier subset whose vertices already lie in the lower domain prefix face, then invoke the
   existing codimension-`1` / vertical-door bridge lemmas.
+- Latest Section 5 graph-level reduction:
+  in the higher-dimensional obstruction branch (`2 < dimension`), the continuation node after the
+  canonical vertical descent is now proved to be positive, strictly lower-level, and
+  below-top-dimensional. This yields the clean reduction
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminal_of_two_lt_dimension`.
+  But the direct recursive proof is still blocked on one exact abstract graph move: restarting the
+  parity argument from the obstruction node in the full graph is too weak because the original
+  odd start `.start` is still present. The likely minimal replacement is a parity theorem on the
+  connected component of the continuation node in the graph obtained by deleting the obstruction
+  spur `{ν, μ}`. In that reduced graph the continuation node should become the new odd start, so
+  the remaining plan is either to formalize that reduced-graph/component theorem or to derive the
+  stronger current below-top-dimensional terminal theorem from existing local Section 5 lemmas.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:
@@ -847,6 +859,13 @@
   `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_lowerLevelPositiveContinuationNeighborTerminal_of_two_lt_dimension`
   packages the exact new frontier: in higher dimensions, it now suffices to prove terminal
   existence from a strictly lower-level positive continuation node.
+- That frontier is now cut down one more step.
+  `face_dim_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData`
+  turns the strict level drop into an honest below-top-dimensional face inequality, and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminal_of_two_lt_dimension`
+  shows that the whole higher-dimensional obstruction branch disappears as soon as one proves a
+  single abstract theorem: every below-top-dimensional positive chosen-chain node eventually leads
+  to a terminal node. This is now the exact remaining high-dimensional graph theorem.
 
 ## Current input status
 - No proposed axioms.

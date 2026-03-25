@@ -95,9 +95,24 @@
   continuation node is automatically positive and strictly lower-level, and
   `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_lowerLevelPositiveContinuationNeighborTerminal_of_two_lt_dimension`
   shows that the exact remaining bypass theorem is now a lower-level continuation statement.
-  The unresolved graph-level gap is therefore concentrated in the residual low-dimensional
-  start-continuation case and in proving terminal existence from that strictly lower-level
-  positive continuation node.
+  The new lemmas
+  `face_dim_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData`
+  and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminal_of_two_lt_dimension`
+  sharpen that one notch further: for `2 < dimension`, it is enough to prove terminal existence
+  from an arbitrary below-top-dimensional positive node. The unresolved graph-level gap is
+  therefore concentrated in the residual low-dimensional start-continuation case and in supplying
+  that below-top-dimensional positive-node terminal theorem. The latest restart analysis sharpens
+  the likely minimal missing abstraction further: a direct parity restart from the obstruction node
+  `ν` is too weak because the global odd start `.start` remains another odd vertex of the full
+  graph, so the proof can escape there. The graph theorem that now looks exact is a
+  component-restricted parity restart after deleting the obstruction spur `{ν, μ}` consisting of
+  the degree-`1` obstruction node and its canonical vertical neighbor. In that reduced graph, the
+  continuation node `ξ` should become the new odd start, and a terminal or smaller obstruction
+  should follow inside its connected component. So the next proof search should either formalize
+  that reduced-graph/component theorem or show that the stronger current reduction to arbitrary
+  below-top-dimensional positive nodes is nevertheless derivable from the existing Section 5 local
+  API.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,
