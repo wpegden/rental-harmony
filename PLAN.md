@@ -720,6 +720,14 @@
   shows that iterating this one-step drop recovers the full support-shrink contract. So the
   remaining top-dimensional proof search should now target this single-vertex support-reduction
   lemma.
+- The support-pruning frontier is now factored through its exact affine-dependence criterion.
+  `exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image` proves that any point
+  in the convex hull of a finite vertex image set already admits a one-vertex drop as soon as that
+  image set is affinely dependent, and
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec_of_affineDependentImage`
+  specializes this to the current top-dimensional codimension-`1` face setting. So the remaining
+  proof search should now target the image-side statement that the support inside the first
+  codimension-`1` face image is affinely dependent under the Section 5 hypotheses.
 
 ## Current input status
 - No proposed axioms.

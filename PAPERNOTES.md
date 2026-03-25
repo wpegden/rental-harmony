@@ -799,3 +799,11 @@
   `chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop` shows
   that iterating this one-step drop recovers the older support-shrink contract, so the remaining
   top-dimensional blocker is now exactly this local convex-support pruning lemma.
+- The support-pruning lemma is now itself reduced to a precise affine-dependence criterion.
+  `exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image` proves that a
+  one-vertex drop exists whenever the current image support is already affinely dependent, and
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec_of_affineDependentImage`
+  turns that into the current top-dimensional codimension-`1` face contract. So the sharp
+  remaining top-dimensional question is no longer raw support pruning, but whether the image
+  support inside the first codimension-`1` face is forced to be affinely dependent by the Section 5
+  hypotheses.

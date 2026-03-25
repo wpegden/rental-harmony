@@ -2961,6 +2961,90 @@ theorem exists_second_codimOneSubface_imageContains_of_subset_in_codimOneSubface
     exact (Finset.mem_erase.mp hvρ₂).1 rfl
   · exact τ.erase_isCodimOneSubface hvτ hτcard
 
+omit [Fintype Vertex] [DecidableEq Vertex] in
+theorem exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image
+    (pfun : Vertex → RealPoint dimension)
+    {x : RealPoint dimension} {s : Finset Vertex}
+    (hx : x ∈ convexHull ℝ (pfun '' (s : Set Vertex)))
+    (hdep :
+      ¬ AffineIndependent ℝ
+        (fun y : ((s.image pfun : Finset (RealPoint dimension)) : Set (RealPoint dimension)) =>
+          (y : RealPoint dimension))) :
+    ∃ s' : Finset Vertex,
+      s' ⊆ s ∧
+      s'.card + 1 ≤ s.card ∧
+      x ∈ convexHull ℝ (pfun '' (s' : Set Vertex)) := by
+  classical
+  have hx_img :
+      x ∈ convexHull ℝ (((s.image pfun : Finset (RealPoint dimension)) : Set (RealPoint dimension))) := by
+    simpa using hx
+  let t : Finset (RealPoint dimension) := Caratheodory.minCardFinsetOfMemConvexHull hx_img
+  have ht_subset_set :
+      (t : Set (RealPoint dimension)) ⊆ ((s.image pfun : Finset (RealPoint dimension)) : Set (RealPoint dimension)) :=
+    Caratheodory.minCardFinsetOfMemConvexHull_subseteq hx_img
+  have ht_mem :
+      x ∈ convexHull ℝ ((t : Finset (RealPoint dimension)) : Set (RealPoint dimension)) :=
+    Caratheodory.mem_minCardFinsetOfMemConvexHull hx_img
+  have ht_indep :
+      AffineIndependent ℝ (fun y : ((t : Finset (RealPoint dimension)) : Set (RealPoint dimension)) =>
+        (y : RealPoint dimension)) :=
+    Caratheodory.affineIndependent_minCardFinsetOfMemConvexHull hx_img
+  have ht_subset : t ⊆ s.image pfun := by
+    intro y hy
+    exact ht_subset_set hy
+  have ht_card_lt_img : t.card < (s.image pfun).card := by
+    by_contra hnot
+    have himg_le : (s.image pfun).card ≤ t.card := Nat.le_of_not_gt hnot
+    have hEq : t = s.image pfun := Finset.eq_of_subset_of_card_le ht_subset himg_le
+    rw [← hEq] at hdep
+    exact hdep ht_indep
+  have ht_card_lt_s : t.card < s.card := lt_of_lt_of_le ht_card_lt_img Finset.card_image_le
+  let chooseVertex : {y // y ∈ t} → Vertex := fun y =>
+    Classical.choose (Finset.mem_image.mp (ht_subset_set y.2))
+  have hchoose_mem : ∀ y : {y // y ∈ t}, chooseVertex y ∈ s := by
+    intro y
+    exact (Classical.choose_spec (Finset.mem_image.mp (ht_subset_set y.2))).1
+  have hchoose_image : ∀ y : {y // y ∈ t}, pfun (chooseVertex y) = y.1 := by
+    intro y
+    exact (Classical.choose_spec (Finset.mem_image.mp (ht_subset_set y.2))).2
+  have hchoose_injective : Function.Injective chooseVertex := by
+    intro y z hEq
+    apply Subtype.ext
+    simpa [hchoose_image y, hchoose_image z] using congrArg pfun hEq
+  let s' : Finset Vertex := t.attach.image chooseVertex
+  have hs'_subset : s' ⊆ s := by
+    intro u hu
+    rcases Finset.mem_image.mp hu with ⟨y, hy, rfl⟩
+    exact hchoose_mem y
+  have hs'_card : s'.card = t.card := by
+    simpa [s'] using
+      Finset.card_image_of_injective (s := t.attach) (f := chooseVertex) hchoose_injective
+  have hs'_image : s'.image pfun = t := by
+    apply Finset.ext
+    intro y
+    constructor
+    · intro hy
+      rcases Finset.mem_image.mp hy with ⟨u, hu, rfl⟩
+      rcases Finset.mem_image.mp hu with ⟨z, hz, hEq⟩
+      have huEq : pfun u = z.1 := by simpa [hEq] using hchoose_image z
+      simpa [huEq] using z.2
+    · intro hy
+      refine Finset.mem_image.mpr ?_
+      refine ⟨chooseVertex ⟨y, hy⟩, ?_, ?_⟩
+      · exact Finset.mem_image.mpr ⟨⟨y, hy⟩, by simp, rfl⟩
+      · simpa [hchoose_image ⟨y, hy⟩]
+  have hs'_image_set : pfun '' (s' : Set Vertex) = ((t : Finset (RealPoint dimension)) : Set (RealPoint dimension)) := by
+    ext y
+    constructor
+    · rintro ⟨u, hu, rfl⟩
+      have hu' : pfun u ∈ s'.image pfun := Finset.mem_image_of_mem _ hu
+      simpa [hs'_image] using hu'
+    · intro hy
+      have hy' : y ∈ s'.image pfun := by simpa [hs'_image] using hy
+      simpa using hy'
+  refine ⟨s', hs'_subset, Nat.succ_le_of_lt (by simpa [hs'_card] using ht_card_lt_s), ?_⟩
+  simpa [hs'_image_set] using ht_mem
+
 structure ChosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec where
   exists_subset_in_codimOneSubface_of_point_of_positiveLevel_topDim_of_faceSubdividesLowerPrefix :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
@@ -2999,9 +3083,39 @@ structure ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec 
         s'.card + 1 ≤ s.card ∧
         ((x : RealPoint dimension) ∈
           convexHull ℝ
-            ((fun v : Vertex =>
+          ((fun v : Vertex =>
                 ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
               (s' : Set Vertex)))
+
+def chosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec_of_affineDependentImage
+    (hdep :
+      ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+        (x : RentDivision (dimension + 1)),
+        0 < ν.level.1 →
+        ν.face.dim = dimension →
+        ν.face.SubdividesPrefixFace (T := T) ν.level.castSucc →
+        {ρ₁ : SubdivisionFace.CarrierCodimOneSubface ν.face} →
+        {s : Finset Vertex} →
+        s ⊆ ρ₁.carrier →
+        ((x : RealPoint dimension) ∈
+          convexHull ℝ
+            ((fun v : Vertex =>
+                ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+              (s : Set Vertex))) →
+        ¬ AffineIndependent ℝ
+          (fun y : (((s.image fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) :
+                Finset (RealPoint dimension)) : Set (RealPoint dimension)) =>
+            (y : RealPoint dimension))) :
+    ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν x hk hνdim hνsub ρ₁ s hs hx
+  exact exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image
+    (pfun := fun v : Vertex =>
+      ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension))
+    hx
+    (hdep ν x hk hνdim hνsub hs hx)
 
 def chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop
     (hdrop :

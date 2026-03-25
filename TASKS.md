@@ -12,7 +12,8 @@
 ## Worker Tasks
 - [ ] Finish the split positive-level lower-milestone door support.
   Top-dimensional branch:
-  prove `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec`.
+  prove the affine-dependence criterion feeding
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec`.
   Reflection now supplies the first normalized lower-prefix carrier automatically via
   `exists_lowerMilestoneCarrier_of_reflection`, and the new reduction
   `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec_of_reflection_and_secondCarrier`
@@ -31,9 +32,12 @@
   `faceSubdividesLowerPrefix_of_reflection_and_topDimLowerMilestoneSecondCarrier`
   show that any successful second-carrier proof already forces the entire top-dimensional face to
   subdivide the lower prefix face. So the remaining top-dimensional content is now explicitly
-  image-side. The current sharp local target is the new one-vertex-drop contract:
-  inside a codimension-`1` face image already carrying a point `x`, shrink a supporting vertex set
-  by one more vertex while keeping `x` in the same image convex hull. The reductions
+  image-side. The file now proves the precise bridge
+  `exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image`, and the wrapper
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec_of_affineDependentImage`
+  shows that the one-vertex-drop contract already follows once the support inside the first
+  codimension-`1` face image is affinely dependent. So the remaining top-dimensional task is to
+  prove that affine dependence criterion under the current Section 5 hypotheses. The reductions
   `chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop`,
   `chosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec_of_supportShrink`, and
   `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec_of_boundaryPointMultiplicity`
@@ -544,3 +548,8 @@
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec`, and
   `chosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec_of_oneVertexDrop`
   shows that this one-vertex-drop theorem already implies the older support-shrink contract.
+  The new theorem
+  `exists_smaller_support_of_mem_convexHull_of_not_affineIndependent_image` and its wrapper
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointOneVertexDropSpec_of_affineDependentImage`
+  sharpen the remaining local content again: it is enough to prove that the image support inside
+  the first codimension-`1` face is affinely dependent.
