@@ -1747,6 +1747,35 @@ theorem exists_terminal_or_boundary_in_induce_of_odd_start_and_nonterminal_even_
       (G := G.induce s) start (fun w : s => terminal w.1) (fun w : s => boundary w.1)
       hstart' heven'
 
+theorem
+    exists_terminal_or_boundary_in_connectedComponent_of_odd_start_and_nonterminal_even_off_boundary
+    (C : G.ConnectedComponent) {start : V} (hstartC : start ∈ C.supp)
+    (terminal boundary : V → Prop)
+    (hstart : Odd (G.degree start))
+    (heven :
+      ∀ v : V,
+        v ∈ C.supp →
+        v ≠ start →
+        ¬ boundary v →
+        ¬ terminal v →
+        Even (G.degree v)) :
+    ∃ v : V, v ∈ C.supp ∧ v ≠ start ∧ (terminal v ∨ boundary v) := by
+  let start' : C.supp := ⟨start, hstartC⟩
+  rcases
+      exists_terminal_or_boundary_in_induce_of_odd_start_and_nonterminal_even_off_boundary
+        (G := G) start' terminal boundary hstart
+        (by
+          intro v w hw
+          exact SimpleGraph.ConnectedComponent.mem_supp_of_adj_mem_supp (G := G) C v.2 hw)
+        (by
+          intro v hv hboundary hterminal
+          exact heven v.1 v.2 (fun hEq => hv (Subtype.ext hEq)) hboundary hterminal) with
+    ⟨v, hv, hvb⟩
+  refine ⟨v.1, v.2, ?_, hvb⟩
+  intro hEq
+  apply hv
+  exact Subtype.ext hEq
+
 end Parity
 
 namespace Section5GraphNode

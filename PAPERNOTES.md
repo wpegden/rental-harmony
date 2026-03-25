@@ -198,6 +198,14 @@
   restarts the odd/even argument on an induced subgraph of any chosen subset. So the backup route
   no longer needs a generic `ConnectedComponent` transport lemma; it only needs the deleted-spur
   continuation component to be presented as such a subset.
+- Formalization note after the latest connected-component cleanup:
+  the backup route now also has a clean connected-component wrapper,
+  `exists_terminal_or_boundary_in_connectedComponent_of_odd_start_and_nonterminal_even_off_boundary`,
+  built on top of the induced-subgraph restart theorem. So the remaining issue is no longer any
+  Lean coercion transport. The exact mathematical setup still to be formalized is the deleted-spur
+  continuation component after removing `{ν, μ}`: prove the continuation node is the odd start in
+  that reduced component, prove all other nonterminal nonboundary vertices there are even, and
+  control possible escape back to the original odd start `.start`.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those

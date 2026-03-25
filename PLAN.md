@@ -143,7 +143,13 @@
   restarts parity directly on induced subgraphs of arbitrary subsets. The remaining backup plan is
   therefore to identify the relevant deleted-spur connected-component support as such a subset and
   instantiate this induced-subgraph theorem there, unless a stronger local Section 5 continuation
-  principle eliminates the restart entirely.
+  principle eliminates the restart entirely. The latest infrastructure step packages the same idea
+  at connected-component granularity as
+  `exists_terminal_or_boundary_in_connectedComponent_of_odd_start_and_nonterminal_even_off_boundary`,
+  so the next backup-route work is no longer subtype transport but the concrete deleted-spur setup:
+  define the continuation component, prove the continuation node is odd in the reduced graph, and
+  show every other nonterminal nonboundary vertex in that component is even without reopening a
+  path to the original odd start `.start`.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:

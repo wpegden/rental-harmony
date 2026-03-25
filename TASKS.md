@@ -128,7 +128,12 @@
   restarts parity directly on an induced subgraph of an arbitrary subset. So the next backup-step
   theorem is no longer a degree-transport lemma; it is to identify the connected-component support
   of the continuation node in the graph with the obstruction spur `{ν, μ}` deleted and then apply
-  this induced-subgraph parity theorem there.
+  this induced-subgraph parity theorem there. The new wrapper theorem
+  `exists_terminal_or_boundary_in_connectedComponent_of_odd_start_and_nonterminal_even_off_boundary`
+  now removes the old subtype/coercion bookkeeping from that route as well, so the next exact
+  setup problem is narrower: define the deleted-spur continuation component and verify its odd
+  start / even off-boundary hypotheses without letting the restart escape back through the
+  original odd node `.start`.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,
