@@ -701,6 +701,16 @@
   specializes this directly to the lower milestone `b_k`. So the next proof search should target
   this point-on-two-face-images lemma, which is the sharp local image-side convex-geometry gap now
   exposed by the Lean development.
+- That point-level gap is now reduced one step further by a reusable constructive bridge.
+  `exists_second_codimOneSubface_imageContains_of_subset_in_codimOneSubface` proves that if a
+  point already lies in the image of one codimension-`1` subface and its image support can be
+  shrunk inside that subface by one more vertex, then the point automatically lies in the image of
+  a second distinct codimension-`1` subface of the ambient top-dimensional face. The new contract
+  `ChosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec` packages exactly that
+  support-shrinking existence statement, and
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec_of_supportShrink` reduces
+  the earlier point-on-two-face-images contract to it. So the next proof search should target this
+  support-shrink existence theorem rather than the two-face conclusion directly.
 
 ## Current input status
 - No proposed axioms.

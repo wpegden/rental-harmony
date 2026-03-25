@@ -781,3 +781,13 @@
   shows that the current milestone-specific second-carrier problem is now exactly this
   point-on-two-face-images lemma applied to `x = b_k`. So the remaining top-dimensional blocker is
   now stated at the sharpest image-side level reached so far.
+- The support layer now reduces even that point-level blocker to a more constructive image-support
+  question. `exists_second_codimOneSubface_imageContains_of_subset_in_codimOneSubface` proves that
+  once a point already lies in the image of one codimension-`1` subface, a second distinct
+  codimension-`1` subface is automatic as soon as one can shrink the supporting vertex set inside
+  the first subface by one additional vertex. This is recorded abstractly as
+  `ChosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec`, and
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec_of_supportShrink` derives
+  the earlier point-on-two-face-images contract from it. So the genuine remaining top-dimensional
+  content is now the sharp support-shrinking lemma inside one codimension-`1` face image, not yet
+  another graph or carrier-construction step.

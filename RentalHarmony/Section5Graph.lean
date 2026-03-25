@@ -2905,6 +2905,80 @@ Once the whole top-dimensional face is already known to lie in the lower prefix 
 remaining task is only to show that the lower milestone is carried by a second codimension-`1`
 subface besides the reflected one.
 -/
+theorem exists_second_codimOneSubface_imageContains_of_subset_in_codimOneSubface
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)}
+    {ρ₁ : SubdivisionFace.CarrierCodimOneSubface τ}
+    {s : Finset Vertex}
+    (hs : s ⊆ ρ₁.carrier)
+    (hcard : s.card + 1 ≤ ρ₁.carrier.card)
+    (himg :
+      ((x : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)) '' (s : Set Vertex)))) :
+    ∃ ρ₂ : SubdivisionFace T,
+      ρ₂ ≠ ρ₁.toSubdivisionFace ∧
+      ρ₂.IsCodimOneSubface τ ∧
+      ρ₂.ImageContains (T := T) φ x := by
+  have hslt : s.card < ρ₁.carrier.card := by
+    exact lt_of_lt_of_le (Nat.lt_succ_self s.card) hcard
+  rcases Finset.exists_mem_notMem_of_card_lt_card hslt with ⟨v, hvρ₁, hvs⟩
+  have hvτ : v ∈ τ.carrier := ρ₁.subset hvρ₁
+  have hρ₁pos : 1 ≤ ρ₁.carrier.card := by
+    calc
+      1 ≤ s.card + 1 := Nat.succ_le_succ (Nat.zero_le _)
+      _ ≤ ρ₁.carrier.card := hcard
+  have hτcard : 1 < τ.carrier.card := by
+    calc
+      1 < ρ₁.carrier.card + 1 := Nat.lt_succ_of_le hρ₁pos
+      _ = τ.carrier.card := ρ₁.card
+  let ρ₂ : SubdivisionFace T :=
+    τ.ofSubset (τ.carrier.erase v) (Finset.erase_subset _ _) (by
+      apply Finset.card_pos.mp
+      rw [Finset.card_erase_of_mem hvτ]
+      exact Nat.sub_pos_of_lt hτcard)
+  have hs₂ : s ⊆ ρ₂.carrier := by
+    intro w hw
+    refine Finset.mem_erase.mpr ⟨?_, ρ₁.subset (hs hw)⟩
+    intro hwv
+    exact hvs (hwv ▸ hw)
+  have himg₂ :
+      ρ₂.ImageContains (T := T) φ x := by
+    change
+      ((x : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun w : Vertex =>
+              ((φ w : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            ((τ.carrier.erase v : Finset Vertex) : Set Vertex)))
+    exact convexHull_mono (by
+      intro y hy
+      rcases hy with ⟨w, hw, rfl⟩
+      exact ⟨w, hs₂ hw, rfl⟩) himg
+  refine ⟨ρ₂, ?_, ?_, himg₂⟩
+  · intro hEq
+    have hvρ₂ : v ∈ ρ₂.carrier := by simpa [hEq] using hvρ₁
+    exact (Finset.mem_erase.mp hvρ₂).1 rfl
+  · exact τ.erase_isCodimOneSubface hvτ hτcard
+
+structure ChosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec where
+  exists_subset_in_codimOneSubface_of_point_of_positiveLevel_topDim_of_faceSubdividesLowerPrefix :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      (x : RentDivision (dimension + 1)),
+      0 < ν.level.1 →
+      ν.face.dim = dimension →
+      ν.face.SubdividesPrefixFace (T := T) ν.level.castSucc →
+      {ρ₁ : SubdivisionFace.CarrierCodimOneSubface ν.face} →
+      ρ₁.toSubdivisionFace.ImageContains (T := T) φ.vertexMap x →
+      ∃ s : Finset Vertex,
+        s ⊆ ρ₁.carrier ∧
+        s.card ≤ ν.level.castSucc.1 ∧
+        ((x : RealPoint dimension) ∈
+          convexHull ℝ
+            ((fun v : Vertex =>
+                ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+              (s : Set Vertex)))
+
 structure ChosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec where
   exists_second_codimOneSubface_of_point_of_positiveLevel_topDim_of_faceSubdividesLowerPrefix :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
@@ -2918,6 +2992,33 @@ structure ChosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec w
         ρ₂ ≠ ρ₁.toSubdivisionFace ∧
         ρ₂.IsCodimOneSubface ν.face ∧
         ρ₂.ImageContains (T := T) φ.vertexMap x
+
+def chosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec_of_supportShrink
+    (hshrink :
+      ChosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν x hk hνdim hνsub ρ₁ hρ₁x
+  rcases hshrink with ⟨hshrink⟩
+  rcases hshrink ν x hk hνdim hνsub hρ₁x with
+    ⟨s, hs, hcard, himg⟩
+  have hρ₁card : ρ₁.carrier.card = ν.level.succ.1 := by
+    have hcard' : ρ₁.carrier.card + 1 = ν.level.succ.1 + 1 := by
+      calc
+        ρ₁.carrier.card + 1 = ν.face.carrier.card := ρ₁.card
+        _ = ν.face.dim + 1 := ν.face.card_eq_dim_succ
+        _ = (ν.level.1 + 1) + 1 := by rw [ν.face_dim]
+        _ = ν.level.succ.1 + 1 := by simp
+    exact Nat.add_right_cancel hcard'
+  have hsCard' : s.card + 1 ≤ ρ₁.carrier.card := by
+    calc
+      s.card + 1 ≤ ν.level.castSucc.1 + 1 := Nat.succ_le_succ hcard
+      _ = ν.level.succ.1 := by simp
+      _ = ρ₁.carrier.card := hρ₁card.symm
+  exact exists_second_codimOneSubface_imageContains_of_subset_in_codimOneSubface
+    (T := T) (hs := hs) hsCard' himg
 
 structure ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec where
   exists_second_codimOneSubface_of_missing_nextMilestone_positiveLevel_topDim_contains_lowerMilestone_of_faceSubdividesLowerPrefix :

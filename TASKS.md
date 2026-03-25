@@ -528,4 +528,10 @@
   top-dimensional face in the lower prefix face to lie in the image of a second distinct
   codimension-`1` subface as well, and
   `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec_of_boundaryPointMultiplicity`
-  recovers the milestone-specific contract from this point-level statement.
+  recovers the milestone-specific contract from this point-level statement. The new theorem
+  `exists_second_codimOneSubface_imageContains_of_subset_in_codimOneSubface` now makes that
+  multiplicity statement constructive: it is enough to shrink the image support inside the first
+  codimension-`1` subface by one additional vertex. This sharper frontier is packaged as
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimBoundaryPointSupportShrinkSpec`, and
+  `chosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec_of_supportShrink`
+  derives the point-level multiplicity contract from it.
