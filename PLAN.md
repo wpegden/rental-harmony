@@ -684,6 +684,14 @@
   now explicitly image-side: once all vertices of `ν.face` are in the lower prefix face, prove
   that the lower milestone is carried by a second codimension-`1` subface besides the reflected
   one.
+- That image-side frontier is now isolated explicitly in Lean as
+  `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec`. The reduction
+  `exists_second_codimOneSubface_of_faceSubdividesLowerPrefix` shows that once the whole
+  top-dimensional face already subdivides the lower prefix face, it is enough to find a second
+  codimension-`1` subface whose image contains the lower milestone; the lower-prefix carrier
+  condition for that second subface is then recovered automatically from
+  `SubdivisionFace.subdividesPrefixFace_of_subface`. So the next proof search should stay on this
+  image-side convex-geometry statement rather than reopen domain-side carrier bookkeeping.
 
 ## Current input status
 - No proposed axioms.

@@ -2898,6 +2898,57 @@ structure ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierSpec
         ρ₂.ImageContainsMilestone (T := T)
           (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc
 
+/--
+Exact remaining image-side top-dimensional gap.
+
+Once the whole top-dimensional face is already known to lie in the lower prefix face, the
+remaining task is only to show that the lower milestone is carried by a second codimension-`1`
+subface besides the reflected one.
+-/
+structure ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec where
+  exists_second_codimOneSubface_of_missing_nextMilestone_positiveLevel_topDim_contains_lowerMilestone_of_faceSubdividesLowerPrefix :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ),
+      0 < ν.level.1 →
+      ν.face.dim = dimension →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ν.face.SubdividesPrefixFace (T := T) ν.level.castSucc →
+      {ρ₁ : SubdivisionFace.CarrierCodimOneSubface ν.face} →
+      ρ₁.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ∃ ρ₂ : SubdivisionFace T,
+        ρ₂ ≠ ρ₁.toSubdivisionFace ∧
+        ρ₂.IsCodimOneSubface ν.face ∧
+        ρ₂.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc
+
+theorem exists_second_codimOneSubface_of_faceSubdividesLowerPrefix
+    (himage :
+      ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec
+        (T := T) (φ := φ))
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    (hνdim : ν.face.dim = dimension)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hνsub : ν.face.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    {ρ₁ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hρ₁mil :
+      ρ₁.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc) :
+    ∃ ρ₂ : SubdivisionFace T,
+      ρ₂ ≠ ρ₁.toSubdivisionFace ∧
+      ρ₂.IsCodimOneSubface ν.face ∧
+      ρ₂.SubdividesPrefixFace (T := T) ν.level.castSucc ∧
+      ρ₂.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc := by
+  rcases himage with ⟨himage⟩
+  rcases himage ν hk hνdim hupper hνsub hρ₁mil with
+    ⟨ρ₂, hρ₂ne, hρ₂, hρ₂mil⟩
+  refine ⟨ρ₂, hρ₂ne, hρ₂, ?_, hρ₂mil⟩
+  exact SubdivisionFace.subdividesPrefixFace_of_subface (T := T) hρ₂.1 hνsub
+
 def chosenMilestoneChainPositiveLevelTopDimLowerMilestoneCarrierMultiplicitySpec_of_reflection_and_secondCarrier
     (hreflect :
       PositiveFaceLowerPrefixReflection

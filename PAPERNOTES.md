@@ -762,3 +762,13 @@
   image-side rather than domain-side: once all vertices of `ν.face` lie in the lower prefix face,
   show that the lower milestone lies in the image of a second codimension-`1` subface besides the
   reflected one.
+- That last reformulation is now formalized as its own internal contract:
+  `ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec`. The theorem
+  `exists_second_codimOneSubface_of_faceSubdividesLowerPrefix` proves that this image-side
+  statement is exactly enough to recover the older second-carrier theorem, because once
+  `ν.face.SubdividesPrefixFace ... ν.level.castSucc` is known, any codimension-`1` subface of
+  `ν.face` automatically inherits the same lower-prefix property by
+  `SubdivisionFace.subdividesPrefixFace_of_subface`. So the genuine remaining top-dimensional gap
+  is no longer “find another lower-prefix carrier” but “inside a top-dimensional face whose whole
+  image already lies in the lower prefix face, show that the lower milestone is carried by a
+  second distinct codimension-`1` subface.”

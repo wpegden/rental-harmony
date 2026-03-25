@@ -515,4 +515,10 @@
   `faceSubdividesLowerPrefix_of_reflection_and_topDimLowerMilestoneSecondCarrier`.
   So the remaining top-dimensional second-carrier gap is no longer domain-side lower-prefix
   bookkeeping; it is the image-side existence of a second milestone-carrying codimension-`1`
-  subface once the whole top-dimensional face already lies in the lower prefix face.
+  subface once the whole top-dimensional face already lies in the lower prefix face. This exact
+  image-side frontier is now packaged as
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec`,
+  and
+  `exists_second_codimOneSubface_of_faceSubdividesLowerPrefix`
+  reduces it back to the older second-carrier theorem by recovering the lower-prefix condition on
+  the second codimension-`1` subface from codimension-`1` incidence alone.
