@@ -685,3 +685,8 @@
   codimension-`1` carrier already known to lie in the relevant prefix face, produce a distinct
   same-level coface that still lies in that prefix face. This is the exact mathematical content of
   `ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec`.
+- That same obstruction is now also recorded in a more geometric form as
+  `ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec`: extend a fixed codimension-`1`
+  carrier to a distinct same-level coface. The continuation and filtered-wrapper chain is already
+  routed through that interface, so the remaining local input can now be stated directly in the
+  paper's facet-local language.

@@ -418,3 +418,11 @@
   facet. There is no upward extension theorem turning a codimension-`1` prefix-face carrier into a
   distinct same-level prefix-face coface, and that is exactly what
   `ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec` now asks for.
+- [x] Repackage that same obstruction in the paper's geometric language:
+  `ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec` now isolates the facet-local
+  statement “extend this fixed codimension-`1` carrier to a distinct same-level coface,” and the
+  candidate-level continuation theorem is proved to follow from it via
+  `chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_cofaceExtension`.
+- [x] Route the no-open-crossing filtered wrapper chain through this coface-extension interface as
+  well, via `chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierCofaceExtension`
+  and `chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_reflection_and_fixedCarrierCofaceExtension_and_uniqueness`.

@@ -2814,6 +2814,21 @@ is precisely the missing upward extension step dual to
 `SubdivisionFace.subdividesPrefixFace_of_subface`: extend a codimension-`1` prefix-face carrier to
 a distinct same-level prefix-face coface.
 -/
+structure ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec where
+  exists_sameLevelCoface_of_carrier :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face},
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc →
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        μ ≠ ν ∧
+        μ.level = ν.level ∧
+        ρ.toSubdivisionFace.IsCodimOneSubface μ.face
+
+/--
+Candidate-level version of the fixed-carrier coface-extension theorem.
+-/
 structure ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec where
   exists_candidate_of_carrier :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
@@ -2823,6 +2838,17 @@ structure ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec
         (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
       ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
         IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ
+
+def chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_cofaceExtension
+    (hext :
+      ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν ρ hρsub hρmil
+  rcases hext.exists_sameLevelCoface_of_carrier ν hρsub hρmil with ⟨μ, hne, hlevel, hρμ⟩
+  exact ⟨μ, hne, hlevel, hρμ.1⟩
 
 /--
 Uniqueness half of the filtered same-level continuation theorem.
@@ -2894,6 +2920,20 @@ def chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_refl
   rcases hexists.exists_candidate_of_carrier ν hρsub hρmil with ⟨μ, hμ⟩
   exact ⟨ρ, hρsub, hρmil, μ, hμ⟩
 
+def chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierCofaceExtension
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hext :
+      ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierContinuation
+    (T := T) (φ := φ) hreflect
+    (chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_cofaceExtension
+      (T := T) (φ := φ) hext)
+
 def
     chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_existence_and_uniqueness
     (hexists :
@@ -2930,6 +2970,25 @@ def
     (T := T) (φ := φ)
     (chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierContinuation
       (T := T) (φ := φ) hreflect hexists)
+    huniq
+
+def
+    chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_reflection_and_fixedCarrierCofaceExtension_and_uniqueness
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hext :
+      ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec
+        (T := T) (φ := φ))
+    (huniq :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_reflection_and_fixedCarrierContinuation_and_uniqueness
+    (T := T) (φ := φ) hreflect
+    (chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_cofaceExtension
+      (T := T) (φ := φ) hext)
     huniq
 
 lemma isCodimOneSubface_of_sameLevelCarrierContinuationCandidate

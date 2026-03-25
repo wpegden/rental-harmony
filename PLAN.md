@@ -610,6 +610,11 @@
   `subset_facet`; it has no upward extension theorem from a codimension-`1` prefix-face carrier to
   a distinct same-level prefix-face coface. That asymmetry is now the concrete proof-theoretic
   reason the fixed-carrier continuation theorem remains open.
+- That missing step is now also packaged in a more geometric, facet-local form as
+  `ChosenMilestoneChainPositiveLevelFixedCarrierCofaceExtensionSpec`. The existing continuation and
+  filtered-wrapper theorems are routed through this coface-extension interface, so the remaining
+  support dependency can now be stated either combinatorially or in the paper's same-level
+  coface-extension language without changing the downstream wrapper chain.
 
 ## Current input status
 - No proposed axioms.
