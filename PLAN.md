@@ -198,7 +198,12 @@
   frontier is the older direct-route theorem
   `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim`,
   with the deleted-spur no-escape fields serving only as alternate local reformulations of that
-  same gap.
+  same gap. This direct route is now reduced further too:
+  `ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec` and
+  `chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent` prove that it would be
+  enough to show a strictly level-lowering positive continuation from every below-top-dimensional
+  nonterminal positive node. So the sharpest current direct-route local frontier is no longer the
+  global terminal theorem itself, but that level-descent continuation principle.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:

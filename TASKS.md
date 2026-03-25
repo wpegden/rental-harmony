@@ -32,6 +32,13 @@
   Unless the obstruction-exclusion field turns out to be substantially easier, this is now
   evidence that the direct-route theorem is the genuine remaining frontier and the deleted-spur
   no-escape fields are only alternate reformulations of that gap.
+  The direct route is now sharper in Lean as well:
+  `ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec`,
+  `chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent`, and
+  `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveLevelDescent_of_two_lt_dimension`
+  show that it is enough to prove one local continuation law:
+  every below-top-dimensional nonterminal positive node has an adjacent positive neighbor of
+  strictly smaller level.
   If either fails from the current API, record that exact theorem statement as the first missing
   local continuation principle.
 - [ ] Finish the positive-level no-open-crossing support at the exact graph interface.

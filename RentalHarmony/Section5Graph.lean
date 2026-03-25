@@ -6803,6 +6803,22 @@ If every below-top-dimensional positive node of the chosen chain already lies on
 path to a terminal node, then the boundary-only unique-carrier obstruction can be bypassed
 without any further graph surgery.
 -/
+structure ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec where
+  exists_lowerLevel_positive_of_not_terminal_belowTopDim :
+    ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ξ.face.dim < dimension →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) →
+      ∃ ζ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive ζ) ∧
+          ζ.level.1 < ξ.level.1
+
+/--
+Stronger local continuation principle sufficient for the direct below-top-dimensional route.
+
+Since the goal is only existence of some terminal node in the whole chosen-chain graph, a
+strictly level-lowering positive continuation from every below-top-dimensional nonterminal node is
+enough: one can recurse on the level until a terminal witness appears.
+-/
 structure ChosenMilestoneChainBelowTopDimPositiveTerminalSpec where
   exists_terminal_of_positive_belowTopDim :
     ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
@@ -6810,6 +6826,42 @@ structure ChosenMilestoneChainBelowTopDimPositiveTerminalSpec where
       ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
         v ≠ .start ∧
           IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v
+
+def chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent
+    (hdesc :
+      ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainBelowTopDimPositiveTerminalSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ξ hξdim
+  let P : Nat → Prop := fun k =>
+    ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ξ.level.1 = k →
+      ξ.face.dim < dimension →
+      ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        v ≠ .start ∧
+          IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v
+  have hP : ∀ k, P k := by
+    intro k
+    refine Nat.strong_induction_on k ?_
+    intro k ih ξ hξlevel hξdim
+    by_cases hξterm :
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ)
+    · exact ⟨.positive ξ, by simp, hξterm⟩
+    · rcases
+          hdesc.exists_lowerLevel_positive_of_not_terminal_belowTopDim ξ hξdim hξterm with
+        ⟨ζ, _, hζlt⟩
+      have hζlt' : ζ.level.1 < k := by
+        simpa [hξlevel] using hζlt
+      have hζdim : ζ.face.dim < dimension := by
+        calc
+          ζ.face.dim = ζ.level.1 + 1 := ζ.face_dim
+          _ < ξ.level.1 + 1 := Nat.succ_lt_succ hζlt
+          _ = ξ.face.dim := by rw [ξ.face_dim]
+          _ < dimension := hξdim
+      exact ih ζ.level.1 hζlt' ζ rfl hζdim
+  exact hP ξ.level.1 ξ rfl hξdim
 
 def
     chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminalSpec_of_two_lt_dimension
@@ -6821,6 +6873,19 @@ def
     ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec (T := T) (φ := φ) :=
   chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminal_of_two_lt_dimension
     (T := T) (φ := φ) haway hdim hterm.exists_terminal_of_positive_belowTopDim
+
+def
+    chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveLevelDescentSpec_of_two_lt_dimension
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdim : 2 < dimension)
+    (hdesc :
+      ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec (T := T) (φ := φ) :=
+  chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminalSpec_of_two_lt_dimension
+    (T := T) (φ := φ) haway hdim
+    (chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent
+      (T := T) (φ := φ) hdesc)
 
 def chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_continuationNeighborTerminal
     (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
@@ -6900,6 +6965,28 @@ theorem
       (T := T) (φ := φ) hzero hopen halt haway
       (chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminalSpec_of_two_lt_dimension
         (T := T) (φ := φ) haway hdim hterm)
+
+theorem
+    exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveLevelDescent_of_two_lt_dimension
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdim : 2 < dimension)
+    (hdesc :
+      ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec
+        (T := T) (φ := φ)) :
+    ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      v ≠ .start ∧
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v := by
+  exact
+    exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveTerminal_of_two_lt_dimension
+      (T := T) (φ := φ) hzero hopen halt haway hdim
+      (chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent
+        (T := T) (φ := φ) hdesc)
 
 theorem exists_terminal_of_local_degree_lemmas
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]

@@ -281,6 +281,17 @@
   `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim` as
   the genuine remaining Section 5 statement, with the deleted-spur no-escape package functioning
   mainly as a local reformulation of that unresolved continuation theorem.
+- Formalization note after sharpening the direct route itself:
+  Lean now proves a further reduction inside that direct higher-dimensional branch.
+  `ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec` packages the local statement that every
+  below-top-dimensional nonterminal positive node has an adjacent positive neighbor of strictly
+  smaller level, and
+  `chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent` proves by strong induction
+  on the level that this local descent law is sufficient for the global theorem
+  `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim`.
+  So the sharpest current Section 5 frontier is no longer the deleted-spur no-start reformulation,
+  nor even the full direct theorem, but this strictly level-lowering continuation principle for
+  below-top-dimensional positive nodes.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those
