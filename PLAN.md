@@ -222,7 +222,12 @@
   `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim`,
   but now in the more precise form that the next-milestone away-from-boundary branch lacks any
   theorem forcing lower-milestone containment. The open-crossing branch has the same remaining
-  shape. So the sharpest current direct-route frontier is now the trio of remaining local
+  shape. This sharper state is now formalized directly by
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitLowerMilestoneSpec`; the reduction
+  theorem
+  `chosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplitLowerMilestone`
+  shows that those exact containment fields are enough to recover the older strict-descent
+  interface. So the sharpest current direct-route frontier is now the trio of remaining local
   subcases: the level-`0` base case, the positive-level next-milestone lower-milestone-containment
   branch, and the positive-level open-crossing lower-milestone-containment branch.
 

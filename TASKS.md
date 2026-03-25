@@ -60,8 +60,12 @@
   `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim`,
   but now in the more precise form: no current theorem derives
   `ξ.face.ImageContainsMilestone ... ξ.level.castSucc` from the next-milestone away-from-boundary
-  hypotheses. The corresponding open-crossing branch has the same shape. The exact remaining
-  direct-route subcases are therefore:
+  hypotheses. The corresponding open-crossing branch has the same shape. The support layer now
+  packages this exact sharper frontier as
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitLowerMilestoneSpec`, and
+  `chosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplitLowerMilestone`
+  shows that proving those containment fields is sufficient for the older descent interface.
+  The exact remaining direct-route subcases are therefore:
   the level-`0` base case, the positive-level next-milestone lower-milestone-containment branch,
   and the positive-level open-crossing lower-milestone-containment branch.
 - [ ] Finish the positive-level no-open-crossing support at the exact graph interface.

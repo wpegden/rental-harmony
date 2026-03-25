@@ -308,8 +308,13 @@
   `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim`,
   but now in the more precise form that `ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec`
   gives two continuation doors without any theorem forcing lower-milestone containment.
-  The open-crossing branch has the same remaining shape. So the exact remaining direct-route
-  local subcases are now the level-`0` base case, the positive-level next-milestone
+  The open-crossing branch has the same remaining shape. This sharper state is now exposed in Lean
+  by `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitLowerMilestoneSpec`, and the
+  theorem
+  `chosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplitLowerMilestone`
+  shows that the old direct-route strict-descent interface is recoverable once those exact
+  lower-milestone-containment fields are supplied. So the exact remaining direct-route local
+  subcases are now the level-`0` base case, the positive-level next-milestone
   lower-milestone-containment branch, and the positive-level open-crossing
   lower-milestone-containment branch.
 - Formalization note after trying to prove those local degree lemmas directly:
