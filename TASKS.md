@@ -21,7 +21,11 @@
   witness. Once such a subface is available, the new abstract bridge lemmas
   `exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone` and
   `exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone` convert it into the needed
-  vertical door / graph neighbor and the remaining two-neighbor packaging.
+  vertical door / graph neighbor and the remaining two-neighbor packaging. The new reduction lemma
+  `exists_codimOneSubface_contains_lowerMilestone_of_subset` shows that it is already enough to
+  find a proper carrier subset of size at most `k + 1` whose image convex hull contains the lower
+  milestone; the remaining geometric difficulty is to choose such a subset so that it still
+  subdivides the lower prefix face.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
@@ -105,6 +109,9 @@
   `exists_graphNeighbor_of_codimOneSubface_contains_lowerMilestone`, which turn a codimension-`1`
   lower-prefix subface carrying the lower milestone into an actual graph neighbor in the Section 5
   graph.
+- [x] Added the codimension-`1` support-reduction lemma
+  `exists_codimOneSubface_contains_lowerMilestone_of_subset`, which erases one unused vertex once
+  the lower milestone is known to lie in the image convex hull of a proper carrier subset.
 - [x] Built the explicit continuous barycenter-omission map from the simplex to `SimplexBoundary` and proved `boundary_contractible_of_omits_barycenter`.
 - [x] Restricted face-preserving simplex maps and their straight-line homotopies to the boundary subtype, and packaged the resulting topological reduction theorem `boundary_contractible_of_nullhomotopic_boundaryExtension`.
 - [x] Recorded the current higher-dimensional Section 5 blocker precisely: no ready-made

@@ -227,6 +227,14 @@
   Section 5 graph. So the remaining blocker is sharper than before: one must still prove that such
   a codimension-`1` lower-prefix subface exists in the concrete chosen-chain situation when the
   lower milestone lies in the image of a positive node.
+- Formalization note after the latest reduction:
+  the codimension-`1` face-existence step itself is now split into a purely combinatorial part and
+  the genuinely geometric prefix-face part. The new theorem
+  `exists_codimOneSubface_contains_lowerMilestone_of_subset` shows that if the lower milestone lies
+  in the convex hull of the images of any proper subset of a positive face's vertices, then one can
+  erase an unused vertex and obtain an actual codimension-`1` face still carrying that milestone.
+  So the remaining difficulty is to choose a proper supporting subset that also comes from vertices
+  lying in the lower prefix face; the graph-side padding/erasure step is no longer missing.
   the prefix-face route is now started in Lean. `RentalHarmony/Section5Graph.lean` defines the
   bundled subtype `PrefixFace k` for the outer face `conv{e_1, ..., e_{k+1}}`, and
   `Section5MilestoneChain.prefixPoint` upgrades each milestone to an element of that subtype.

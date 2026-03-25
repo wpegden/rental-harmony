@@ -213,6 +213,12 @@
   Section 5 graph already has the required vertical door. So the remaining missing-next work is no
   longer graph bookkeeping; it is the geometric existence of that codimension-`1` lower-prefix
   subface for the concrete `chosenMilestoneChain`.
+- The geometric subface step is now reduced further:
+  `exists_codimOneSubface_contains_lowerMilestone_of_subset` proves that any proper carrier subset
+  of a positive node whose image convex hull already contains `b_k` can be turned into an actual
+  codimension-`1` face carrying `b_k` by erasing one unused vertex. So the remaining concrete
+  work is to produce such a proper supporting subset and simultaneously ensure it subdivides the
+  lower prefix face.
 - Latest blocker after pushing on that proof directly:
   mathlib does provide full-dimensional interior lemmas such as
   `interior_convexHull_nonempty_iff_affineSpan_eq_top`, but the milestone-chain argument needs

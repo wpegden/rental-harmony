@@ -1371,6 +1371,63 @@ def IsTerminal : Section5GraphNode c φ → Prop
       ν.face.dim = dimension ∧
         ν.face.ImageContainsMilestone (T := T) c φ.vertexMap (Fin.last dimension)
 
+theorem exists_codimOneSubface_contains_lowerMilestone_of_subset
+    {ν : Section5PositiveNode c φ} {s : Finset Vertex}
+    (hs : s ⊆ ν.face.carrier)
+    (hcard : s.card ≤ ν.level.succ.1)
+    (himg :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun v : Vertex =>
+              ((φ.vertexMap v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            (s : Set Vertex)))) :
+    ∃ ρ : SubdivisionFace T,
+      ρ.IsCodimOneSubface ν.face ∧
+        ρ.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc := by
+  have hfacecard : ν.face.carrier.card = ν.level.succ.1 + 1 := by
+    rw [ν.face.card_eq_dim_succ, ν.face_dim]
+    simp
+  have hslt : s.card < ν.face.carrier.card := by
+    calc
+      s.card ≤ ν.level.succ.1 := hcard
+      _ < ν.level.succ.1 + 1 := Nat.lt_succ_self _
+      _ = ν.face.carrier.card := hfacecard.symm
+  rcases Finset.exists_mem_notMem_of_card_lt_card hslt with ⟨v, hvface, hvs⟩
+  have hsErase : s ⊆ ν.face.carrier.erase v := by
+    intro w hw
+    exact Finset.mem_erase.mpr ⟨by
+      intro hEq
+      exact hvs (hEq ▸ hw), hs (by simpa using hw)⟩
+  let ρ : SubdivisionFace T :=
+    ν.face.ofSubset (ν.face.carrier.erase v) (Finset.erase_subset _ _) (by
+      apply Finset.card_pos.mp
+      rw [Finset.card_erase_of_mem hvface]
+      have hfacecard_pos : 1 < ν.face.carrier.card := by
+        rw [hfacecard]
+        simp
+      exact Nat.sub_pos_of_lt hfacecard_pos)
+  have himg' :
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun w : Vertex =>
+              ((φ.vertexMap w : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            ((ν.face.carrier.erase v : Finset Vertex) : Set Vertex))) :=
+    convexHull_mono (by
+      intro x hx
+      rcases hx with ⟨w, hw, rfl⟩
+      exact ⟨w, hsErase hw, rfl⟩) himg
+  refine ⟨ρ, ?_, ?_⟩
+  · exact ν.face.erase_isCodimOneSubface hvface (by
+      rw [hfacecard]
+      simp)
+  · change
+      (((c.point ν.level.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) ∈
+        convexHull ℝ
+          ((fun w : Vertex =>
+              ((φ.vertexMap w : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+            ((ν.face.carrier.erase v : Finset Vertex) : Set Vertex)))
+    exact himg'
+
 theorem exists_verticalAdj_of_codimOneSubface_contains_lowerMilestone
     {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
     {ρ : SubdivisionFace T}
