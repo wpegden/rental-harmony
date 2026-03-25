@@ -931,6 +931,129 @@ end SubdivisionFace
 
 end GraphData
 
+section MilestoneFamilies
+
+variable {dimension : ℕ} {Vertex : Type u} [Fintype Vertex] [DecidableEq Vertex]
+variable {T : SimplicialSubdivision dimension Vertex}
+variable (φ : PiecewiseLinearSimplexMap T)
+
+namespace SubdivisionFace
+
+/--
+One image vertex of a subdivision face, re-bundled as a point of the corresponding prefix face.
+
+This is the target-side version of `SubdividesPrefixFace`: because the piecewise-linear map
+preserves boundary faces, any vertex of a face subdividing the `k`-th prefix face is sent back
+into that same prefix face.
+-/
+def prefixImageVertex (φ : PiecewiseLinearSimplexMap T) {k : Fin (dimension + 1)}
+    (τ : SubdivisionFace T)
+    (hτ : τ.SubdividesPrefixFace (T := T) k) (v : Vertex) (hv : v ∈ τ.carrier) :
+    PrefixFace (dimension := dimension) k :=
+  ⟨φ.vertexMap v, by
+    intro i hi
+    have hvi : (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 :=
+      hτ v hv i hi
+    have hnot : i ∉ T.boundaryFace v := by
+      intro hi'
+      exact ((T.boundaryFace_exact v i).mp hi') hvi
+    exact φ.boundary_preserving v i hnot⟩
+
+@[simp] lemma prefixImageVertex_val (φ : PiecewiseLinearSimplexMap T) {k : Fin (dimension + 1)}
+    (τ : SubdivisionFace T)
+    (hτ : τ.SubdividesPrefixFace (T := T) k) (v : Vertex) (hv : v ∈ τ.carrier) :
+    (prefixImageVertex (T := T) φ τ hτ v hv).1 = φ.vertexMap v :=
+  rfl
+
+/--
+The finite set of target-side prefix-face vertices coming from a subdivision face.
+
+These are the actual points whose convex hull is excluded when choosing a generic Section 5
+milestone in the `k`-th prefix face.
+-/
+def prefixImageVertices (φ : PiecewiseLinearSimplexMap T) {k : Fin (dimension + 1)}
+    (τ : SubdivisionFace T)
+    (hτ : τ.SubdividesPrefixFace (T := T) k) : Finset (PrefixFace (dimension := dimension) k) :=
+  by
+    classical
+    exact τ.carrier.attach.image (fun v => prefixImageVertex (T := T) φ τ hτ v.1 v.2)
+
+lemma card_prefixImageVertices_le (φ : PiecewiseLinearSimplexMap T) {k : Fin (dimension + 1)}
+    (τ : SubdivisionFace T)
+    (hτ : τ.SubdividesPrefixFace (T := T) k) :
+    (prefixImageVertices (T := T) φ τ hτ).card ≤ τ.carrier.card := by
+  classical
+  unfold prefixImageVertices
+  calc
+    (τ.carrier.attach.image
+        (fun v => prefixImageVertex (T := T) φ τ hτ v.1 v.2)).card ≤
+      τ.carrier.attach.card := Finset.card_image_le
+    _ = τ.carrier.card := by rw [Finset.card_attach]
+
+end SubdivisionFace
+
+/--
+The actual finite family of lower-dimensional face images to avoid in the `k`-th prefix face.
+
+This packages the Section 5 milestone constraint at one level: when choosing the `k`-th milestone,
+avoid the images of all subdivision faces inside the `k`-th prefix face that have at most `k`
+vertices, i.e. dimension at most `k - 1`.
+-/
+lemma carrier_injective : Function.Injective (fun τ : SubdivisionFace T => τ.carrier) := by
+  intro τ σ h
+  cases τ
+  cases σ
+  cases h
+  rfl
+
+/-- The lower-dimensional prefix faces whose images are forbidden milestone locations. -/
+def milestoneForbiddenFaces (k : Fin (dimension + 1)) : Finset (SubdivisionFace T) := by
+  classical
+  letI : Fintype (SubdivisionFace T) :=
+    Fintype.ofInjective (fun τ : SubdivisionFace T => τ.carrier) (carrier_injective (T := T))
+  exact Finset.univ.filter fun τ : SubdivisionFace T =>
+    τ.SubdividesPrefixFace (T := T) k ∧ τ.carrier.card ≤ k.1
+
+def milestoneForbiddenFamily (k : Fin (dimension + 1)) :
+    Finset (Finset (PrefixFace (dimension := dimension) k)) := by
+  classical
+  exact (milestoneForbiddenFaces (T := T) k).attach.image
+    (fun τ => τ.1.prefixImageVertices φ (Finset.mem_filter.mp τ.2).2.1)
+
+lemma card_milestoneForbiddenFamily_member_le {k : Fin (dimension + 1)}
+    {t : Finset (PrefixFace (dimension := dimension) k)}
+    (ht : t ∈ milestoneForbiddenFamily (T := T) (φ := φ) k) :
+    t.card ≤ k.1 := by
+  classical
+  rcases Finset.mem_image.mp ht with ⟨τ, hτmem, rfl⟩
+  have hτprops := Finset.mem_filter.mp τ.2
+  exact (τ.1.card_prefixImageVertices_le φ hτprops.2.1).trans hτprops.2.2
+
+/--
+At every prefix level, one can choose a milestone point avoiding the actual lower-dimensional
+Section 5 forbidden family at that level.
+-/
+theorem exists_prefixMilestonePoint_avoiding_forbiddenFamily (k : Fin (dimension + 1)) :
+    ∃ x : PrefixFace (dimension := dimension) k,
+      PrefixFace.smallPoint (dimension := dimension) (k := k) x ∈
+          interior
+            (((↑) :
+                affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1)) →
+                  RealPoint k.1) ⁻¹'
+              (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))) ∧
+        ∀ t ∈ milestoneForbiddenFamily (T := T) (φ := φ) k,
+          ((x.1 : RentDivision (dimension + 1)) : RealPoint dimension) ∉
+            convexHull ℝ
+              ((fun z : PrefixFace (dimension := dimension) k =>
+                  ((z.1 : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+                (t : Set _)) := by
+  exact
+    PrefixFace.exists_smallPointInterior_not_mem_biUnion_convexHull_of_card_le
+      (T := milestoneForbiddenFamily (T := T) (φ := φ) k)
+      (fun t ht => card_milestoneForbiddenFamily_member_le (T := T) (φ := φ) ht)
+
+end MilestoneFamilies
+
 section GraphStructure
 
 variable {dimension : ℕ} {Vertex : Type u} [Fintype Vertex] [DecidableEq Vertex]

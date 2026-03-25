@@ -240,6 +240,14 @@
   prefix level, the finite family of lower-dimensional face-image convex hulls to avoid, then use
   the transported prefix-face theorem to choose the milestone points and assemble the resulting
   `Section5MilestoneChain`.
+- The forbidden-family identification is now formalized too:
+  `RentalHarmony/Section5Graph.lean` defines `milestoneForbiddenFaces` and
+  `milestoneForbiddenFamily`, proves the needed `≤ k` cardinality bound on every member of that
+  family, and packages the resulting point choice as
+  `exists_prefixMilestonePoint_avoiding_forbiddenFamily`. So the remaining Section 5 work is now
+  the actual assembly step: combine those levelwise choices with the fixed start vertex and fixed
+  terminal barycenter, then prove the resulting chain satisfies
+  `Section5GraphNode.MilestoneSegmentTransversality`.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -271,8 +279,8 @@
   sense recorded there. At the moment this reduces to a missing support theorem about choosing
   points in the relative interior of prefix simplex faces away from finitely many lower-dimensional
   convex hulls. That smaller-simplex convex-hull avoidance theorem is now proved, so the next
-  missing argument is the identification of the actual forbidden convex-hull families at each
-  prefix level and the assembly of the resulting transported choices into a milestone chain witnessing
+  missing argument is the assembly of the resulting levelwise choices into a milestone chain
+  witnessing
   `Section5GraphNode.MilestoneSegmentTransversality`.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.
