@@ -116,9 +116,13 @@
   `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec` and
   `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveTerminal_of_two_lt_dimension`:
   in dimensions `2 < dimension`, the whole remaining higher-dimensional proof is reduced to
-  proving `exists_terminal_of_positive_belowTopDim`. A direct attempt to replace that by a
-  component-restricted parity restart currently breaks first at the missing transport theorem
-  equating degree/oddness facts between `C.toSimpleGraph` on `↥C` and the induced graph on `↑C`.
+  proving `exists_terminal_of_positive_belowTopDim`. Lean now also proves
+  `degree_positive_eq_two_of_not_terminal_belowTopDim_positive_of_alternativeSpecs`, so a direct
+  full-graph parity restart from an arbitrary below-top-dimensional positive node cannot work:
+  such a node is even-degree unless it is already terminal. The backup component-restricted parity
+  restart therefore still looks like the minimal abstract repair, and currently breaks first at
+  the missing transport theorem equating degree/oddness facts between `C.toSimpleGraph` on `↥C`
+  and the induced graph on `↑C`.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,

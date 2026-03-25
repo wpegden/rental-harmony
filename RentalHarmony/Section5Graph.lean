@@ -5543,6 +5543,91 @@ theorem exists_terminal_or_boundaryOnlyUniqueCarrierCounterexampleData_of_altern
   · rcases hboundary with ⟨hdata, hw⟩
     exact Or.inr ⟨hdata⟩
 
+lemma not_isBoundaryOnlyUniqueCarrierCounterexampleNode_of_face_dim_lt
+    {ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hξdim : ξ.face.dim < dimension) :
+    ¬ IsBoundaryOnlyUniqueCarrierCounterexampleNode (T := T) (φ := φ) (.positive ξ) := by
+  intro hboundary
+  rcases hboundary with ⟨hdata, hEq⟩
+  cases hEq
+  exact (Nat.ne_of_lt hξdim) hdata.hνdim
+
+/--
+Under the current alternative local API, every nonterminal below-top-dimensional positive node
+still has full-graph degree `2`.
+
+So the direct higher-dimensional route cannot restart the global parity argument from such a node
+in the unmodified chosen-chain graph; any restart must occur in a modified graph/component.
+-/
+theorem degree_positive_eq_two_of_not_terminal_belowTopDim_positive_of_alternativeSpecs
+    [Fintype (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    [DecidableRel (graph (T := T) (chosenMilestoneChain (φ := φ)) φ).Adj]
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    {ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hξdim : ξ.face.dim < dimension)
+    (hξterm :
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ)) :
+    (graph (T := T) (chosenMilestoneChain (φ := φ)) φ).degree (.positive ξ) = 2 := by
+  by_cases hnext :
+      ξ.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level.succ
+  · exact
+      degree_positive_eq_two_of_twoNeighborSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) ξ <|
+      haway.two_doors_of_nextMilestone_awayFromBoundary ξ
+        (chosenMilestoneChain_nextMilestoneAwayFromBoundary_of_nonterminal
+          (T := T) (φ := φ) hnext hξterm)
+        hξterm
+  · by_cases hopenξ :
+      ξ.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level
+    · exact
+        degree_positive_eq_two_of_twoNeighborSpec
+          (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) ξ <|
+        hopen.two_doors_of_missing_nextMilestone_openCrossing ξ hnext hopenξ
+    · by_cases hk : 0 < ξ.level.1
+      · rcases
+            halt.two_doors_or_topDimBoundaryOnlyUniqueCarrierCounterexample_of_not_openCrossing
+              ξ hk hnext hopenξ with
+          hdoors | ⟨hdata, hdataEq⟩
+        · exact
+            degree_positive_eq_two_of_twoNeighborSpec
+              (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) ξ hdoors
+        · exfalso
+          have htop : ξ.face.dim = dimension := by
+            simpa [hdataEq] using hdata.hνdim
+          exact (Nat.ne_of_lt hξdim) htop
+      · exact
+          degree_positive_eq_two_of_twoNeighborSpec
+            (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) ξ <|
+          hzero.two_doors_of_missing_nextMilestone_level_zero ξ
+            (Nat.eq_zero_of_not_pos hk) hnext
+            (chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
+              (T := T) (φ := φ) (ν := ξ) hnext hopenξ)
+
+theorem not_odd_degree_of_not_terminal_belowTopDim_positive_of_alternativeSpecs
+    [Fintype (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    [DecidableRel (graph (T := T) (chosenMilestoneChain (φ := φ)) φ).Adj]
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    {ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hξdim : ξ.face.dim < dimension)
+    (hξterm :
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ)) :
+    ¬ Odd ((graph (T := T) (chosenMilestoneChain (φ := φ)) φ).degree (.positive ξ)) := by
+  rw [degree_positive_eq_two_of_not_terminal_belowTopDim_positive_of_alternativeSpecs
+    (T := T) (φ := φ) hzero hopen halt haway hξdim hξterm]
+  decide
+
 /--
 Minimal remaining graph-level input after the current alternative local analysis.
 

@@ -181,6 +181,13 @@
   theorem equating degree/oddness facts between `C.toSimpleGraph` on `↥C` and the induced graph on
   `↑C`. This is a coercion/typeclass problem, not evidence that the mathematical frontier itself is
   wrong.
+- Formalization note sharpening the direct-route obstruction:
+  Lean now proves
+  `degree_positive_eq_two_of_not_terminal_belowTopDim_positive_of_alternativeSpecs`, so under the
+  current alternative local API every below-top-dimensional nonterminal positive node has full
+  graph degree exactly `2`. Therefore a direct full-graph parity restart from such a node cannot
+  work; any restart must happen in a modified graph/component where one incident edge has been
+  removed.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those

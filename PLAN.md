@@ -131,13 +131,15 @@
   `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec`, and
   `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveTerminal_of_two_lt_dimension`
   shows that it is enough for pure terminal existence under the current alternative local API.
-  But the direct recursive proof is still blocked on one exact abstract graph move: restarting the
-  parity argument from the obstruction node in the full graph is too weak because the original
-  odd start `.start` is still present. The likely minimal replacement is a parity theorem on the
-  connected component of the continuation node in the graph obtained by deleting the obstruction
-  spur `{ν, μ}`. In that reduced graph the continuation node should become the new odd start, so
-  the remaining plan is either to formalize that reduced-graph/component theorem or to derive the
-  stronger current below-top-dimensional terminal theorem from existing local Section 5 lemmas.
+  Lean now also proves
+  `degree_positive_eq_two_of_not_terminal_belowTopDim_positive_of_alternativeSpecs`, so the direct
+  full-graph route really does fail at the first parity step: an arbitrary below-top-dimensional
+  nonterminal positive node is even-degree, not an odd start. The likely minimal replacement is
+  still a parity theorem on the connected component of the continuation node in the graph obtained
+  by deleting the obstruction spur `{ν, μ}`. In that reduced graph the continuation node should
+  become the new odd start, so the remaining plan is either to formalize that reduced-graph /
+  component theorem or to find a stronger local Section 5 continuation principle that avoids
+  parity restart entirely.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:
