@@ -5539,6 +5539,35 @@ theorem
   · simpa [μ] using hρμ
 
 /--
+Manuscript-faithful second local bridge for the next-milestone branch.
+
+Once an entrance codimension-`1` face is known to meet `[b_{k-1}, b_k]`, the paper's trap-door
+paragraph only needs a same-level continuation through that entrance carrier in the
+below-top-dimensional case. This is weaker than asking for a fresh ambient-facet vertex.
+-/
+structure ChosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec where
+  exists_sameLevelHorizontalAdj_of_entranceCarrier :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face},
+      ν.face.dim < dimension →
+      ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        ν.HorizontalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ
+
+def chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_prefixExtension
+    (hext :
+      ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν ρ _hνdim hρmeets
+  exact
+    exists_sameLevelHorizontalAdj_of_codimOneSubface_meets_segment_of_lt_topDim_of_prefixExtension
+      (T := T) (φ := φ) hext hρmeets
+
+/--
 Route-changed next-milestone continuation package.
 
 This records the manuscript-faithful local consequence of the next-milestone branch that Lean can
@@ -5556,12 +5585,12 @@ structure ChosenMilestoneChainNextMilestoneSameLevelContinuationSpec where
       ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
         ν.HorizontalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ
 
-def chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_prefixExtension
+def chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_entranceCarrierContinuation
     (hentrance :
       ChosenMilestoneChainNextMilestoneEntranceFaceSpec
         (T := T) (φ := φ))
-    (hext :
-      ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec
+    (hcont :
+      ChosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec
         (T := T) (φ := φ)) :
     ChosenMilestoneChainNextMilestoneSameLevelContinuationSpec
       (T := T) (φ := φ) := by
@@ -5571,9 +5600,22 @@ def chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_a
       hentrance.exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary
         ν hk hνdim haway hνterm with
     ⟨ρ, hρmeets⟩
+  exact hcont.exists_sameLevelHorizontalAdj_of_entranceCarrier ν hνdim hρmeets
+
+def chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_prefixExtension
+    (hentrance :
+      ChosenMilestoneChainNextMilestoneEntranceFaceSpec
+        (T := T) (φ := φ))
+    (hext :
+      ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneSameLevelContinuationSpec
+      (T := T) (φ := φ) := by
   exact
-    exists_sameLevelHorizontalAdj_of_codimOneSubface_meets_segment_of_lt_topDim_of_prefixExtension
-      (T := T) (φ := φ) hext hρmeets
+    chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_entranceCarrierContinuation
+      (T := T) (φ := φ) hentrance
+      (chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_prefixExtension
+        (T := T) (φ := φ) hext)
 
 /--
 Uniqueness half of the filtered same-level continuation theorem.

@@ -1254,3 +1254,17 @@
   continuation statement, either still routed through a fresh prefix vertex with the missing
   hypotheses added, or directly as existence of a second same-level coface through the entrance
   carrier.
+- Formalization note after installing that repair:
+  the next-milestone continuation layer is now stated in the manuscript's own language rather than
+  through a fresh-vertex surrogate. The new structure
+  `ChosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec`
+  asks directly for a same-level horizontal continuation from a below-top-dimensional entrance
+  carrier whose image meets `[b_{k-1}, b_k]`, and the theorem
+  `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_entranceCarrierContinuation`
+  composes this corrected second bridge with the already-proved entrance-face theorem. The older
+  ambient-facet prefix-extension route remains only as a stronger sufficient support theorem via
+  `chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_prefixExtension`. So the
+  remaining local geometric issue is no longer to justify a fresh ambient-facet prefix vertex, but
+  to prove the corrected entrance-carrier continuation theorem itself directly from the Section 5
+  trap-door geometry, and only then to decide how that same-level continuation interacts with the
+  below-top-dimensional descent package.

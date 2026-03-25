@@ -1092,6 +1092,19 @@
   below-top-dimensional / entrance-carrier continuation theorem, either still phrased through a
   fresh prefix vertex or directly as a same-level coface theorem through the entrance carrier.
   After that repair, Lean can already reassemble the same-level continuation package.
+- That repair is now installed at the statement level. The new structure
+  `ChosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec` replaces the overstrong
+  fresh-prefix-vertex bridge by the manuscript-faithful local claim:
+  from a below-top-dimensional node and an entrance codimension-`1` face whose image meets
+  `[b_{k-1}, b_k]`, produce a same-level horizontal continuation. The theorem
+  `chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_prefixExtension` shows that
+  the older ambient-facet prefix-extension package is merely a stronger sufficient hypothesis for
+  this corrected bridge, and the main next-milestone continuation wrapper has been rerouted via
+  `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_entranceCarrierContinuation`.
+  So the concrete remaining task is now to prove the corrected entrance-carrier continuation
+  theorem directly from the Section 5 face/segment geometry, and only afterward to revisit how
+  that same-level continuation should be converted into the below-top-dimensional level-descent
+  theorem.
 
 ## Current input status
 - No proposed axioms.
