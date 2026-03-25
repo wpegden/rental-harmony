@@ -3393,6 +3393,277 @@ theorem affineIndependent_carrierImage_of_imageContainsMilestoneAwayFromBoundary
   affineIndependent_carrierImage_of_imageContainsPointAwayFromBoundary
     (T := T) hτ
 
+namespace SubdivisionFace
+
+noncomputable def carrierSubtypeEquivFin (τ : SubdivisionFace T) :
+    τ.carrier ≃ Fin (τ.dim + 1) :=
+  Finset.equivFinOfCardEq τ.card_eq_dim_succ
+
+noncomputable def carrierImageSimplex (τ : SubdivisionFace T)
+    (φ : Vertex → RentDivision (dimension + 1))
+    (hτ :
+      AffineIndependent ℝ
+        (fun v : (τ.carrier : Set Vertex) =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension))) :
+    Affine.Simplex ℝ (RealPoint dimension) τ.dim := by
+  let e : Fin (τ.dim + 1) ↪ (τ.carrier : Set Vertex) :=
+    (carrierSubtypeEquivFin (T := T) τ).symm.toEmbedding
+  refine
+    { points := fun i =>
+        ((φ ((e i : (τ.carrier : Set Vertex)) : Vertex) :
+          RentDivision (dimension + 1)) : RealPoint dimension)
+      independent := ?_ }
+  simpa [e] using hτ.comp_embedding e
+
+@[simp] theorem range_carrierImageSimplex_points
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    (hτ :
+      AffineIndependent ℝ
+        (fun v : (τ.carrier : Set Vertex) =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension))) :
+    Set.range (carrierImageSimplex (T := T) τ φ hτ).points =
+      τ.imagePoints (T := T) φ := by
+  apply Set.ext
+  intro y
+  constructor
+  · rintro ⟨i, rfl⟩
+    refine
+      ⟨(((carrierSubtypeEquivFin (T := T) τ).symm i : (τ.carrier : Set Vertex)) : Vertex),
+        (((carrierSubtypeEquivFin (T := T) τ).symm i : (τ.carrier : Set Vertex))).property,
+        rfl⟩
+  · rintro ⟨v, hv, rfl⟩
+    refine ⟨carrierSubtypeEquivFin (T := T) τ ⟨v, hv⟩, ?_⟩
+    simp [carrierImageSimplex]
+
+theorem range_faceOpposite_carrierImageSimplex_points
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    [NeZero τ.dim]
+    (hτ :
+      AffineIndependent ℝ
+        (fun v : (τ.carrier : Set Vertex) =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)))
+    (i : Fin (τ.dim + 1)) :
+    Set.range ((carrierImageSimplex (T := T) τ φ hτ).faceOpposite i).points =
+      ((fun v : Vertex =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+        (((τ.carrier.erase
+              (((carrierSubtypeEquivFin (T := T) τ).symm i : (τ.carrier : Set Vertex)) :
+                Vertex)) : Finset Vertex) : Set Vertex)) := by
+  rw [Affine.Simplex.range_faceOpposite_points]
+  apply Set.ext
+  intro y
+  constructor
+  · rintro ⟨j, hj, rfl⟩
+    refine
+      ⟨(((carrierSubtypeEquivFin (T := T) τ).symm j : (τ.carrier : Set Vertex)) : Vertex), ?_, rfl⟩
+    refine Finset.mem_erase.mpr ⟨?_, ?_⟩
+    · intro hEq
+      have hsub :
+          ((carrierSubtypeEquivFin (T := T) τ).symm j : (τ.carrier : Set Vertex)) =
+            (carrierSubtypeEquivFin (T := T) τ).symm i := by
+        apply Subtype.ext
+        simpa using hEq
+      have hji : j = i := (carrierSubtypeEquivFin (T := T) τ).symm.injective hsub
+      exact hj (by simpa [hji])
+    · exact (((carrierSubtypeEquivFin (T := T) τ).symm j : (τ.carrier : Set Vertex))).property
+  · rintro ⟨v, hv, rfl⟩
+    have hvτ : v ∈ τ.carrier := (Finset.mem_erase.mp hv).2
+    let j : Fin (τ.dim + 1) := carrierSubtypeEquivFin (T := T) τ ⟨v, hvτ⟩
+    refine ⟨j, ?_, ?_⟩
+    · change j ∈ ({i}ᶜ : Set (Fin (τ.dim + 1)))
+      intro hj
+      have hji : j = i := by simpa using hj
+      have hsub :
+          (⟨v, hvτ⟩ : (τ.carrier : Set Vertex)) =
+            (carrierSubtypeEquivFin (T := T) τ).symm i := by
+        simpa [j] using congrArg (carrierSubtypeEquivFin (T := T) τ).symm hji
+      exact (Finset.mem_erase.mp hv).1 (congrArg Subtype.val hsub)
+    · simp [carrierImageSimplex, j]
+
+theorem mem_closedInterior_carrierImageSimplex_of_imageContains
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)}
+    (hτ :
+      AffineIndependent ℝ
+        (fun v : (τ.carrier : Set Vertex) =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)))
+    (hx : τ.ImageContains (T := T) φ x) :
+    ((x : RealPoint dimension) ∈
+      (carrierImageSimplex (T := T) τ φ hτ).closedInterior) := by
+  classical
+  let sx := carrierImageSimplex (T := T) τ φ hτ
+  have hxconv : (x : RealPoint dimension) ∈ convexHull ℝ (Set.range sx.points) := by
+    simpa [sx, range_carrierImageSimplex_points (T := T) (τ := τ) hτ] using hx
+  rw [convexHull_range_eq_exists_affineCombination] at hxconv
+  rcases hxconv with ⟨s, w, hw₀, hw₁, hxeq⟩
+  let w' : Fin (τ.dim + 1) → ℝ := fun i => if i ∈ s then w i else 0
+  have hsum_indicator :
+      ∑ i, ((↑s : Set (Fin (τ.dim + 1))).indicator w) i = s.sum w := by
+    simpa using Finset.sum_indicator_subset w (Finset.subset_univ s)
+  have hsumw' : ∑ i, w' i = s.sum w := by
+    simpa [w'] using hsum_indicator
+  have hw' : ∑ i, w' i = 1 := by
+    rw [hsumw']
+    exact hw₁
+  have hxeq' : Finset.univ.affineCombination ℝ sx.points w' = (x : RealPoint dimension) := by
+    calc
+      Finset.univ.affineCombination ℝ sx.points w'
+          = s.affineCombination ℝ sx.points w := by
+              symm
+              rw [Finset.affineCombination_indicator_subset w sx.points (Finset.subset_univ s)]
+              congr
+              ext i
+              by_cases hi : i ∈ s <;> simp [w', hi]
+      _ = (x : RealPoint dimension) := hxeq
+  have hw'nonneg : ∀ i, 0 ≤ w' i := by
+    intro i
+    by_cases hi : i ∈ s
+    · simpa [w', hi] using hw₀ i hi
+    · simp [w', hi]
+  have hw'le : ∀ i, w' i ≤ 1 := by
+    intro i
+    have hrest : 0 ≤ Finset.sum (Finset.univ.erase i) w' := by
+      exact Finset.sum_nonneg fun j _ => hw'nonneg j
+    have hsplit : w' i + Finset.sum (Finset.univ.erase i) w' = 1 := by
+      calc
+        w' i + Finset.sum (Finset.univ.erase i) w' = ∑ j, w' j := by
+          symm
+          simpa using Finset.sum_erase_add (s := Finset.univ) (f := w') (a := i) (by simp)
+        _ = 1 := hw'
+    linarith
+  have hxclosed' :
+      Finset.univ.affineCombination ℝ sx.points w' ∈ sx.closedInterior := by
+    rw [sx.affineCombination_mem_closedInterior_iff hw']
+    intro i
+    exact ⟨hw'nonneg i, hw'le i⟩
+  exact hxeq' ▸ hxclosed'
+
+theorem mem_convexHull_range_of_mem_closedInterior
+    {n : ℕ} {s : Affine.Simplex ℝ (RealPoint dimension) n} {x : RealPoint dimension}
+    (hx : x ∈ s.closedInterior) :
+    x ∈ convexHull ℝ (Set.range s.points) := by
+  rcases hx with ⟨w, hw, hw01, hwx⟩
+  rw [convexHull_range_eq_exists_affineCombination]
+  refine ⟨Finset.univ, w, ?_, hw, hwx⟩
+  intro i hi
+  exact (hw01 i).1
+
+theorem imageContains_of_mem_closedInterior_carrierImageSimplex
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)}
+    (hτ :
+      AffineIndependent ℝ
+        (fun v : (τ.carrier : Set Vertex) =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)))
+    (hx :
+      ((x : RealPoint dimension) ∈
+        (carrierImageSimplex (T := T) τ φ hτ).closedInterior)) :
+    τ.ImageContains (T := T) φ x := by
+  let sx := carrierImageSimplex (T := T) τ φ hτ
+  rcases hx with ⟨w, hw, hw01, hwx⟩
+  have hxconv :
+      Finset.univ.affineCombination ℝ sx.points w ∈ convexHull ℝ (Set.range sx.points) :=
+    affineCombination_mem_convexHull (fun i _ => (hw01 i).1) hw
+  change (x : RealPoint dimension) ∈ convexHull ℝ (τ.imagePoints (T := T) φ)
+  rw [← hwx]
+  simpa [sx, range_carrierImageSimplex_points (T := T) (τ := τ) hτ] using hxconv
+
+theorem mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_of_pos
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)}
+    (hτ :
+      AffineIndependent ℝ
+        (fun v : (τ.carrier : Set Vertex) =>
+          ((φ v : RentDivision (dimension + 1)) : RealPoint dimension)))
+    (hτdim : 0 < τ.dim)
+    (hxaway : τ.ImageContainsPointAwayFromBoundary (T := T) φ x) :
+    ((x : RealPoint dimension) ∈
+      (carrierImageSimplex (T := T) τ φ hτ).interior) := by
+  classical
+  let sx := carrierImageSimplex (T := T) τ φ hτ
+  have hxclosed :
+      ((x : RealPoint dimension) ∈ sx.closedInterior) :=
+    mem_closedInterior_carrierImageSimplex_of_imageContains
+      (T := T) (τ := τ) (φ := φ) (x := x) hτ hxaway.1
+  rcases hxclosed with ⟨w, hw, hw01, hwx⟩
+  letI : NeZero τ.dim := ⟨Nat.ne_of_gt hτdim⟩
+  have hτcard : 1 < τ.carrier.card := by
+    rw [τ.card_eq_dim_succ]
+    exact Nat.succ_lt_succ hτdim
+  have hwpos : ∀ i, 0 < w i := by
+    intro i
+    have hnonneg : 0 ≤ w i := (hw01 i).1
+    by_contra hnotpos
+    have hwi0 : w i = 0 := by linarith
+    let v : Vertex :=
+      (((carrierSubtypeEquivFin (T := T) τ).symm i : (τ.carrier : Set Vertex)) : Vertex)
+    let ρ : SubdivisionFace T :=
+      τ.ofSubset (τ.carrier.erase v) (Finset.erase_subset _ _) (by
+        apply Finset.card_pos.mp
+        rw [Finset.card_erase_of_mem
+          (((carrierSubtypeEquivFin (T := T) τ).symm i : (τ.carrier : Set Vertex)).property)]
+        exact Nat.sub_pos_of_lt hτcard)
+    have hρ : ρ.IsCodimOneSubface τ := by
+      exact
+        τ.erase_isCodimOneSubface
+          (((carrierSubtypeEquivFin (T := T) τ).symm i : (τ.carrier : Set Vertex)).property)
+          hτcard
+    have hfacecard :
+        Finset.card ({i}ᶜ : Finset (Fin (τ.dim + 1))) = τ.dim - 1 + 1 := by
+      simpa [Finset.card_compl, NeZero.one_le]
+    have hxfaceclosed :
+        Finset.univ.affineCombination ℝ sx.points w ∈ (sx.faceOpposite i).closedInterior := by
+      have hfaceclosed :
+          Finset.univ.affineCombination ℝ sx.points w ∈
+            (sx.face (fs := ({i}ᶜ : Finset (Fin (τ.dim + 1)))) hfacecard).closedInterior := by
+        rw [sx.affineCombination_mem_closedInterior_face_iff_nonneg
+          (fs := ({i}ᶜ : Finset (Fin (τ.dim + 1)))) (h := hfacecard) (w := w) hw]
+        constructor
+        · intro j hj
+          exact (hw01 j).1
+        · intro j hj
+          have hji : j = i := by
+            by_contra hne
+            exact hj (by simp [hne])
+          simpa [hji] using hwi0
+      simpa [Affine.Simplex.faceOpposite] using hfaceclosed
+    have hρx :
+        ρ.ImageContains (T := T) φ x := by
+      change
+        ((x : RealPoint dimension) ∈
+          convexHull ℝ
+            ((fun y : Vertex =>
+                ((φ y : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+              ((τ.carrier.erase v : Finset Vertex) : Set Vertex)))
+      rw [← hwx]
+      simpa [sx, v, range_faceOpposite_carrierImageSimplex_points (T := T) (τ := τ) hτ i] using
+        mem_convexHull_range_of_mem_closedInterior (dimension := dimension) hxfaceclosed
+    exact hxaway.2 ρ hρ hρx
+  have hcard : 1 < Fintype.card (Fin (τ.dim + 1)) := by
+    simpa [Fintype.card_fin] using Nat.succ_lt_succ hτdim
+  have hwlt : ∀ i, w i < 1 := by
+    intro i
+    obtain ⟨j, hj⟩ := Fintype.exists_ne_of_one_lt_card hcard i
+    have hrestpos : 0 < Finset.sum (Finset.univ.erase i) w := by
+      have hjmem : j ∈ Finset.univ.erase i := by simp [hj]
+      exact lt_of_lt_of_le (hwpos j) <|
+        Finset.single_le_sum (fun t _ => (hwpos t).le) hjmem
+    have hsplit : w i + Finset.sum (Finset.univ.erase i) w = 1 := by
+      calc
+        w i + Finset.sum (Finset.univ.erase i) w = ∑ t, w t := by
+          symm
+          simpa using Finset.sum_erase_add (s := Finset.univ) (f := w) (a := i) (by simp)
+        _ = 1 := hw
+    linarith
+  have hxint :
+      Finset.univ.affineCombination ℝ sx.points w ∈ sx.interior := by
+    rw [sx.affineCombination_mem_interior_iff hw]
+    intro i
+    exact ⟨hwpos i, hwlt i⟩
+  simpa [sx] using (hwx ▸ hxint)
+
+end SubdivisionFace
+
 theorem not_exists_smaller_support_of_pair_of_mem_openSegment
     (pfun : Vertex → RealPoint dimension)
     {u v : Vertex} (huv : pfun u ≠ pfun v)

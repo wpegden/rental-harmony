@@ -290,7 +290,16 @@
   geometry, but precisely the simplex-entry theorem for the case where `b_k` lies away from the
   boundary of `λ(σ)`, `σ` does not already contain `b_{k-1}`, and the image simplex is already
   known affine independent. This keeps the route change aligned with paper-faithful same-level
-  continuation rather than overstrong lower-milestone containment in that branch.
+  continuation rather than overstrong lower-milestone containment in that branch. The support
+  layer now packages this more literally: the new lemmas
+  `SubdivisionFace.imageContains_of_mem_closedInterior_carrierImageSimplex` and
+  `SubdivisionFace.mem_closedInterior_carrierImageSimplex_of_imageContains`
+  identify containment in `λ(σ)` with closed-interior membership in the carrier-image simplex,
+  while
+  `SubdivisionFace.mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_of_pos`
+  upgrades away-from-boundary at positive level to actual simplex interior. So the remaining
+  next-milestone local theorem is now a genuine barycentric/simplex-entry statement rather than
+  another support-selection reformulation.
   The second bridge is now reduced further too. The theorem
   `exists_sameLevelPrefixFace_in_ambientFacet_of_freshPrefixVertex_of_entranceCarrier` and the
   wrapper

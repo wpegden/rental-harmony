@@ -207,6 +207,19 @@
   exists_codimOneSubface_meets_segment_of_affineIndependentImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
   In manuscript terms, the surviving gap is now the codimension-`1` entry-face claim for a
   genuine simplex image whose final endpoint `b_k` lies in the relative interior of that simplex.
+- Formalization note after the latest simplex reduction:
+  this relative-interior reading is now checked directly in Lean rather than left as informal
+  prose. The new theorems
+  `SubdivisionFace.imageContains_of_mem_closedInterior_carrierImageSimplex` and
+  `SubdivisionFace.mem_closedInterior_carrierImageSimplex_of_imageContains`
+  identify containment in `λ(σ)` with closed-interior membership in the affine simplex built from
+  the carrier image of `σ`, while
+  `SubdivisionFace.mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_of_pos`
+  shows that in positive dimension the paper's away-from-boundary condition upgrades `b_k` from
+  mere simplex membership to actual simplex interior. So the remaining next-milestone geometry is
+  now sharply one barycentric/simplex-entry lemma: if `b_{k-1}` is not already in `λ(σ)` but
+  `b_k` is an interior point of that affine simplex, then the segment `[b_{k-1}, b_k]` must meet
+  some codimension-`1` face of `σ`.
 - Formalization note after the latest higher-dimensional obstruction reduction:
   in the range `2 < dimension`, the current Section 5 development now reduces pure terminal
   existence to one explicit direct-route theorem:

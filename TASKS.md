@@ -149,6 +149,16 @@
   exists_codimOneSubface_meets_segment_of_affineIndependentImage_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`,
   rather than as unrestricted convex-hull geometry. The second bridge is still naturally viewed
   through the fresh-prefix-vertex reformulation.
+  The new carrier-image simplex lemmas
+  `SubdivisionFace.imageContains_of_mem_closedInterior_carrierImageSimplex`,
+  `SubdivisionFace.range_faceOpposite_carrierImageSimplex_points`,
+  `SubdivisionFace.mem_convexHull_range_of_mem_closedInterior`, and
+  `SubdivisionFace.mem_interior_carrierImageSimplex_of_imageContainsPointAwayFromBoundary_of_pos`
+  now tighten this further: in positive dimension, the away-from-boundary hypothesis at `b_k`
+  literally upgrades `b_k` to an interior point of the affine simplex built from the carrier
+  image of `σ`. So the first unresolved next-milestone bridge is now exactly the simplex-entry
+  theorem that if `b_{k-1}` is not already in `λ(σ)` but `b_k` is an interior point of that
+  carrier-image simplex, then the segment `[b_{k-1}, b_k]` meets some codimension-`1` face.
   The exact remaining direct-route subcases are therefore:
   the level-`0` base case, the positive-level next-milestone lower-milestone-containment branch,
   and the positive-level open-crossing lower-milestone-containment branch.
