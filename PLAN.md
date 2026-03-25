@@ -246,6 +246,19 @@
   `contains_lowerMilestone_of_nextMilestone_not_terminal_belowTopDim`
   by a more paper-exact entrance-door / same-level continuation theorem and then rebuild the
   below-top-dimensional continuation argument from that interface.
+  That route change is now explicit in Lean. The new abstract interfaces
+  `ChosenMilestoneChainNextMilestoneEntranceFaceSpec` and
+  `ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec` isolate exactly the two local
+  ingredients suggested by the manuscript: an entrance codimension-`1` face whose image still
+  meets the segment `[b_{k-1}, b_k]`, and a current-prefix ambient-facet extension producing a
+  distinct same-level coface through that entrance face. The theorem
+  `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_prefixExtension`
+  then turns those two geometric inputs into
+  `ChosenMilestoneChainNextMilestoneSameLevelContinuationSpec`, i.e. a same-level horizontal
+  continuation theorem for the next-milestone-away-from-boundary branch. So the next route-change
+  plan is concrete: prove one or both of these local bridge theorems from the existing Section 5
+  face geometry, and then refactor the below-top-dimensional direct route to consume same-level
+  continuation rather than overstrong lower-milestone containment in that branch.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:

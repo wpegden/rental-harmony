@@ -4193,6 +4193,155 @@ def chosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec_of_pr
       (T := T) (φ := φ) hext)
 
 /--
+Paper-faithful local next-milestone entrance theorem.
+
+In the higher-dimensional trap-door paragraph, the next-milestone branch is described by the
+segment ending inside the image of the current face. In the current Lean model, the closest local
+statement is the existence of a codimension-`1` subface whose image still meets the same segment.
+-/
+structure ChosenMilestoneChainNextMilestoneEntranceFaceSpec where
+  exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim < dimension →
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
+      ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+        ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+
+/--
+Ambient-facet prefix-extension theorem in the current-prefix next-milestone branch.
+
+Unlike the lower-milestone continuation package, the entrance face in the next-milestone branch
+still lives in the current prefix face `ν.level.succ`, not in the lower prefix face
+`ν.level.castSucc`.
+-/
+structure ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec where
+  exists_sameLevelPrefixFace_in_ambientFacet_of_entranceCarrier :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face} {σ : Finset Vertex},
+      σ ∈ T.facets →
+      ν.face.carrier ⊆ σ →
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.succ →
+      ∃ μface : SubdivisionFace T,
+        μface ≠ ν.face ∧
+        μface.dim = ν.level.1 + 1 ∧
+        μface.SubdividesPrefixFace (T := T) ν.level.succ ∧
+        ρ.toSubdivisionFace.IsCodimOneSubface μface ∧
+        μface.carrier ⊆ σ
+
+theorem
+    exists_sameLevelCarrierContinuationCandidate_of_codimOneSubface_meets_segment_of_lt_topDim_of_prefixExtension
+    (hext :
+      ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ))
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hρmeets :
+      ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level) :
+    ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ := by
+  rcases ν.face.subset_facet with ⟨σ, hσ, hνσ⟩
+  have hρsub :
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.succ :=
+    SubdivisionFace.subdividesPrefixFace_of_subface (T := T) ρ.isCodimOneSubface.1 ν.subdivides
+  rcases
+      hext.exists_sameLevelPrefixFace_in_ambientFacet_of_entranceCarrier ν hσ hνσ hρsub with
+    ⟨μface, hμne, hμdim, hμsub, hρμ, -⟩
+  have hμseg :
+      μface.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level :=
+    SubdivisionFace.imageMeetsMilestoneSegment_mono (T := T) hρμ.1 hρmeets
+  let μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ := {
+    level := ν.level
+    face := μface
+    face_dim := hμdim
+    subdivides := hμsub
+    meets_segment := hμseg
+  }
+  refine ⟨μ, ?_⟩
+  refine ⟨?_, rfl, ?_⟩
+  · intro hEq
+    exact hμne (congrArg Section5PositiveNode.face hEq)
+  · simpa [μ, SubdivisionFace.CarrierCodimOneSubface.toSubdivisionFace_carrier] using hρμ.1
+
+theorem
+    exists_sameLevelHorizontalAdj_of_codimOneSubface_meets_segment_of_lt_topDim_of_prefixExtension
+    (hext :
+      ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ))
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hρmeets :
+      ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level) :
+    ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ν.HorizontalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ := by
+  rcases ν.face.subset_facet with ⟨σ, hσ, hνσ⟩
+  have hρsub :
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.succ :=
+    SubdivisionFace.subdividesPrefixFace_of_subface (T := T) ρ.isCodimOneSubface.1 ν.subdivides
+  rcases
+      hext.exists_sameLevelPrefixFace_in_ambientFacet_of_entranceCarrier ν hσ hνσ hρsub with
+    ⟨μface, hμne, hμdim, hμsub, hρμ, -⟩
+  have hμseg :
+      μface.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level :=
+    SubdivisionFace.imageMeetsMilestoneSegment_mono (T := T) hρμ.1 hρmeets
+  let μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ := {
+    level := ν.level
+    face := μface
+    face_dim := hμdim
+    subdivides := hμsub
+    meets_segment := hμseg
+  }
+  refine ⟨μ, ?_⟩
+  refine ⟨rfl, ?_, ρ.toSubdivisionFace, ρ.isCodimOneSubface, ?_, hρmeets⟩
+  · intro hEq
+    exact hμne (by simpa [μ] using hEq.symm)
+  · simpa [μ] using hρμ
+
+/--
+Route-changed next-milestone continuation package.
+
+This records the manuscript-faithful local consequence of the next-milestone branch that Lean can
+already reduce to an explicit geometric entrance-face theorem plus the existing same-level
+prefix-extension machinery.
+-/
+structure ChosenMilestoneChainNextMilestoneSameLevelContinuationSpec where
+  exists_sameLevelHorizontalAdj_of_nextMilestone_awayFromBoundary :
+    ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ν.level.1 →
+      ν.face.dim < dimension →
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
+      ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        ν.HorizontalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ
+
+def chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_prefixExtension
+    (hentrance :
+      ChosenMilestoneChainNextMilestoneEntranceFaceSpec
+        (T := T) (φ := φ))
+    (hext :
+      ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneSameLevelContinuationSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hνdim haway hνterm
+  rcases
+      hentrance.exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary
+        ν hk hνdim haway hνterm with
+    ⟨ρ, hρmeets⟩
+  exact
+    exists_sameLevelHorizontalAdj_of_codimOneSubface_meets_segment_of_lt_topDim_of_prefixExtension
+      (T := T) (φ := φ) hext hρmeets
+
+/--
 Uniqueness half of the filtered same-level continuation theorem.
 
 Once an admissible normalized lower-milestone carrier and one same-level candidate are available,

@@ -1118,3 +1118,17 @@
   the lower milestone `b_{k-1}`. So the present next-milestone lower-containment field should now
   be regarded as a strong sufficient reformulation of the paper's geometry, not clearly as the
   exact statement the manuscript justifies.
+- Formalization note after packaging that route change:
+  Lean now isolates the manuscript-faithful next-milestone local content in two new structures:
+  `ChosenMilestoneChainNextMilestoneEntranceFaceSpec`, which asks for a codimension-`1` entrance
+  face whose image still meets the segment `[b_{k-1}, b_k]`, and
+  `ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec`, which asks for a distinct
+  same-level coface in the current prefix face `conv{e_1, ..., e_k}` through that entrance face.
+  The theorem
+  `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_prefixExtension`
+  shows that these two local geometric inputs are already enough to recover a paper-faithful
+  same-level horizontal continuation theorem for the next-milestone-away-from-boundary branch.
+  So the exact unresolved issue is no longer "derive lower-milestone containment in one jump" but
+  rather to prove one of these entrance-face / current-prefix extension bridges from the existing
+  Section 5 geometry, and then decide how the below-top-dimensional continuation proof should
+  iterate that same-level step before any later descent to the lower milestone.

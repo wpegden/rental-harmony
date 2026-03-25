@@ -84,6 +84,19 @@
   containment, the next correction should be to replace this next-milestone field by a more
   paper-faithful entrance-door / same-level continuation theorem and rework the direct route from
   that statement instead.
+  That route change is now partially formalized. The new structures
+  `ChosenMilestoneChainNextMilestoneEntranceFaceSpec` and
+  `ChosenMilestoneChainNextMilestoneAmbientFacetPrefixExtensionSpec` isolate the two local inputs
+  suggested by paper lines 383--396: first, an entrance codimension-`1` face whose image still
+  meets the same segment `[b_{k-1}, b_k]`; second, a current-prefix ambient-facet extension from
+  that entrance face to a distinct same-level coface. The reduction theorem
+  `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_and_prefixExtension`
+  then packages these into the manuscript-faithful local consequence
+  `ChosenMilestoneChainNextMilestoneSameLevelContinuationSpec`, namely a same-level horizontal
+  continuation in the next-milestone-away-from-boundary branch. So the exact next-milestone
+  frontier is no longer "prove lower-milestone containment directly", but rather to prove those
+  entrance-face / current-prefix extension inputs and then rebuild the below-top-dimensional
+  direct route from the resulting same-level continuation theorem.
   The exact remaining direct-route subcases are therefore:
   the level-`0` base case, the positive-level next-milestone lower-milestone-containment branch,
   and the positive-level open-crossing lower-milestone-containment branch.
