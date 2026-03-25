@@ -5663,6 +5663,161 @@ theorem
     ⟨w, hw, -⟩
   exact hcont μ hμ w hw.1 hw.2
 
+theorem
+    exists_positive_graphNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_not_start
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hnostart :
+      ¬ Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) .start) :
+    ∃ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ξ ≠ hdata.ν ∧
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ) := by
+  rcases
+      existsUnique_graphNeighbor_ne_counterexampleNode_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ) haway hdata hμ with
+    ⟨w, hw, -⟩
+  cases w with
+  | start =>
+      exact False.elim (hnostart hw.2)
+  | positive ξ =>
+      refine ⟨ξ, ?_, hw.2⟩
+      intro hEq
+      exact hw.1 (by simpa [hEq])
+
+theorem
+    not_adj_positive_start_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_level_gt_one
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hk : 1 < hdata.ν.level.1) :
+    ¬ Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) .start := by
+  intro hstart
+  rw [adj_positive_start] at hstart
+  rcases hstart with ⟨hμzero, -⟩
+  rcases hμ with ⟨hlevel, - , -⟩
+  omega
+
+theorem
+    not_adj_positive_start_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_two_lt_dimension
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hdim : 2 < dimension) :
+    ¬ Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) .start := by
+  have hνlevel : hdata.ν.level.1 + 1 = dimension := by
+    simpa [hdata.ν.face_dim] using hdata.hνdim
+  have hk : 1 < hdata.ν.level.1 := by
+    omega
+  exact
+    not_adj_positive_start_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_level_gt_one
+      (T := T) (φ := φ) hdata hμ hk
+
+theorem
+    exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_positiveContinuationNeighbor
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    (hnostart :
+      ∀ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν →
+        ¬ Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) .start)
+    (hcont :
+      ∀ μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν →
+        ξ ≠ hdata.ν →
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ) →
+        ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          v ≠ .start ∧
+            IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v) :
+    ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      v ≠ .start ∧
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v := by
+  rcases
+      existsUnique_verticalAdj_of_boundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ) hdata with
+    ⟨μ, hμ, -⟩
+  rcases
+      exists_positive_graphNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_not_start
+        (T := T) (φ := φ) haway hdata hμ (hnostart μ hμ) with
+    ⟨ξ, hξne, hξadj⟩
+  exact hcont μ ξ hμ hξne hξadj
+
+theorem
+    exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_positiveContinuationNeighbor_of_two_lt_dimension
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    (hdim : 2 < dimension)
+    (hcont :
+      ∀ μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν →
+        ξ ≠ hdata.ν →
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ) →
+        ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+          v ≠ .start ∧
+            IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v) :
+    ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      v ≠ .start ∧
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v := by
+  refine
+    exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_positiveContinuationNeighbor
+      (T := T) (φ := φ) haway hdata ?_ hcont
+  intro μ hμ
+  exact
+    not_adj_positive_start_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_two_lt_dimension
+      (T := T) (φ := φ) hdata hμ hdim
+
+def chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hnostart :
+      ∀ hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ),
+        ∀ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+          μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν →
+          ¬ Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) .start)
+    (hcont :
+      ∀ hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ),
+        ∀ μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+          μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν →
+          ξ ≠ hdata.ν →
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ) →
+          ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+            v ≠ .start ∧
+              IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v) :
+    ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro hdata
+  exact
+    exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_positiveContinuationNeighbor
+      (T := T) (φ := φ) haway hdata (hnostart hdata) (hcont hdata)
+
+def
+    chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal_of_two_lt_dimension
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdim : 2 < dimension)
+    (hcont :
+      ∀ hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ),
+        ∀ μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+          μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν →
+          ξ ≠ hdata.ν →
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ) →
+          ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+            v ≠ .start ∧
+              IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v) :
+    ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro hdata
+  exact
+    exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_positiveContinuationNeighbor_of_two_lt_dimension
+      (T := T) (φ := φ) haway hdata hdim (hcont hdata)
+
 def chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_continuationNeighborTerminal
     (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
     (hcont :

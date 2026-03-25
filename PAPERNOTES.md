@@ -906,3 +906,14 @@
   reduce the whole remaining Section 5 mismatch to one even more specific statement:
   following that unique continuation neighbor after the forced descent must preserve eventual
   terminal-node existence.
+- That continuation-door analysis is now partly resolved by dimension counting. The theorem
+  `not_adj_positive_start_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_two_lt_dimension`
+  shows that when `2 < dimension`, the descended node `μ` cannot connect back to `.start`; its
+  unique continuation door must be another positive node. The paired reductions
+  `exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_positiveContinuationNeighbor_of_two_lt_dimension`
+  and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal_of_two_lt_dimension`
+  therefore isolate the remaining Section 5 mismatch more sharply:
+  the unresolved start-continuation scenario is confined to the lowest top-dimensional case, while
+  the higher-dimensional bypass now only needs eventual terminal existence from a positive
+  continuation node.

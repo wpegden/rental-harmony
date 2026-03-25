@@ -825,6 +825,17 @@
   show that pure terminal existence now reduces exactly to proving eventual terminal existence from
   that continuation neighbor. So the remaining Section 5 gap is no longer an unspecified bypass;
   it is the continuation-neighbor theorem after the forced vertical descent.
+- That continuation split is now sharper in the high-dimensional range. The theorems
+  `not_adj_positive_start_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_two_lt_dimension`,
+  `exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_positiveContinuationNeighbor_of_two_lt_dimension`,
+  and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal_of_two_lt_dimension`
+  show that when `2 < dimension`, the continuation door after the forced descent cannot be
+  `.start`; it must be another positive graph node. So the genuinely unresolved bypass issue is
+  now split cleanly:
+  in higher dimensions, prove eventual terminal existence from that positive continuation node;
+  in the lowest top-dimensional case, understand or exclude the residual start-continuation
+  configuration.
 
 ## Current input status
 - No proposed axioms.

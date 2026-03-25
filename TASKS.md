@@ -79,7 +79,15 @@
   sharpen that frontier once more: after descending to the canonical vertical neighbor `μ`, Lean
   can now isolate a unique continuation door `w ≠ ν`. So the exact remaining bypass theorem is no
   longer "get a terminal from the vertical neighbor" but "get a terminal after following the
-  continuation neighbor of that vertical descent." This is the current precise graph-level gap.
+  continuation neighbor of that vertical descent." The new theorems
+  `not_adj_positive_start_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_two_lt_dimension`,
+  `exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_positiveContinuationNeighbor_of_two_lt_dimension`,
+  and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal_of_two_lt_dimension`
+  sharpen the split further: for `2 < dimension` the continuation door cannot be `.start`, so only
+  a positive continuation node remains. The unresolved graph-level gap is now concentrated in the
+  low-dimensional start-continuation case and in proving eventual terminal existence from that
+  positive continuation node.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,
