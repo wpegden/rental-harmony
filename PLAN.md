@@ -514,6 +514,13 @@
   `Section5GraphNode.chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_filteredSpec`.
   So the remaining no-open-crossing plan is now even sharper: prove or assume filtered
   graph-relevant continuation uniqueness, not blanket coface uniqueness in the subdivision.
+- The first local proof obligations around that filtered statement are now discharged. Monotonicity
+  lemmas for `ImageContains*` and `ImageMeets*` along carrier inclusions are formalized, and the
+  support file now proves that a filtered candidate gives an actual same-level horizontal graph
+  door, while any horizontal same-level door in the no-open-crossing branch yields a normalized
+  lower-milestone carrier candidate. So the remaining plan is no longer to bridge carrier geometry
+  to graph adjacency; it is specifically to prove existence and uniqueness of those graph-relevant
+  same-level candidates.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

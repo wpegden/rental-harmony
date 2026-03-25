@@ -336,8 +336,20 @@
   `Section5GraphNode.chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_filteredSpec`.
   So the old carrier-continuation theorem now reduces to uniqueness among graph doors compatible
   with the chosen-milestone geometry, not among all abstract cofaces of the carrier.
+- [x] Added the local bridge lemmas needed to work with that filtered continuation statement:
+  `SubdivisionFace.imageContains_mono`,
+  `SubdivisionFace.imageContainsMilestone_mono`,
+  `SubdivisionFace.imageMeetsMilestoneSegment_mono`,
+  `SubdivisionFace.imageMeetsOpenMilestoneSegment_mono`,
+  `Section5GraphNode.horizontalAdj_of_sameLevelCarrierContinuationCandidate`,
+  `Section5GraphNode.adj_of_sameLevelCarrierContinuationCandidate`, and
+  `Section5GraphNode.exists_candidate_of_horizontalAdj_of_not_openCrossing`.
+  So the no-open-crossing positive-level branch is no longer blocked on translating between
+  carrier-level witnesses and actual graph doors.
 - [ ] Current exact blocker: prove that filtered same-level continuation theorem, or keep it as the
   minimal extra internal contract. In the no-open-crossing positive-level lower-endpoint case, one
-  must show that any third same-level positive coface through the normalized carrier either forces
-  an open crossing, exits the current level/boundary regime, or collapses to the already chosen
-  continuation. This is now the sharpest remaining statement on that branch.
+  must still show existence and uniqueness of a graph-relevant same-level continuation through the
+  normalized lower-milestone carrier: once a same-level horizontal neighbor exists, the new lemmas
+  extract such a candidate automatically, but the current abstract support layer still does not
+  force that candidate to exist or be unique. This is now the sharpest remaining statement on that
+  branch.

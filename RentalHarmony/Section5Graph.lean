@@ -110,6 +110,16 @@ def ImageContains (τ : SubdivisionFace T) (φ : Vertex → RentDivision (dimens
     (x : RentDivision (dimension + 1)) : Prop :=
   ((x : RealPoint dimension) ∈ convexHull ℝ (τ.imagePoints (T := T) φ))
 
+lemma imageContains_mono {τ σ : SubdivisionFace T} (h : τ.carrier ⊆ σ.carrier)
+    {φ : Vertex → RentDivision (dimension + 1)} {x : RentDivision (dimension + 1)}
+    (hx : τ.ImageContains (T := T) φ x) :
+    σ.ImageContains (T := T) φ x := by
+  change ((x : RealPoint dimension) ∈ convexHull ℝ (σ.imagePoints (T := T) φ))
+  exact Set.mem_of_subset_of_mem
+    (convexHull_mono <| by
+      rintro _ ⟨v, hv, rfl⟩
+      exact ⟨v, h hv, rfl⟩) hx
+
 lemma containsPoint_of_mem {τ : SubdivisionFace T} {v : Vertex} (hv : v ∈ τ.carrier) :
     τ.ContainsPoint (T := T) (T.vertexPos v) := by
   change (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension) ∈
@@ -1165,6 +1175,14 @@ def ImageContainsMilestone (c : Section5MilestoneChain (dimension := dimension))
     (k : Fin (dimension + 1)) : Prop :=
   τ.ImageContains (T := T) φ (c.point k)
 
+lemma imageContainsMilestone_mono
+    {c : Section5MilestoneChain (dimension := dimension)} {τ σ : SubdivisionFace T}
+    (h : τ.carrier ⊆ σ.carrier) {φ : Vertex → RentDivision (dimension + 1)}
+    {k : Fin (dimension + 1)}
+    (hk : τ.ImageContainsMilestone (T := T) c φ k) :
+    σ.ImageContainsMilestone (T := T) c φ k :=
+  imageContains_mono (T := T) h hk
+
 /--
 The chosen milestone lies in the image of a face, but not already in the image of any of its
 codimension-`1` subfaces.
@@ -1184,6 +1202,24 @@ lemma imageMeetsMilestoneSegment_of_imageMeetsOpenMilestoneSegment
     τ.ImageMeetsMilestoneSegment (T := T) c φ k := by
   rcases hτ with ⟨x, hxseg, -, -, himg⟩
   exact ⟨x, hxseg, himg⟩
+
+lemma imageMeetsMilestoneSegment_mono
+    {c : Section5MilestoneChain (dimension := dimension)} {τ σ : SubdivisionFace T}
+    (h : τ.carrier ⊆ σ.carrier) {φ : Vertex → RentDivision (dimension + 1)}
+    {k : Fin dimension}
+    (hτ : τ.ImageMeetsMilestoneSegment (T := T) c φ k) :
+    σ.ImageMeetsMilestoneSegment (T := T) c φ k := by
+  rcases hτ with ⟨x, hxseg, hximg⟩
+  exact ⟨x, hxseg, imageContains_mono (T := T) h hximg⟩
+
+lemma imageMeetsOpenMilestoneSegment_mono
+    {c : Section5MilestoneChain (dimension := dimension)} {τ σ : SubdivisionFace T}
+    (h : τ.carrier ⊆ σ.carrier) {φ : Vertex → RentDivision (dimension + 1)}
+    {k : Fin dimension}
+    (hτ : τ.ImageMeetsOpenMilestoneSegment (T := T) c φ k) :
+    σ.ImageMeetsOpenMilestoneSegment (T := T) c φ k := by
+  rcases hτ with ⟨x, hxseg, hxlower, hxupper, hximg⟩
+  exact ⟨x, hxseg, hxlower, hxupper, imageContains_mono (T := T) h hximg⟩
 
 lemma imageMeetsOpenMilestoneSegment_of_meets_of_not_containsMilestones
     {c : Section5MilestoneChain (dimension := dimension)} {τ : SubdivisionFace T}
@@ -1520,6 +1556,14 @@ inductive Section5GraphNode
   | positive (_ : Section5PositiveNode c φ)
 
 namespace Section5PositiveNode
+
+@[ext] theorem ext {ν μ : Section5PositiveNode c φ}
+    (hlevel : ν.level = μ.level) (hface : ν.face = μ.face) : ν = μ := by
+  cases ν
+  cases μ
+  cases hlevel
+  cases hface
+  simp
 
 /--
 The start node is connected to those one-dimensional graph faces that geometrically contain the
@@ -2666,6 +2710,94 @@ structure ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpe
           (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc ∧
         ∃! μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
           IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ
+
+lemma isCodimOneSubface_of_sameLevelCarrierContinuationCandidate
+    {ν μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hμ : IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ) :
+    ρ.toSubdivisionFace.IsCodimOneSubface μ.face := by
+  rcases hμ with ⟨_, hlevel, hsubset⟩
+  constructor
+  · simpa using hsubset
+  · calc
+      ρ.carrier.card + 1 = ν.face.carrier.card := ρ.card
+      _ = ν.level.1 + 2 := by rw [ν.face.card_eq_dim_succ, ν.face_dim]
+      _ = μ.level.1 + 2 := by simpa [hlevel]
+      _ = μ.face.carrier.card := by rw [μ.face.card_eq_dim_succ, μ.face_dim]
+
+lemma horizontalAdj_of_sameLevelCarrierContinuationCandidate
+    {ν μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hρmil :
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (hμ : IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ) :
+    ν.HorizontalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ := by
+  rcases hμ with ⟨hμne, hlevel, hsubset⟩
+  have hμ' : IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ :=
+    ⟨hμne, hlevel, hsubset⟩
+  refine ⟨hlevel.symm, ?_, ρ.toSubdivisionFace, ρ.isCodimOneSubface, ?_, ?_⟩
+  · intro hface
+    apply hμne
+    exact Section5PositiveNode.ext
+      (c := chosenMilestoneChain (φ := φ)) (φ := φ) hlevel hface.symm
+  · exact isCodimOneSubface_of_sameLevelCarrierContinuationCandidate
+      (T := T) (φ := φ) hμ'
+  · refine ⟨chosenMilestoneChain (φ := φ).point ν.level.castSucc, ?_, ?_⟩
+    · exact left_mem_segment ℝ
+        (((chosenMilestoneChain (φ := φ)).point ν.level.castSucc :
+            RentDivision (dimension + 1)) : RealPoint dimension)
+        (((chosenMilestoneChain (φ := φ)).point ν.level.succ :
+            RentDivision (dimension + 1)) : RealPoint dimension)
+    · simpa [SubdivisionFace.ImageContainsMilestone] using hρmil
+
+lemma adj_of_sameLevelCarrierContinuationCandidate
+    {ν μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hρmil :
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (hμ : IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ) :
+    Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) (.positive μ) :=
+  Or.inl <| horizontalAdj_of_sameLevelCarrierContinuationCandidate
+    (T := T) (φ := φ) hρmil hμ
+
+lemma exists_candidate_of_horizontalAdj_of_not_openCrossing
+    {ν μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hadj : ν.HorizontalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hclosed :
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level) :
+    ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc ∧
+      IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ := by
+  rcases hadj with ⟨hlevel, hne, τ, hτν, hτμ, hτseg⟩
+  have hτupper :
+      ¬ τ.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ := by
+    intro hτupper
+    exact hupper <|
+      SubdivisionFace.imageContainsMilestone_mono (T := T) hτν.1 hτupper
+  have hτlower :
+      τ.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc := by
+    by_contra hτlower
+    exact hclosed <|
+      SubdivisionFace.imageMeetsOpenMilestoneSegment_mono (T := T) hτν.1 <|
+        SubdivisionFace.imageMeetsOpenMilestoneSegment_of_meets_of_not_containsMilestones
+          (T := T) (τ := τ) hτseg hτlower hτupper
+  refine ⟨SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface hτν, ?_, ?_⟩
+  · simpa [SubdivisionFace.ImageContainsMilestone] using hτlower
+  · refine ⟨?_, hlevel.symm, ?_⟩
+    · intro hμeq
+      apply hne
+      simpa [hμeq]
+    · simpa [SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface_carrier]
+        using hτμ.1
 
 def chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_filteredSpec
     (hfiltered :

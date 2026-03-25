@@ -629,3 +629,10 @@
   precise remaining question is whether chosen-milestone geometry plus existing carrier-containment
   lemmas already force at most one graph-relevant same-level continuation. If not, exactly that
   filtered continuation statement should remain as the next minimal internal hypothesis.
+- The next local bridge step is now formalized and no longer part of the blocker. The support file
+  proves monotonicity of `ImageContains*` and `ImageMeets*` under carrier inclusion, shows that a
+  filtered same-level candidate really yields a horizontal graph door, and conversely shows that
+  any same-level horizontal door in the no-open-crossing branch automatically determines a
+  normalized lower-milestone carrier candidate. So the remaining question is not how to pass
+  between carrier witnesses and graph adjacency; it is exactly whether the chosen-milestone
+  geometry forces existence and uniqueness of such graph-relevant same-level candidates.
