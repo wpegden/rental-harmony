@@ -669,3 +669,9 @@
   carrier must coincide. Thus the uniqueness half is not currently derivable from the existing
   bridge lemmas alone; it should remain a separate local contract unless a stronger coface
   uniqueness theorem is formalized.
+- The primary existence half is now sharper too. Once `PositiveFaceLowerPrefixReflection` is fixed,
+  the theorem `exists_lowerMilestoneCarrier_of_not_openCrossing_of_reflection` shows that the
+  normalized codimension-`1` carrier is already available in the no-open-crossing branch. So the
+  genuinely remaining existence input is not “find a carrier and a continuation,” but only “find a
+  same-level continuation through this fixed carrier,” formalized as
+  `ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec`.

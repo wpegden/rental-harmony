@@ -2805,6 +2805,23 @@ structure ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec w
           IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ
 
 /--
+Minimal same-level continuation existence once the normalized codimension-`1` carrier face is
+already fixed.
+
+After `PositiveFaceLowerPrefixReflection` has supplied the lower-milestone carrier, the genuinely
+remaining existence theorem no longer depends on the no-open-crossing hypotheses themselves.
+-/
+structure ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec where
+  exists_candidate_of_carrier :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face},
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc →
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ
+
+/--
 Uniqueness half of the filtered same-level continuation theorem.
 
 Once an admissible normalized lower-milestone carrier and one same-level candidate are available,
@@ -2821,6 +2838,58 @@ structure ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec 
         IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ₁ →
         IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ₂ →
         μ₁ = μ₂
+
+theorem exists_lowerMilestoneCarrier_of_not_openCrossing_of_reflection
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hclosed :
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level) :
+    ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc ∧
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc := by
+  rcases chosenMilestoneChain_missingNextMilestone_openCrossing_or_contains_lowerMilestone
+      (T := T) (φ := φ) (ν := ν) hupper with hopen | hlower
+  · exact False.elim (hclosed hopen)
+  · rcases exists_verticalAdj_of_contains_lowerMilestone_of_reflection
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hreflect hk hlower with ⟨μ, hμ⟩
+    rcases hμ with ⟨hlevel, hμν, hμmil⟩
+    let ρ : SubdivisionFace.CarrierCodimOneSubface ν.face :=
+      SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface hμν
+    have hsucc : μ.level.succ = ν.level.castSucc := by
+      apply Fin.ext
+      exact hlevel
+    refine ⟨ρ, ?_, ?_⟩
+    · intro v hv i hi
+      exact μ.subdivides v
+        (by
+          simpa [ρ, SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface_carrier] using hv)
+        i (by simpa [hsucc] using hi)
+    · simpa [SubdivisionFace.ImageContainsMilestone, hsucc, ρ,
+        SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface_carrier] using hμmil
+
+def chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierContinuation
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hexists :
+      ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hupper hclosed
+  rcases exists_lowerMilestoneCarrier_of_not_openCrossing_of_reflection
+      (T := T) (φ := φ) hreflect hk hupper hclosed with ⟨ρ, hρsub, hρmil⟩
+  rcases hexists.exists_candidate_of_carrier ν hρsub hρmil with ⟨μ, hμ⟩
+  exact ⟨ρ, hρsub, hρmil, μ, hμ⟩
 
 def
     chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_existence_and_uniqueness
@@ -2955,6 +3024,25 @@ def chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_ex
     (T := T) (φ := φ)
     (chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec_of_existence_and_uniqueness
       (T := T) (φ := φ) hexists huniq)
+
+def
+    chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_reflection_and_fixedCarrierContinuation_and_uniqueness
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hexists :
+      ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec
+        (T := T) (φ := φ))
+    (huniq :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec
+      (T := T) (φ := φ) :=
+  chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_existence_and_uniqueness
+    (T := T) (φ := φ)
+    (chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierContinuation
+      (T := T) (φ := φ) hreflect hexists)
+    huniq
 
 def chosenMilestoneChainPositiveLevelLowerMilestoneSpec_of_doorSpec
     (hdoor : ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec (T := T) (φ := φ)) :

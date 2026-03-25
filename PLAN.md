@@ -594,6 +594,13 @@
   same-level codimension-`1` coface uniqueness, so unless such a simplicial-complex uniqueness
   lemma is added, `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec` should
   be treated as a separate local input after the existence half.
+- The existence half has now been sharpened once more. Using the fixed reflection contract,
+  `exists_lowerMilestoneCarrier_of_not_openCrossing_of_reflection` manufactures the normalized
+  lower-milestone carrier automatically, so the remaining existence theorem is only
+  `ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec`: continue through a
+  given carrier. The carrier-continuation wrapper has been rethreaded through this sharper split,
+  leaving exactly fixed-carrier existence plus fixed-carrier uniqueness as the no-open-crossing
+  local inputs after reflection.
 
 ## Current input status
 - No proposed axioms.

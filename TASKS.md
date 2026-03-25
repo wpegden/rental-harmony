@@ -394,3 +394,13 @@
   promote horizontal doors to candidates, but nothing yet proves that two same-level candidates
   through the same normalized carrier must coincide. So `ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredUniquenessSpec`
   remains an explicit local input unless a stronger simplicial-complex uniqueness theorem is added.
+- [x] Refine the primary existence frontier further: with
+  `exists_lowerMilestoneCarrier_of_not_openCrossing_of_reflection`,
+  `ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec`, and
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingFilteredExistenceSpec_of_reflection_and_fixedCarrierContinuation`,
+  the reflection contract now supplies the normalized lower-milestone carrier automatically. The
+  remaining existence input is only a same-level continuation through that fixed carrier.
+- [x] Thread the carrier-continuation wrapper through this sharper split as well via
+  `chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_reflection_and_fixedCarrierContinuation_and_uniqueness`.
+  After reflection is fixed, the no-open-crossing branch is now explicitly parameterized by only
+  two local inputs: fixed-carrier continuation existence and fixed-carrier uniqueness.
