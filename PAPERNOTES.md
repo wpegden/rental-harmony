@@ -281,17 +281,21 @@
   `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim` as
   the genuine remaining Section 5 statement, with the deleted-spur no-escape package functioning
   mainly as a local reformulation of that unresolved continuation theorem.
-- Formalization note after sharpening the direct route itself:
-  Lean now proves a further reduction inside that direct higher-dimensional branch.
-  `ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec` packages the local statement that every
-  below-top-dimensional nonterminal positive node has an adjacent positive neighbor of strictly
-  smaller level, and
-  `chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent` proves by strong induction
-  on the level that this local descent law is sufficient for the global theorem
-  `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim`.
-  So the sharpest current Section 5 frontier is no longer the deleted-spur no-start reformulation,
-  nor even the full direct theorem, but this strictly level-lowering continuation principle for
-  below-top-dimensional positive nodes.
+- Formalization note after correcting and sharpening the direct route:
+  the first strict "every below-top-dimensional nonterminal positive node has a lower-level
+  positive neighbor" formulation was too strong, because a level-`0` positive node cannot have any
+  lower positive neighbor. Lean now replaces it with
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec`, and
+  `chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_baseCaseAndLevelDescent` proves that the
+  global direct theorem follows from two ingredients:
+  a separate level-`0` base case, and strict lower-level positive continuation only at positive
+  levels. This is sharpened further by
+  `chosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplit`:
+  the positive-level missing-next/no-open-crossing branch is already discharged from the existing
+  large-lower-prefix carrier API by
+  `exists_lowerLevel_positive_of_missingNextMilestone_positiveLevel_of_not_openCrossing_of_largeLowerPrefixCarrierSpec`.
+  So the exact remaining direct-route local subcases are now the level-`0` base case, the
+  positive-level next-milestone branch, and the positive-level open-crossing branch.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those

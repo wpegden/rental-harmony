@@ -198,12 +198,20 @@
   frontier is the older direct-route theorem
   `ChosenMilestoneChainBelowTopDimPositiveTerminalSpec.exists_terminal_of_positive_belowTopDim`,
   with the deleted-spur no-escape fields serving only as alternate local reformulations of that
-  same gap. This direct route is now reduced further too:
-  `ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec` and
-  `chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent` prove that it would be
-  enough to show a strictly level-lowering positive continuation from every below-top-dimensional
-  nonterminal positive node. So the sharpest current direct-route local frontier is no longer the
-  global terminal theorem itself, but that level-descent continuation principle.
+  same gap. This direct route has now been corrected and sharpened further:
+  the original everywhere-strict
+  `ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec` is too strong at level `0`, so the
+  realistic reduction is
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec`, proved sufficient by
+  `chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_baseCaseAndLevelDescent`.
+  Moreover,
+  `chosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplit`
+  now discharges the positive-level missing-next/no-open-crossing branch from the existing
+  large-lower-prefix carrier API via
+  `exists_lowerLevel_positive_of_missingNextMilestone_positiveLevel_of_not_openCrossing_of_largeLowerPrefixCarrierSpec`.
+  So the sharpest current direct-route frontier is now the trio of remaining local subcases:
+  the level-`0` base case, the positive-level next-milestone branch, and the positive-level
+  open-crossing branch.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:

@@ -6863,6 +6863,162 @@ def chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent
       exact ih ζ.level.1 hζlt' ζ rfl hζdim
   exact hP ξ.level.1 ξ rfl hξdim
 
+/--
+More realistic direct-route reduction: level `0` is handled separately, and strict descent is
+only required at positive levels.
+
+This matches the actual shape of the Section 5 graph better, since a level-`0` positive node
+cannot possibly have a lower positive neighbor.
+-/
+theorem
+    exists_lowerLevel_positive_of_missingNextMilestone_positiveLevel_of_not_openCrossing_of_largeLowerPrefixCarrierSpec
+    (hlarge :
+      FaceLocalLargeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    {ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ξ.level.1)
+    (hupper :
+      ¬ ξ.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level.succ)
+    (hclosed :
+      ¬ ξ.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level) :
+    ∃ ζ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive ζ) ∧
+        ζ.level.1 < ξ.level.1 := by
+  have hlower :
+      ξ.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level.castSucc :=
+    chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
+      (T := T) (φ := φ) (ν := ξ) hupper hclosed
+  rcases
+      exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+        hlarge hk hlower with
+    ⟨ζ, hζ⟩
+  refine ⟨ζ, Or.inr (Or.inr hζ), ?_⟩
+  rcases hζ with ⟨hlevel, -, -⟩
+  omega
+
+structure ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec where
+  exists_terminal_of_levelZero_belowTopDim :
+    ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ξ.level.1 = 0 →
+      ξ.face.dim < dimension →
+      ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        v ≠ .start ∧
+          IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v
+  exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim :
+    ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ξ.level.1 →
+      ξ.face.dim < dimension →
+      ξ.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level.succ →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) →
+      ∃ ζ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive ζ) ∧
+          ζ.level.1 < ξ.level.1
+  exists_lowerLevel_positive_of_openCrossing_not_terminal_belowTopDim :
+    ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ξ.level.1 →
+      ξ.face.dim < dimension →
+      ¬ ξ.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level.succ →
+      ξ.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) →
+      ∃ ζ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive ζ) ∧
+          ζ.level.1 < ξ.level.1
+
+structure ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec where
+  exists_terminal_of_levelZero_belowTopDim :
+    ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ξ.level.1 = 0 →
+      ξ.face.dim < dimension →
+      ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        v ≠ .start ∧
+          IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v
+  exists_lowerLevel_positive_of_not_terminal_belowTopDim :
+    ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      0 < ξ.level.1 →
+      ξ.face.dim < dimension →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) →
+      ∃ ζ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive ζ) ∧
+          ζ.level.1 < ξ.level.1
+
+def
+    chosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplit
+    (hlarge :
+      FaceLocalLargeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hcase :
+      ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec
+      (T := T) (φ := φ) := by
+  refine
+    { exists_terminal_of_levelZero_belowTopDim :=
+        hcase.exists_terminal_of_levelZero_belowTopDim
+      exists_lowerLevel_positive_of_not_terminal_belowTopDim := ?_ }
+  intro ξ hk hξdim hξterm
+  by_cases hupper :
+      ξ.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level.succ
+  · exact
+      hcase.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim
+        ξ hk hξdim hupper hξterm
+  · by_cases hopen :
+      ξ.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level
+    · exact
+        hcase.exists_lowerLevel_positive_of_openCrossing_not_terminal_belowTopDim
+          ξ hk hξdim hupper hopen hξterm
+    · exact
+        exists_lowerLevel_positive_of_missingNextMilestone_positiveLevel_of_not_openCrossing_of_largeLowerPrefixCarrierSpec
+          (T := T) (φ := φ) hlarge hk hupper hopen
+
+def chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_baseCaseAndLevelDescent
+    (hdesc :
+      ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainBelowTopDimPositiveTerminalSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ξ hξdim
+  let P : Nat → Prop := fun k =>
+    ∀ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ξ.level.1 = k →
+      ξ.face.dim < dimension →
+      ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+        v ≠ .start ∧
+          IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v
+  have hP : ∀ k, P k := by
+    intro k
+    refine Nat.strong_induction_on k ?_
+    intro k ih ξ hξlevel hξdim
+    by_cases hξterm :
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ)
+    · exact ⟨.positive ξ, by simp, hξterm⟩
+    · by_cases hk : 0 < ξ.level.1
+      · rcases
+            hdesc.exists_lowerLevel_positive_of_not_terminal_belowTopDim ξ hk hξdim hξterm with
+          ⟨ζ, _, hζlt⟩
+        have hζlt' : ζ.level.1 < k := by
+          simpa [hξlevel] using hζlt
+        have hζdim : ζ.face.dim < dimension := by
+          calc
+            ζ.face.dim = ζ.level.1 + 1 := ζ.face_dim
+            _ < ξ.level.1 + 1 := Nat.succ_lt_succ hζlt
+            _ = ξ.face.dim := by rw [ξ.face_dim]
+            _ < dimension := hξdim
+        exact ih ζ.level.1 hζlt' ζ rfl hζdim
+      · exact
+          hdesc.exists_terminal_of_levelZero_belowTopDim ξ
+            (Nat.eq_zero_of_not_pos hk) hξdim
+  exact hP ξ.level.1 ξ rfl hξdim
+
 def
     chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminalSpec_of_two_lt_dimension
     (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
@@ -6885,6 +7041,19 @@ def
   chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminalSpec_of_two_lt_dimension
     (T := T) (φ := φ) haway hdim
     (chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent
+      (T := T) (φ := φ) hdesc)
+
+def
+    chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveBaseCaseAndLevelDescentSpec_of_two_lt_dimension
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdim : 2 < dimension)
+    (hdesc :
+      ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec (T := T) (φ := φ) :=
+  chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_belowTopDimPositiveTerminalSpec_of_two_lt_dimension
+    (T := T) (φ := φ) haway hdim
+    (chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_baseCaseAndLevelDescent
       (T := T) (φ := φ) hdesc)
 
 def chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_continuationNeighborTerminal
@@ -6987,6 +7156,53 @@ theorem
       (T := T) (φ := φ) hzero hopen halt haway hdim
       (chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent
         (T := T) (φ := φ) hdesc)
+
+theorem
+    exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveBaseCaseAndLevelDescent_of_two_lt_dimension
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdim : 2 < dimension)
+    (hdesc :
+      ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec
+        (T := T) (φ := φ)) :
+    ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      v ≠ .start ∧
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v := by
+  exact
+    exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveTerminal_of_two_lt_dimension
+      (T := T) (φ := φ) hzero hopen halt haway hdim
+      (chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_baseCaseAndLevelDescent
+        (T := T) (φ := φ) hdesc)
+
+theorem
+    exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveBaseCaseAndCaseSplitDescent_of_largeLowerPrefixCarrierSpec_of_two_lt_dimension
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hzero : ChosenMilestoneChainLevelZeroBoundarySpec (T := T) (φ := φ))
+    (hopen : ChosenMilestoneChainOpenCrossingSpec (T := T) (φ := φ))
+    (halt :
+      ChosenMilestoneChainPositiveLevelNoOpenCrossingAlternativeSpec
+        (T := T) (φ := φ))
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hlarge :
+      FaceLocalLargeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hdim : 2 < dimension)
+    (hcase :
+      ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec
+        (T := T) (φ := φ)) :
+    ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      v ≠ .start ∧
+        IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v := by
+  exact
+    exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveBaseCaseAndLevelDescent_of_two_lt_dimension
+      (T := T) (φ := φ) hzero hopen halt haway hdim
+      (chosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplit
+        (T := T) (φ := φ) hlarge hcase)
 
 theorem exists_terminal_of_local_degree_lemmas
     [Fintype (Section5GraphNode c φ)] [DecidableRel (graph (T := T) c φ).Adj]

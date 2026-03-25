@@ -32,15 +32,21 @@
   Unless the obstruction-exclusion field turns out to be substantially easier, this is now
   evidence that the direct-route theorem is the genuine remaining frontier and the deleted-spur
   no-escape fields are only alternate reformulations of that gap.
-  The direct route is now sharper in Lean as well:
-  `ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec`,
-  `chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_levelDescent`, and
-  `exists_terminal_of_chosenMilestoneChain_alternativeSpecs_of_belowTopDimPositiveLevelDescent_of_two_lt_dimension`
-  show that it is enough to prove one local continuation law:
-  every below-top-dimensional nonterminal positive node has an adjacent positive neighbor of
-  strictly smaller level.
-  If either fails from the current API, record that exact theorem statement as the first missing
-  local continuation principle.
+  The direct route is now sharper in Lean as well, but the original
+  `ChosenMilestoneChainBelowTopDimPositiveLevelDescentSpec` turned out to be too strong at level
+  `0`: a level-`0` positive node cannot have a lower positive neighbor. The realistic direct-route
+  reduction is now
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec`, with
+  `chosenMilestoneChainBelowTopDimPositiveTerminalSpec_of_baseCaseAndLevelDescent` proving the
+  global below-top-dimensional terminal theorem from:
+  a separate level-`0` base case, plus strict lower-level positive continuation only at positive
+  levels. The positive-level continuation theorem is now split further by
+  `chosenMilestoneChainBelowTopDimPositiveBaseCaseAndLevelDescentSpec_of_largeLowerPrefixCarrierSpec_and_caseSplit`:
+  the positive-level missing-next/no-open-crossing branch is already discharged by
+  `exists_lowerLevel_positive_of_missingNextMilestone_positiveLevel_of_not_openCrossing_of_largeLowerPrefixCarrierSpec`.
+  So the exact remaining direct-route subcases are:
+  the level-`0` base case, the positive-level next-milestone branch, and the positive-level
+  open-crossing branch.
 - [ ] Finish the positive-level no-open-crossing support at the exact graph interface.
   Top-dimensional branch:
   stop treating
