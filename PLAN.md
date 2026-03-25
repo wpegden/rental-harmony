@@ -745,6 +745,16 @@
   `ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec` directly or isolate a compatible
   counterexample pattern showing that even this corrected top-dimensional interface still needs
   revision.
+- That compatible counterexample pattern is now formalized precisely. The new theorems
+  `not_exists_sameLevelCarrierContinuationCandidate_of_uniqueFacetContainingCarrier`,
+  `eq_verticalNeighbor_of_adj_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly`,
+  and
+  `not_exists_two_distinct_neighbors_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly`
+  show that if the only codimension-`1` lower-milestone carrier of a top-dimensional positive face
+  lies in a unique ambient facet, then there is no same-level continuation through it and every
+  graph neighbor collapses to the single canonical vertical door. So the next exact top-dimensional
+  proof step is not more support pruning; it is to prove that the actual Section 5 hypotheses rule
+  out this boundary-only unique-carrier pattern, or else to revise the interface again.
 
 ## Current input status
 - No proposed axioms.

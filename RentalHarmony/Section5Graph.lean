@@ -4311,6 +4311,198 @@ lemma exists_candidate_of_horizontalAdj_of_not_openCrossing
     · simpa [SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface_carrier]
         using hτμ.1
 
+lemma not_exists_sameLevelCarrierContinuationCandidate_of_uniqueFacetContainingCarrier
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hνdim : ν.face.dim = dimension)
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (huniq :
+      ∀ σ ∈ T.facets, ρ.carrier ⊆ σ → σ = ν.face.carrier) :
+    ¬ ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      IsSameLevelCarrierContinuationCandidate (T := T) (φ := φ) ν ρ μ := by
+  intro hμ
+  rcases hμ with ⟨μ, hμne, hlevel, hρμ⟩
+  rcases μ.face.subset_facet with ⟨σ, hσ, hμσ⟩
+  have hσeq : σ = ν.face.carrier := huniq σ hσ (hρμ.trans hμσ)
+  have hμdim : μ.face.dim = dimension := by
+    calc
+      μ.face.dim = μ.level.1 + 1 := μ.face_dim
+      _ = ν.level.1 + 1 := by simpa [hlevel]
+      _ = ν.face.dim := by rw [ν.face_dim]
+      _ = dimension := hνdim
+  have hμface :
+      μ.face.carrier = ν.face.carrier := by
+    calc
+      μ.face.carrier = σ :=
+        ambientFacet_eq_of_topDim (T := T) (φ := φ) μ hσ hμσ hμdim
+      _ = ν.face.carrier := hσeq
+  exact hμne <|
+    Section5PositiveNode.ext
+      (c := chosenMilestoneChain (φ := φ)) (φ := φ) hlevel
+      (SubdivisionFace.ext hμface)
+
+lemma not_horizontalAdj_of_not_openCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+    {ν μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hνdim : ν.face.dim = dimension)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hclosed :
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level)
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (huniqueCarrier :
+      ∀ {ρ' : SubdivisionFace.CarrierCodimOneSubface ν.face},
+        ρ'.toSubdivisionFace.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+        ρ' = ρ)
+    (huniqFacet :
+      ∀ σ ∈ T.facets, ρ.carrier ⊆ σ → σ = ν.face.carrier) :
+    ¬ ν.HorizontalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ := by
+  intro hadj
+  rcases exists_candidate_of_horizontalAdj_of_not_openCrossing
+      (T := T) (φ := φ) hadj hupper hclosed with
+    ⟨ρ', hρ'mil, hcand⟩
+  have hρeq : ρ' = ρ := huniqueCarrier hρ'mil
+  exact
+    not_exists_sameLevelCarrierContinuationCandidate_of_uniqueFacetContainingCarrier
+      (T := T) (φ := φ) hνdim huniqFacet <|
+    by
+      refine ⟨μ, ?_⟩
+      simpa [hρeq] using hcand
+
+lemma not_verticalAdj_of_topDim_as_lower
+    {ν μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hνdim : ν.face.dim = dimension) :
+    ¬ ν.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ := by
+  intro h
+  rcases h with ⟨hlevel, -, -⟩
+  have hνlevel : ν.level.1 + 1 = dimension := by
+    simpa [ν.face_dim] using hνdim
+  omega
+
+/--
+Boundary-only unique lower-milestone carriers give an exact one-neighbor obstruction in the
+top-dimensional no-open-crossing branch.
+
+This is compatible with the paper's current local hypotheses unless an additional geometric input
+rules it out: every adjacent node collapses to the single vertical neighbor determined by the
+unique lower-milestone carrier.
+-/
+theorem eq_verticalNeighbor_of_adj_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    (hνdim : ν.face.dim = dimension)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hclosed :
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level)
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hρsub : ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    (hρmil :
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (huniqueCarrier :
+      ∀ {ρ' : SubdivisionFace.CarrierCodimOneSubface ν.face},
+        ρ'.toSubdivisionFace.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+        ρ' = ρ)
+    (huniqFacet :
+      ∀ σ ∈ T.facets, ρ.carrier ⊆ σ → σ = ν.face.carrier)
+    {w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ}
+    (hadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w) :
+    w =
+      .positive
+        (verticalNeighborOfCodimOneSubfaceContainsLowerMilestone
+          (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+          hk ρ.isCodimOneSubface hρsub hρmil) := by
+  cases w with
+  | start =>
+      have hstart :
+          ν.IsStartIncident (T := T) (chosenMilestoneChain (φ := φ)) φ := hadj
+      rcases hstart with ⟨hlevel, -⟩
+      exact False.elim ((Nat.ne_of_gt hk) hlevel)
+  | positive μ =>
+      rcases hadj with hhor | hupperAdj | hlowerAdj
+      · exact False.elim <|
+          not_horizontalAdj_of_not_openCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+            (T := T) (φ := φ) hνdim hupper hclosed huniqueCarrier huniqFacet hhor
+      · exact False.elim <|
+          not_verticalAdj_of_topDim_as_lower (T := T) (φ := φ) hνdim hupperAdj
+      ·
+        let μ₀ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ :=
+          verticalNeighborOfCodimOneSubfaceContainsLowerMilestone
+            (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+            hk ρ.isCodimOneSubface hρsub hρmil
+        have hμ₀adj :
+            μ₀.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ ν :=
+          verticalNeighborOfCodimOneSubfaceContainsLowerMilestone_verticalAdj
+            (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+            hk ρ.isCodimOneSubface hρsub hρmil
+        rcases hlowerAdj with ⟨hμlevel, hμν, hμmil⟩
+        rcases hμ₀adj with ⟨hμ₀level, -, -⟩
+        let ρ' : SubdivisionFace.CarrierCodimOneSubface ν.face :=
+          SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface hμν
+        have hsucc : μ.level.succ = ν.level.castSucc := by
+          apply Fin.ext
+          exact hμlevel
+        have hρ'mil :
+            ρ'.toSubdivisionFace.ImageContainsMilestone (T := T)
+              (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc := by
+          simpa [ρ', hsucc] using hμmil
+        have hρeq : ρ' = ρ := huniqueCarrier hρ'mil
+        have hface : μ.face = ρ.toSubdivisionFace := by
+          apply SubdivisionFace.ext
+          calc
+            μ.face.carrier = ρ'.carrier := by simp [ρ']
+            _ = ρ.carrier := by simpa [hρeq]
+            _ = ρ.toSubdivisionFace.carrier := by simp
+        have hlevelEq : μ.level = μ₀.level := by
+          apply Fin.ext
+          omega
+        have hμeq : μ = μ₀ := by
+          apply Section5PositiveNode.ext
+            (c := chosenMilestoneChain (φ := φ)) (φ := φ) hlevelEq
+          simpa [μ₀, verticalNeighborOfCodimOneSubfaceContainsLowerMilestone] using hface
+        simpa [μ₀] using congrArg Section5GraphNode.positive hμeq
+
+theorem not_exists_two_distinct_neighbors_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    (hνdim : ν.face.dim = dimension)
+    (hupper :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hclosed :
+      ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level)
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (hρsub : ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc)
+    (hρmil :
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (huniqueCarrier :
+      ∀ {ρ' : SubdivisionFace.CarrierCodimOneSubface ν.face},
+        ρ'.toSubdivisionFace.ImageContainsMilestone (T := T)
+          (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+        ρ' = ρ)
+    (huniqFacet :
+      ∀ σ ∈ T.facets, ρ.carrier ⊆ σ → σ = ν.face.carrier) :
+    ¬ ∃ a b : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      a ≠ b ∧
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) a ∧
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) b := by
+  intro h
+  rcases h with ⟨a, b, hab, ha, hb⟩
+  have ha' :=
+    eq_verticalNeighbor_of_adj_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+      (T := T) (φ := φ) hk hνdim hupper hclosed hρsub hρmil huniqueCarrier huniqFacet ha
+  have hb' :=
+    eq_verticalNeighbor_of_adj_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+      (T := T) (φ := φ) hk hνdim hupper hclosed hρsub hρmil huniqueCarrier huniqFacet hb
+  exact hab (ha'.trans hb'.symm)
+
 def chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_filteredSpec
     (hfiltered :
       ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec

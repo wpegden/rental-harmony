@@ -24,7 +24,17 @@
   top-dimensional frontier to
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec`.
   The current support-pruning chain remains a stronger sufficient route, but it is now known to be
-  overkill unless the Section 5 hypotheses exclude the segment-support obstruction.
+  overkill unless the Section 5 hypotheses exclude the segment-support obstruction. The new
+  theorems
+  `eq_verticalNeighbor_of_adj_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly`
+  and
+  `not_exists_two_distinct_neighbors_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly`
+  now isolate an exact compatible failure pattern for the corrected interface as well: if the
+  lower-milestone codimension-`1` carrier is unique and lies in only one ambient facet, then every
+  neighbor of `ν` collapses to the single canonical vertical door. So the next top-dimensional
+  proof search must either derive two doors directly from the paper's lines 395--396 geometry or
+  prove that this boundary-only unique-carrier pattern is excluded by the actual Section 5
+  hypotheses.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,

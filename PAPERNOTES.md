@@ -822,3 +822,14 @@
   `chosenMilestoneChainPositiveLevelNoOpenCrossingSpec_of_topDim_and_belowTopDim` record that the
   exact remaining top-dimensional target should now be a no-open-crossing door theorem, not the
   stronger support-pruning contract.
+- The corrected top-dimensional interface now has a precise compatible obstruction pattern too.
+  Lean proves
+  `not_exists_sameLevelCarrierContinuationCandidate_of_uniqueFacetContainingCarrier`,
+  `eq_verticalNeighbor_of_adj_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly`,
+  and
+  `not_exists_two_distinct_neighbors_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly`:
+  if the lower-milestone codimension-`1` carrier is unique and belongs to only one ambient facet
+  of the triangulation, then there is no same-level continuation through that carrier and every
+  graph neighbor collapses to the single canonical vertical door. So the remaining top-dimensional
+  question is now explicit: do the actual Section 5 genericity hypotheses exclude this
+  boundary-only unique-carrier pattern, or does the door theorem need another revision?
