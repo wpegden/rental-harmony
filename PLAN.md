@@ -233,6 +233,13 @@
   smaller-simplex points back to the ambient prefix faces through `PrefixFace.equivRentDivision`
   and package them into a `Section5MilestoneChain` satisfying
   `Section5GraphNode.MilestoneSegmentTransversality`.
+- That transport step is now also formalized abstractly:
+  `PrefixFace.exists_smallPointInterior_not_mem_biUnion_convexHull_of_card_le` packages the
+  smaller-simplex avoidance theorem directly on ambient prefix faces. So the remaining Section 5
+  milestone work is now purely about the paper's actual forbidden families: identify, for each
+  prefix level, the finite family of lower-dimensional face-image convex hulls to avoid, then use
+  the transported prefix-face theorem to choose the milestone points and assemble the resulting
+  `Section5MilestoneChain`.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations
@@ -264,8 +271,8 @@
   sense recorded there. At the moment this reduces to a missing support theorem about choosing
   points in the relative interior of prefix simplex faces away from finitely many lower-dimensional
   convex hulls. That smaller-simplex convex-hull avoidance theorem is now proved, so the next
-  missing argument is the actual transport step back through `PrefixFace.equivRentDivision` and
-  the assembly of those chosen points into a milestone chain witnessing
+  missing argument is the identification of the actual forbidden convex-hull families at each
+  prefix level and the assembly of the resulting transported choices into a milestone chain witnessing
   `Section5GraphNode.MilestoneSegmentTransversality`.
 - Then feed surjectivity into the already-proved wrappers in `PaperTheorems.lean` to recover the
   barycenter-cell and Sperner statements.

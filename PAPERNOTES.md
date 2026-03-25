@@ -247,3 +247,12 @@
   blocker is no longer a finite-avoidance statement at all; it is the concrete transport from
   those smaller-simplex avoided points back to ambient prefix-face milestones and the packaging of
   that choice into `Section5GraphNode.MilestoneSegmentTransversality`.
+- Formalization note after the latest prefix-face transport step:
+  that transport is now proved abstractly too.
+  `PrefixFace.exists_smallPointInterior_not_mem_biUnion_convexHull_of_card_le` uses
+  `PrefixFace.restrict`, `PrefixFace.pad`, and the restriction linear map to pull any finite
+  convex-hull avoidance problem on a prefix face down to the smaller simplex and then push the
+  chosen point back to the ambient simplex. So the remaining Section 5 milestone blocker is now
+  exactly the paper's bookkeeping step: specify the actual finite forbidden convex-hull families
+  attached to each prefix level and assemble the resulting avoided prefix-face points into a
+  `Section5MilestoneChain` satisfying `Section5GraphNode.MilestoneSegmentTransversality`.

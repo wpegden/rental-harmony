@@ -316,6 +316,64 @@ def equivRentDivision : PrefixFace (dimension := dimension) k ≃ RentDivision (
     · rw [hEq]
     · simpa using j.2
 
+/--
+The corresponding point of the smaller simplex, viewed in its affine span.
+
+This packages `restrict` with the ambient affine-span coercion used by the smaller-simplex
+avoidance theorem.
+-/
+def smallPoint (x : PrefixFace (dimension := dimension) k) :
+    affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1)) :=
+  ⟨restrict (k := k) x,
+    subset_affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))
+      (restrict (k := k) x).property⟩
+
+@[simp] lemma coe_smallPoint (x : PrefixFace (dimension := dimension) k) :
+    ((smallPoint (dimension := dimension) (k := k) x :
+      affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))) :
+        RealPoint k.1) =
+      ((restrict (k := k) x : RentDivision (k.1 + 1)) : RealPoint k.1) :=
+  rfl
+
+@[simp] lemma smallPoint_pad (y : RentDivision (k.1 + 1)) :
+    smallPoint (dimension := dimension) (k := k) (pad (k := k) y) =
+      ⟨(y : RealPoint k.1),
+        subset_affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))
+          y.property⟩ := by
+  apply Subtype.ext
+  ext j
+  change (((restrict (k := k) (pad (k := k) y) : RentDivision (k.1 + 1)) :
+      RealPoint k.1) j) = ((y : RealPoint k.1) j)
+  rw [restrict_apply]
+  rw [pad_apply_lt (dimension := dimension) (k := k) (y := y)
+      (i := j.castLE (Nat.succ_le_of_lt k.2)) (by simpa using j.2)]
+  simp
+
+/-- Restrict ambient coordinates to the first `k + 1` rooms. -/
+def restrictLinear : RealPoint dimension →ₗ[ℝ] RealPoint k.1 where
+  toFun f j := f (j.castLE (Nat.succ_le_of_lt k.2))
+  map_add' f g := by
+    ext j
+    rfl
+  map_smul' a f := by
+    ext j
+    rfl
+
+@[simp] lemma restrictLinear_apply (f : RealPoint dimension) (j : Fin (k.1 + 1)) :
+    restrictLinear (k := k) f j = f (j.castLE (Nat.succ_le_of_lt k.2)) :=
+  rfl
+
+@[simp] lemma restrictLinear_pad (y : RentDivision (k.1 + 1)) :
+    restrictLinear (k := k)
+      (((pad (dimension := dimension) (k := k) y).1 : RentDivision (dimension + 1)) :
+        RealPoint dimension) =
+      ((y : RealPoint k.1)) := by
+  ext j
+  rw [restrictLinear_apply]
+  simpa using
+    (pad_apply_lt (dimension := dimension) (k := k) (y := y)
+      (i := j.castLE (Nat.succ_le_of_lt k.2)) (by simpa using j.2))
+
 end PrefixFace
 
 /-- The `j`-th original vertex inside the prefix face spanned by the first `k + 1` rooms. -/
@@ -654,6 +712,142 @@ theorem exists_mem_smallSimplexInterior_not_mem_biUnion_convexHull_of_card_le
 end StdSimplexAvoid
 
 end Avoidance
+
+section PrefixFaceAvoidance
+
+variable {dimension : ℕ} {k : Fin (dimension + 1)}
+
+namespace PrefixFace
+
+lemma image_restrictLinear_prefixPoints
+    (t : Finset (PrefixFace (dimension := dimension) k)) :
+    restrictLinear (k := k) ''
+        ((fun z : PrefixFace (dimension := dimension) k =>
+          ((z.1 : RentDivision (dimension + 1)) : RealPoint dimension)) '' (t : Set _)) =
+      ((↑) :
+          affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1)) →
+            RealPoint k.1) ''
+        ((t.image (fun z => smallPoint (dimension := dimension) (k := k) z)) : Set _) := by
+  ext y
+  constructor
+  · rintro ⟨x, ⟨z, hz, rfl⟩, rfl⟩
+    refine ⟨smallPoint (dimension := dimension) (k := k) z, ?_, ?_⟩
+    · exact Finset.mem_image_of_mem _ hz
+    · ext j
+      change restrictLinear (k := k)
+          (((z.1 : RentDivision (dimension + 1)) : RealPoint dimension)) j =
+        ((smallPoint (dimension := dimension) (k := k) z :
+          affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))) :
+            RealPoint k.1) j
+      rfl
+  · rintro ⟨x, hx, rfl⟩
+    rcases Finset.mem_image.mp hx with ⟨z, hz, rfl⟩
+    refine ⟨((z.1 : RentDivision (dimension + 1)) : RealPoint dimension), ?_, ?_⟩
+    · exact ⟨z, hz, rfl⟩
+    · ext j
+      change
+        (((z.1 : RentDivision (dimension + 1)) : RealPoint dimension)
+            (j.castLE (Nat.succ_le_of_lt k.2))) =
+          ((smallPoint (dimension := dimension) (k := k) z :
+            affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))) :
+              RealPoint k.1) j
+      rfl
+
+/--
+Transport the smaller-simplex convex-hull avoidance theorem back to an ambient prefix face.
+
+This is the precise support step needed for the Section 5 milestone construction: once the
+forbidden sets in a prefix face are bounded by `k` vertices, one can choose a prefix-face point
+whose restricted smaller-simplex coordinates lie in the relative interior and whose ambient point
+avoids all of those forbidden convex hulls.
+-/
+theorem exists_smallPointInterior_not_mem_biUnion_convexHull_of_card_le
+    (T : Finset (Finset (PrefixFace (dimension := dimension) k)))
+    (hcard : ∀ t ∈ T, t.card ≤ k.1) :
+    ∃ x : PrefixFace (dimension := dimension) k,
+      smallPoint (dimension := dimension) (k := k) x ∈
+          interior
+            (((↑) :
+                affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1)) →
+                  RealPoint k.1) ⁻¹'
+              (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))) ∧
+        ∀ t ∈ T,
+          ((x.1 : RentDivision (dimension + 1)) : RealPoint dimension) ∉
+            convexHull ℝ
+              ((fun z : PrefixFace (dimension := dimension) k =>
+                  ((z.1 : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+                (t : Set _)) := by
+  classical
+  let E : AffineSubspace ℝ (RealPoint k.1) :=
+    affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))
+  let smallT : Finset (Finset E) :=
+    T.image (fun t => t.image (fun z => smallPoint (dimension := dimension) (k := k) z))
+  have hcardSmall : ∀ t ∈ smallT, t.card ≤ k.1 := by
+    intro t ht
+    rcases Finset.mem_image.mp ht with ⟨u, hu, rfl⟩
+    exact (Finset.card_image_le).trans (hcard u hu)
+  rcases exists_mem_smallSimplexInterior_not_mem_biUnion_convexHull_of_card_le
+      (dimension := k.1) smallT hcardSmall with ⟨xE, hxint, hxavoid⟩
+  have hxmem_pre :
+      xE ∈
+        (((↑) :
+            affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1)) →
+              RealPoint k.1) ⁻¹'
+          (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))) :=
+    interior_subset hxint
+  have hxmem :
+      (xE : RealPoint k.1) ∈ stdSimplex ℝ (Room (k.1 + 1)) :=
+    hxmem_pre
+  let y : RentDivision (k.1 + 1) := ⟨xE, hxmem⟩
+  refine ⟨pad (dimension := dimension) (k := k) y, ?_, ?_⟩
+  · have hpad :
+        smallPoint (dimension := dimension) (k := k)
+          (pad (dimension := dimension) (k := k) y) = xE := by
+      calc
+        smallPoint (dimension := dimension) (k := k)
+            (pad (dimension := dimension) (k := k) y) =
+          ⟨(y : RealPoint k.1),
+            subset_affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1))
+              y.property⟩ := smallPoint_pad (dimension := dimension) (k := k) y
+        _ = xE := by
+          apply Subtype.ext
+          rfl
+    simpa [hpad] using hxint
+  · intro t ht hxt
+    have hsmall :
+        restrictLinear (k := k)
+            ((((pad (dimension := dimension) (k := k) y).1 :
+                RentDivision (dimension + 1)) : RealPoint dimension)) ∈
+          convexHull ℝ
+            (restrictLinear (k := k) ''
+              ((fun z : PrefixFace (dimension := dimension) k =>
+                  ((z.1 : RentDivision (dimension + 1)) : RealPoint dimension)) ''
+                (t : Set _))) := by
+      have :
+          restrictLinear (k := k)
+              ((((pad (dimension := dimension) (k := k) y).1 :
+                  RentDivision (dimension + 1)) : RealPoint dimension)) ∈
+            restrictLinear (k := k) ''
+              convexHull ℝ
+                ((fun z : PrefixFace (dimension := dimension) k =>
+                    ((z.1 : RentDivision (dimension + 1)) : RealPoint dimension)) '' (t : Set _)) :=
+        ⟨_, hxt, rfl⟩
+      rw [LinearMap.image_convexHull] at this
+      exact this
+    have hsmall' :
+        (xE : RealPoint k.1) ∈
+          convexHull ℝ
+            (((↑) :
+                affineSpan ℝ (stdSimplex ℝ (Room (k.1 + 1)) : Set (RealPoint k.1)) →
+                  RealPoint k.1) ''
+              ((t.image (fun z => smallPoint (dimension := dimension) (k := k) z)) : Set E)) := by
+      simpa [y, image_restrictLinear_prefixPoints, restrictLinear_pad]
+        using hsmall
+    exact hxavoid _ (Finset.mem_image.mpr ⟨t, ht, rfl⟩) hsmall'
+
+end PrefixFace
+
+end PrefixFaceAvoidance
 
 section GraphData
 
