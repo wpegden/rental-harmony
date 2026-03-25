@@ -1,7 +1,9 @@
+import Mathlib.Analysis.Convex.Caratheodory
 import Mathlib.Analysis.Convex.Combination
 import Mathlib.Analysis.Convex.Intrinsic
 import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Combinatorics.SimpleGraph.DegreeSum
+import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
 import RentalHarmony.PaperDefinitions
 
 /-!
@@ -416,6 +418,53 @@ def prefixBarycenterSegment (k : Fin dimension) : Set (RealPoint dimension) :=
       RealPoint dimension))
     (((prefixBarycenter (dimension := dimension) k.succ : RentDivision (dimension + 1)) :
       RealPoint dimension))
+
+@[simp] lemma restrictLinear_prefixVertex (k : Fin (dimension + 1)) (j : Fin (k.1 + 1)) :
+    PrefixFace.restrictLinear (dimension := dimension) (k := k)
+        (((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+          RealPoint dimension)) =
+      (((stdSimplex.vertex (S := ℝ) j : stdSimplex ℝ (Room (k.1 + 1))) :
+        RealPoint k.1)) := by
+  ext i
+  by_cases h : i = j
+  · subst h
+    simp [PrefixFace.restrictLinear_apply, prefixVertex, stdSimplex.vertex]
+  · simp [PrefixFace.restrictLinear_apply, prefixVertex, stdSimplex.vertex, h]
+
+lemma prefixVertex_injective (k : Fin (dimension + 1)) :
+    Function.Injective
+      (fun j : Fin (k.1 + 1) =>
+        ((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+          RealPoint dimension)) := by
+  intro i j hij
+  have hrestrict :=
+    congrArg (PrefixFace.restrictLinear (dimension := dimension) (k := k)) hij
+  exact stdSimplex.vertex_injective <| by
+    simpa [restrictLinear_prefixVertex (dimension := dimension) (k := k)] using hrestrict
+
+def prefixVertexFinset (k : Fin (dimension + 1)) : Finset (RealPoint dimension) :=
+  Finset.univ.image fun j : Fin (k.1 + 1) =>
+    ((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+      RealPoint dimension)
+
+lemma prefixVertexFinset_coe (k : Fin (dimension + 1)) :
+    ((prefixVertexFinset (dimension := dimension) k : Finset (RealPoint dimension)) :
+        Set (RealPoint dimension)) =
+      Set.range (fun j : Fin (k.1 + 1) =>
+        ((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+          RealPoint dimension)) := by
+  ext x
+  simp [prefixVertexFinset]
+
+lemma prefixVertexFinset_card (k : Fin (dimension + 1)) :
+    (prefixVertexFinset (dimension := dimension) k).card = k.1 + 1 := by
+  classical
+  simpa [prefixVertexFinset] using
+    (Finset.card_image_of_injective (s := Finset.univ)
+      (f := fun j : Fin (k.1 + 1) =>
+        ((prefixVertex (dimension := dimension) k j : RentDivision (dimension + 1)) :
+          RealPoint dimension))
+      (prefixVertex_injective (dimension := dimension) k))
 
 /--
 Section 5 allows the barycenters to be perturbed slightly in order to enforce genericity.

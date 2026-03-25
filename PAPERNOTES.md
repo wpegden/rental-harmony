@@ -334,3 +334,12 @@
   blocker has shifted again: prove that the lower-milestone-containment alternative yields the
   actual vertical-door / two-neighbor consequence needed by `GeometricGenericity`, then package
   the chosen chain into the existing terminal-node framework.
+- Formalization note after the latest prefix-vertex bookkeeping step:
+  the remaining lower-door obstruction is now sharper on the ambient-geometry side.
+  `RentalHarmony/Section5Graph.lean` now contains the compile-clean helper lemmas
+  `restrictLinear_prefixVertex`, `prefixVertex_injective`, `prefixVertexFinset`, and
+  `prefixVertexFinset_card`, which identify the first `k + 1` outer simplex vertices as an
+  explicit finite ambient set and record how `restrictLinear` sees them. This makes the next
+  missing theorem concrete: build a clean ambient padding / affine-span transport statement for
+  `PrefixFace k`, so that the all-image-lower-prefix lower-door case can be reduced to a
+  Carathéodory support argument inside that lower target prefix face.

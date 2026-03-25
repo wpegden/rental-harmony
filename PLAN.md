@@ -112,6 +112,13 @@
   either an upper-coordinate survives and codimension-`1` support follows immediately, or every
   image vertex already lies in the lower target prefix face and one must extract a lower-prefix
   domain subface from that stronger geometric situation.
+- Latest support-layer status for that remaining case:
+  `RentalHarmony/Section5Graph.lean` now records the ambient prefix-vertex bookkeeping explicitly
+  via `restrictLinear_prefixVertex`, `prefixVertex_injective`, `prefixVertexFinset`, and
+  `prefixVertexFinset_card`. The next local theorem should identify any point of `PrefixFace k`
+  with the affine span of `prefixVertexFinset k` in the ambient simplex. Once that transport lemma
+  exists, the all-image-lower case should reduce to a Carathéodory support argument inside the
+  lower target prefix face.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:

@@ -32,7 +32,12 @@
   codimension-`1` supporting face already exists. So the remaining geometric difficulty is now
   strictly sharper: handle only the complementary case where every image vertex of the positive face
   already lies in the lower target prefix face, and from that deduce a codimension-`1`
-  lower-prefix supporting subface in the domain.
+  lower-prefix supporting subface in the domain. The new compile-clean prefix-face helper lemmas
+  `restrictLinear_prefixVertex`, `prefixVertex_injective`, `prefixVertexFinset`, and
+  `prefixVertexFinset_card` isolate the exact remaining support theorem: prove an ambient
+  padding/affine-span transport statement identifying points of a `PrefixFace k` with the affine
+  span of `prefixVertexFinset k`, so Carathéodory can be applied cleanly to the all-image-lower
+  case.
 - [ ] Use the repaired extension theorem together with surjectivity to obtain the Section 5 barycenter-cell and Section 2 Sperner statements directly.
 - [ ] Close the higher-dimensional contradiction.
   Current blocker: the topological route now needs a genuine noncontractibility theorem for
