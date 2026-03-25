@@ -578,3 +578,11 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'''`
   confirms that these are the exact remaining higher-dimensional inputs after factoring out the
   open-crossing branch.
+- The lower-endpoint branch itself is now expressed in its minimal form. The auxiliary premise
+  "there exists some extra graph neighbor" has been removed from the paper-facing internal
+  frontier: `Section5GraphNode.ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec` records
+  the bare theorem that a positive-level face which contains the lower milestone but misses the
+  next one has exactly two continuation doors. The wrapper
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''''`
+  shows that once this lower-endpoint two-door statement and the separate away-from-boundary case
+  are supplied, the downstream parity argument again reaches a barycenter-containing facet.

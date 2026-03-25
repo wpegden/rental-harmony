@@ -466,6 +466,13 @@
   branch no longer belongs to that package. The new wrapper
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'''`
   shows that these sharper contracts suffice for the downstream barycenter-cell theorem.
+- The lower-endpoint positive-level branch has now been sharpened again: the auxiliary hypothesis
+  that some extra graph neighbor already exists is no longer part of the minimal frontier.
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec` packages the bare
+  two-door conclusion for the lower-milestone case itself, and the wrapper
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''''`
+  shows that this stronger/minimal contract is exactly what the downstream Section 5 pipeline
+  needs.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

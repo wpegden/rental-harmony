@@ -289,3 +289,11 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'''`
   shows that these two sharper contracts, together with the existing reflection, level-`0`
   boundary, and open-crossing specs, are already sufficient for the barycenter-cell conclusion.
+- [x] Tightened the lower-milestone positive-level contract once more: the auxiliary hypothesis
+  "some extra neighbor exists" is not part of the true remaining theorem, so the support file now
+  exposes the stronger/minimal interface
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelLowerMilestoneDoorSpec` with that premise
+  removed. The new wrapper
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec''''`
+  shows that the barycenter-cell theorem now depends only on the bare lower-endpoint two-door
+  statement, not on an additional externally supplied neighbor witness.
