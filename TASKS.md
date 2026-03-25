@@ -521,4 +521,11 @@
   and
   `exists_second_codimOneSubface_of_faceSubdividesLowerPrefix`
   reduces it back to the older second-carrier theorem by recovering the lower-prefix condition on
-  the second codimension-`1` subface from codimension-`1` incidence alone.
+  the second codimension-`1` subface from codimension-`1` incidence alone. The precise remaining
+  local lemma is now one step lower still:
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec`
+  asks for an arbitrary point already lying in the image of one codimension-`1` subface of a
+  top-dimensional face in the lower prefix face to lie in the image of a second distinct
+  codimension-`1` subface as well, and
+  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec_of_boundaryPointMultiplicity`
+  recovers the milestone-specific contract from this point-level statement.

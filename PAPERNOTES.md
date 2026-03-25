@@ -772,3 +772,12 @@
   is no longer “find another lower-prefix carrier” but “inside a top-dimensional face whose whole
   image already lies in the lower prefix face, show that the lower milestone is carried by a
   second distinct codimension-`1` subface.”
+- That gap is now isolated one step more cleanly as a point-level multiplicity statement.
+  `ChosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec` removes the milestone
+  specialization entirely: inside a top-dimensional positive face already known to subdivide the
+  lower prefix face, if some point `x` lies in the image of one codimension-`1` subface, then it
+  should lie in the image of a second distinct codimension-`1` subface as well. The theorem
+  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec_of_boundaryPointMultiplicity`
+  shows that the current milestone-specific second-carrier problem is now exactly this
+  point-on-two-face-images lemma applied to `x = b_k`. So the remaining top-dimensional blocker is
+  now stated at the sharpest image-side level reached so far.

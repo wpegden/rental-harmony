@@ -692,6 +692,15 @@
   condition for that second subface is then recovered automatically from
   `SubdivisionFace.subdividesPrefixFace_of_subface`. So the next proof search should stay on this
   image-side convex-geometry statement rather than reopen domain-side carrier bookkeeping.
+- The frontier has now been lowered to the exact point-level version of that image statement.
+  `ChosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec` asks for a point `x`
+  already lying in the image of one codimension-`1` subface of a top-dimensional positive face in
+  the lower prefix face to lie in the image of a second distinct codimension-`1` subface as well.
+  The theorem
+  `chosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec_of_boundaryPointMultiplicity`
+  specializes this directly to the lower milestone `b_k`. So the next proof search should target
+  this point-on-two-face-images lemma, which is the sharp local image-side convex-geometry gap now
+  exposed by the Lean development.
 
 ## Current input status
 - No proposed axioms.

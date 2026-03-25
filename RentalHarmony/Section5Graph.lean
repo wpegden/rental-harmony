@@ -2905,6 +2905,20 @@ Once the whole top-dimensional face is already known to lie in the lower prefix 
 remaining task is only to show that the lower milestone is carried by a second codimension-`1`
 subface besides the reflected one.
 -/
+structure ChosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec where
+  exists_second_codimOneSubface_of_point_of_positiveLevel_topDim_of_faceSubdividesLowerPrefix :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      (x : RentDivision (dimension + 1)),
+      0 < ν.level.1 →
+      ν.face.dim = dimension →
+      ν.face.SubdividesPrefixFace (T := T) ν.level.castSucc →
+      {ρ₁ : SubdivisionFace.CarrierCodimOneSubface ν.face} →
+      ρ₁.toSubdivisionFace.ImageContains (T := T) φ.vertexMap x →
+      ∃ ρ₂ : SubdivisionFace T,
+        ρ₂ ≠ ρ₁.toSubdivisionFace ∧
+        ρ₂.IsCodimOneSubface ν.face ∧
+        ρ₂.ImageContains (T := T) φ.vertexMap x
+
 structure ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec where
   exists_second_codimOneSubface_of_missing_nextMilestone_positiveLevel_topDim_contains_lowerMilestone_of_faceSubdividesLowerPrefix :
     ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ),
@@ -2921,6 +2935,19 @@ structure ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImag
         ρ₂.IsCodimOneSubface ν.face ∧
         ρ₂.ImageContainsMilestone (T := T)
           (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc
+
+def chosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec_of_boundaryPointMultiplicity
+    (hboundary :
+      ChosenMilestoneChainPositiveLevelTopDimBoundaryPointMultiplicitySpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainPositiveLevelTopDimLowerMilestoneSecondCarrierImageSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hνdim _hupper hνsub ρ₁ hρ₁mil
+  simpa [SubdivisionFace.ImageContainsMilestone] using
+    hboundary.exists_second_codimOneSubface_of_point_of_positiveLevel_topDim_of_faceSubdividesLowerPrefix
+      ν ((chosenMilestoneChain (φ := φ)).point ν.level.castSucc) hk hνdim hνsub
+      (ρ₁ := ρ₁) hρ₁mil
 
 theorem exists_second_codimOneSubface_of_faceSubdividesLowerPrefix
     (himage :
