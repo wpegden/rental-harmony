@@ -542,3 +542,11 @@
   `PositiveFaceLowerPrefixReflection`, the normalized level-`0` boundary continuation input, and
   the remaining graph-local data, the downstream Section 5 parity argument again reaches a
   barycenter-containing facet with no further hidden blockers.
+- A further direct check shows that the start-node data is also part of the same 1-dimensional
+  boundary issue: the same overlapping lower-edge countermodel that breaks unique continuation can
+  also create several distinct start-incident faces. Accordingly, the Lean factorization now places
+  `start_neighbor`, `start_adj`, and `start_unique` inside
+  `ChosenMilestoneChainLevelZeroBoundarySpec`. The remaining
+  `ChosenMilestoneChainGraphLocalRestSpec` is therefore a cleaner higher-dimensional remainder:
+  only the open-crossing branch and the positive-level missing-next / away-from-boundary
+  continuation data are still outside the boundary contract.

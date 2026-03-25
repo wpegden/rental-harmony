@@ -2396,6 +2396,13 @@ The explicit milestone geometry already proved in this file reduces the higher-d
 argument to these start and door-count statements.
 -/
 structure ChosenMilestoneChainLevelZeroBoundarySpec where
+  start_neighbor : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ
+  start_adj :
+    Adj (T := T) (chosenMilestoneChain (φ := φ)) φ .start (.positive start_neighbor)
+  start_unique :
+    ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ .start w →
+        w = .positive start_neighbor
   two_doors_of_missing_nextMilestone_level_zero :
     ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
       ν.level.1 = 0 →
@@ -2411,13 +2418,6 @@ structure ChosenMilestoneChainLevelZeroBoundarySpec where
           Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) w → w = a ∨ w = b
 
 structure ChosenMilestoneChainGraphLocalRestSpec where
-  start_neighbor : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ
-  start_adj :
-    Adj (T := T) (chosenMilestoneChain (φ := φ)) φ .start (.positive start_neighbor)
-  start_unique :
-    ∀ w : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
-      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ .start w →
-        w = .positive start_neighbor
   two_doors_of_missing_nextMilestone_openCrossing :
     ∀ ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
       ¬ ν.face.ImageContainsMilestone (T := T)
@@ -2520,9 +2520,9 @@ def chosenMilestoneChainGraphLocalSpec_of_levelZeroBoundary_and_rest
     (hrest : ChosenMilestoneChainGraphLocalRestSpec (T := T) (φ := φ)) :
     ChosenMilestoneChainGraphLocalSpec (T := T) (φ := φ) := by
   refine
-    { start_neighbor := hrest.start_neighbor
-      start_adj := hrest.start_adj
-      start_unique := hrest.start_unique
+    { start_neighbor := hzero.start_neighbor
+      start_adj := hzero.start_adj
+      start_unique := hzero.start_unique
       two_doors_of_missing_nextMilestone_openCrossing :=
         hrest.two_doors_of_missing_nextMilestone_openCrossing
       two_doors_of_missing_nextMilestone_level_zero :=

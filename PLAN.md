@@ -438,6 +438,11 @@
   `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'`
   shows that these two graph-local pieces together with `PositiveFaceLowerPrefixReflection` are
   exactly sufficient for the downstream Section 5 barycenter-cell conclusion.
+- The level-`0` boundary split has now been tightened once more: the start-node existence and
+  uniqueness fields are also part of the same boundary interval model, so they have moved into
+  `ChosenMilestoneChainLevelZeroBoundarySpec`. This leaves
+  `ChosenMilestoneChainGraphLocalRestSpec` as a genuinely higher-dimensional remainder consisting
+  only of the open-crossing branch and the positive-level continuation statements.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

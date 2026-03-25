@@ -259,3 +259,9 @@
   conclusion already follows from `PositiveFaceLowerPrefixReflection`, the normalized level-`0`
   boundary continuation theorem, and the remaining positive-level/open-crossing graph-local data,
   via `exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec'`.
+- [x] Tightened that split further: the start-node existence/uniqueness fields also belong to the
+  same lower-boundary interval model, so they now live in
+  `Section5GraphNode.ChosenMilestoneChainLevelZeroBoundarySpec`. The remaining
+  `ChosenMilestoneChainGraphLocalRestSpec` is now purely the non-boundary part of the graph-local
+  package: open-crossing continuation and the positive-level missing-next / away-from-boundary
+  cases.
