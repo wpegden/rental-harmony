@@ -319,3 +319,11 @@
   This packages the next blocker at the right layer: not raw `SubdivisionFace` syntax, but the
   unique same-level continuation across a normalized codimension-`1` carrier face that contains
   the lower milestone.
+- [ ] Focused recovery result: even after carrier normalization, the current
+  `SimplicialSubdivision` API still permits genuine coface multiplicity. A codimension-`1` carrier
+  set can lie in three or more facets because `facets` is only a covering family of
+  `(dimension + 1)`-element finsets; there is no simplicial-complex / pseudomanifold axiom saying
+  such a carrier has exactly two incident cofaces. So the new
+  `ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec` is not derivable from
+  the present abstract support layer either; it is now the exact missing carrier-incidence
+  theorem.

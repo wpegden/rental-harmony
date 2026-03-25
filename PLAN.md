@@ -496,6 +496,14 @@
   So the remaining no-open-crossing frontier is now phrased at the correct carrier/incidence layer:
   prove unique same-level continuation across the normalized lower-milestone codimension-`1` face,
   then use it to recover the graph-door count.
+- A direct check at that carrier level shows the new contract is genuinely independent of the
+  current abstract subdivision fields. Even after quotienting away raw-face syntax, the
+  `SimplicialSubdivision` API still allows a codimension-`1` carrier finset to be contained in
+  three or more facets, because no pseudomanifold or simplicial-complex incidence axiom is
+  recorded. So the remaining plan is now explicit: either strengthen the subdivision layer with
+  codimension-`1` coface uniqueness, or keep
+  `ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec` as the minimal extra
+  internal hypothesis.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

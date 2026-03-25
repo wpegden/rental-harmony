@@ -611,3 +611,11 @@
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec`:
   a normalized codimension-`1` carrier face containing the lower milestone should admit a unique
   same-level continuation coface. This is the next exact abstract theorem to prove or assume.
+- A direct attempt on that carrier-normalized statement shows that the normalization fixes only the
+  subset-presentation problem, not the true incidence problem. The current `SimplicialSubdivision`
+  structure still records `facets` only as a covering family of `(dimension + 1)`-element finite
+  sets, so the same codimension-`1` carrier finset may belong to three or more facets. Thus even
+  at the carrier layer there is no theorem that a lower-milestone codimension-`1` face has a
+  unique same-level continuation coface. The remaining obstruction is therefore a genuine missing
+  pseudomanifold/simplicial-complex incidence axiom, not another artifact of raw `SubdivisionFace`
+  syntax.
