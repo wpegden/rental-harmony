@@ -503,3 +503,13 @@
   image hull `{e_0}` only. So the desired lower-prefix reflection statement is not a consequence
   of the current abstract boundary axioms; it must remain an explicit extra hypothesis or be built
   into a stronger support layer.
+- Recovery attempt 3 implemented that repair explicitly in Lean. The new internal structure
+  `Section5GraphNode.PositiveFaceLowerPrefixReflection` records exactly the missing semantic input:
+  for a positive face whose image contains the lower milestone, there is a lower-prefix carrier
+  support inside that face whose image still contains the milestone. The theorem
+  `faceLocalLargeLowerPrefixCarrierSpec_of_positiveFaceLowerPrefixReflection` shows this is exactly
+  what the old carrier-set interface needed, and
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec`
+  confirms that once this reflection property and the graph-local door-count package are supplied,
+  the downstream Section 5 parity argument again reaches a barycenter-containing facet with no
+  further hidden blockers.

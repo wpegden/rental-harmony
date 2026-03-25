@@ -410,6 +410,13 @@
   theorem from the current fields, but to keep it as an explicit internal hypothesis or strengthen
   the abstract subdivision / PL-map support layer so that such counterexamples are ruled out by
   construction.
+- Recovery attempt 3 has now implemented that architectural repair. The new internal bundle
+  `Section5GraphNode.PositiveFaceLowerPrefixReflection` states exactly the necessary face-local
+  reflection property for positive faces. From it one immediately derives
+  `FaceLocalLargeLowerPrefixCarrierSpec`, and the new theorem
+  `Section5GraphNode.exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec`
+  confirms that the rest of the higher-dimensional Section 5 argument already runs cleanly under
+  this single stronger interface together with `ChosenMilestoneChainGraphLocalSpec`.
 - Do not introduce axioms: this surjectivity lemma is the main internal theorem to supply.
 
 ### Generalizations

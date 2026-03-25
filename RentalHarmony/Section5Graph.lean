@@ -2141,6 +2141,30 @@ case.
 The current abstract subdivision API does not supply this large lower-prefix carrier set, but once
 it is available the lower-milestone branch can be fed into the existing enlargement lemma above.
 -/
+structure PositiveFaceLowerPrefixReflection : Prop where
+  exists_lowerPrefixCarrier_and_support_of_contains_lowerMilestone :
+    ∀ {ν : Section5PositiveNode c φ},
+      0 < ν.level.1 →
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc →
+      ∃ s u : Finset Vertex,
+        s ⊆ u ∧
+        u ⊆ ν.face.carrier ∧
+        s.card ≤ ν.level.succ.1 ∧
+        ν.level.succ.1 ≤ u.card ∧
+        (∀ v ∈ u,
+          (((T.vertexPos v : RentDivision (dimension + 1)) : RealPoint dimension)
+            ν.level.succ) = 0) ∧
+        ((((c.point ν.level.castSucc : RentDivision (dimension + 1)) :
+            RealPoint dimension) ∈
+          convexHull ℝ
+            ((fun v : Vertex =>
+                ((φ.vertexMap v : RentDivision (dimension + 1)) :
+                  RealPoint dimension)) '' (s : Set Vertex))))
+
+/--
+This semantic positive-face reflection hypothesis immediately yields the more combinatorial
+carrier-set bundle used by the existing enlargement lemma.
+-/
 structure FaceLocalLargeLowerPrefixCarrierSpec : Prop where
   exists_support_in_largeLowerPrefixCarrier_of_contains_lowerMilestone :
     ∀ {ν : Section5PositiveNode c φ},
@@ -2160,6 +2184,13 @@ structure FaceLocalLargeLowerPrefixCarrierSpec : Prop where
             ((fun v : Vertex =>
                 ((φ.vertexMap v : RentDivision (dimension + 1)) :
                   RealPoint dimension)) '' (s : Set Vertex))))
+
+theorem faceLocalLargeLowerPrefixCarrierSpec_of_positiveFaceLowerPrefixReflection
+    (hreflect : PositiveFaceLowerPrefixReflection (T := T) (c := c) (φ := φ)) :
+    FaceLocalLargeLowerPrefixCarrierSpec (T := T) (c := c) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hcontains
+  exact hreflect.exists_lowerPrefixCarrier_and_support_of_contains_lowerMilestone hk hcontains
 
 /--
 This derives the older graph-neighbor contract from the sharper large-lower-prefix carrier-set
@@ -2718,6 +2749,26 @@ theorem exists_barycenterPreimageCell_of_chosenMilestoneChain_specs
     (T := T) (φ := φ)
     (chosenMilestoneChainDoorSpec_of_faceLocal_and_graphLocal
       (T := T) (φ := φ) hlower hgraph)
+
+theorem exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec
+    [Finite (Section5GraphNode (chosenMilestoneChain (φ := φ)) φ)]
+    (hreflect :
+      PositiveFaceLowerPrefixReflection
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hgraph : ChosenMilestoneChainGraphLocalSpec (T := T) (φ := φ)) :
+    ∃ σ ∈ T.facets, FacetImageContainsBarycenter σ φ.vertexMap := by
+  let hlarge :
+      FaceLocalLargeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) :=
+    faceLocalLargeLowerPrefixCarrierSpec_of_positiveFaceLowerPrefixReflection
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hreflect
+  let hlower :
+      FaceLocalLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) :=
+    faceLocalLowerPrefixCarrierSpec_of_largeLowerPrefixCarrierSpec
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hlarge
+  exact exists_barycenterPreimageCell_of_chosenMilestoneChain_specs
+    (T := T) (φ := φ) hlower hgraph
 
 end Section5GraphNode
 

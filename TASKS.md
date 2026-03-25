@@ -233,3 +233,10 @@
   only to `e_0`. This means the needed lower-prefix reflection must stay as an explicit extra
   hypothesis or be added to a stronger support-layer structure; it is not derivable from the
   present `boundary_preserving` API alone.
+- [x] Replaced further proof-search on that false theorem by an explicit stronger internal
+  interface. `Section5GraphNode.PositiveFaceLowerPrefixReflection` now carries exactly the
+  face-local lower-prefix reflection property justified by the recorded countermodel, and
+  `faceLocalLargeLowerPrefixCarrierSpec_of_positiveFaceLowerPrefixReflection` plus
+  `exists_barycenterPreimageCell_of_chosenMilestoneChain_reflectionSpec` show that the downstream
+  Section 5 parity pipeline closes cleanly under this one extra contract together with the existing
+  graph-local spec.
