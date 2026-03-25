@@ -833,3 +833,13 @@
   graph neighbor collapses to the single canonical vertical door. So the remaining top-dimensional
   question is now explicit: do the actual Section 5 genericity hypotheses exclude this
   boundary-only unique-carrier pattern, or does the door theorem need another revision?
+- This obstruction has now been packaged as exact counterexample data.
+  `TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData` records one top-dimensional
+  no-open-crossing node together with a unique lower-milestone carrier lying in a unique ambient
+  facet, and
+  `not_topDimNoOpenCrossingDoorSpec_of_boundaryOnlyUniqueCarrierCounterexampleData`
+  proves that any such realization falsifies the current theorem
+  `ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec`.
+  So the paper-facing mismatch is now completely explicit in Lean: unless the intended generic
+  perturbation rules out this boundary-only unique-carrier configuration, the corrected
+  top-dimensional door theorem is still too strong.

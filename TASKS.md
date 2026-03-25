@@ -34,7 +34,13 @@
   neighbor of `ν` collapses to the single canonical vertical door. So the next top-dimensional
   proof search must either derive two doors directly from the paper's lines 395--396 geometry or
   prove that this boundary-only unique-carrier pattern is excluded by the actual Section 5
-  hypotheses.
+  hypotheses. The new structure
+  `TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData` and theorem
+  `not_topDimNoOpenCrossingDoorSpec_of_boundaryOnlyUniqueCarrierCounterexampleData`
+  now package this as exact compatible counterexample data for the current interface: if such data
+  can actually arise from the intended genericity assumptions, then
+  `Section5GraphNode.ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec` is too strong
+  as stated.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently
   `Section5GraphNode.ChosenMilestoneChainPositiveLevelBelowTopDimNoOpenCrossingDoorSpec`,

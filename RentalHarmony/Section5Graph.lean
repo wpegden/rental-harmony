@@ -4503,6 +4503,55 @@ theorem not_exists_two_distinct_neighbors_of_topDim_noOpenCrossing_of_uniqueLowe
       (T := T) (φ := φ) hk hνdim hupper hclosed hρsub hρmil huniqueCarrier huniqFacet hb
   exact hab (ha'.trans hb'.symm)
 
+/--
+Exact compatible obstruction data for the current top-dimensional no-open-crossing door
+interface.
+
+If such data exists, the present formulation of
+`ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec` is too strong: the node `ν`
+cannot have two distinct graph neighbors.
+-/
+structure TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData where
+  ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ
+  hk : 0 < ν.level.1
+  hνdim : ν.face.dim = dimension
+  hupper :
+    ¬ ν.face.ImageContainsMilestone (T := T)
+      (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ
+  hclosed :
+    ¬ ν.face.ImageMeetsOpenMilestoneSegment (T := T)
+      (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level
+  ρ : SubdivisionFace.CarrierCodimOneSubface ν.face
+  hρsub : ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc
+  hρmil :
+    ρ.toSubdivisionFace.ImageContainsMilestone (T := T)
+      (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc
+  huniqueCarrier :
+    ∀ {ρ' : SubdivisionFace.CarrierCodimOneSubface ν.face},
+      ρ'.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ρ' = ρ
+  huniqFacet :
+    ∀ σ ∈ T.facets, ρ.carrier ⊆ σ → σ = ν.face.carrier
+
+theorem not_topDimNoOpenCrossingDoorSpec_of_boundaryOnlyUniqueCarrierCounterexampleData
+    (hdata :
+      TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ)) :
+    ¬ ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec
+      (T := T) (φ := φ) := by
+  intro htop
+  rcases
+      htop.two_doors_of_missing_nextMilestone_positiveLevel_topDim_of_not_openCrossing
+        hdata.ν hdata.hk hdata.hνdim hdata.hupper hdata.hclosed with
+    ⟨a, b, hab, ha, hb, -⟩
+  exact
+    not_exists_two_distinct_neighbors_of_topDim_noOpenCrossing_of_uniqueLowerMilestoneCarrier_boundaryOnly
+      (T := T) (φ := φ)
+      hdata.hk hdata.hνdim hdata.hupper hdata.hclosed hdata.hρsub hdata.hρmil
+      hdata.huniqueCarrier hdata.huniqFacet
+      ⟨a, b, hab, ha, hb⟩
+
 def chosenMilestoneChainPositiveLevelNoOpenCrossingCarrierContinuationSpec_of_filteredSpec
     (hfiltered :
       ChosenMilestoneChainPositiveLevelNoOpenCrossingFilteredContinuationSpec

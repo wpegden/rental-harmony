@@ -755,6 +755,15 @@
   graph neighbor collapses to the single canonical vertical door. So the next exact top-dimensional
   proof step is not more support pruning; it is to prove that the actual Section 5 hypotheses rule
   out this boundary-only unique-carrier pattern, or else to revise the interface again.
+- That reassessment point is now packaged explicitly as data. The structure
+  `TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData` records exactly the local
+  hypotheses needed for the one-door obstruction, and
+  `not_topDimNoOpenCrossingDoorSpec_of_boundaryOnlyUniqueCarrierCounterexampleData` shows that any
+  realization of this data outright refutes the current theorem
+  `ChosenMilestoneChainPositiveLevelTopDimNoOpenCrossingDoorSpec`. So the current top-dimensional
+  frontier is now binary rather than diffuse:
+  either derive from the intended genericity hypotheses that such data cannot occur, or revise the
+  theorem statement before returning to the below-top-dimensional branch.
 
 ## Current input status
 - No proposed axioms.
