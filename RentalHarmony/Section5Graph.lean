@@ -1864,6 +1864,30 @@ lemma level_relation_of_adj_positive_positive
   · exact Or.inr <| Or.inl hupper.1
   · exact Or.inr <| Or.inr hlower.1
 
+theorem not_exists_lowerLevel_positiveAdj_of_not_contains_lowerMilestone
+    {ν μ : Section5PositiveNode c φ}
+    (hlower :
+      ¬ ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc)
+    (hadj : Adj (T := T) c φ (.positive ν) (.positive μ))
+    (hμlt : μ.level.1 < ν.level.1) :
+    False := by
+  rw [adj_positive_positive_iff] at hadj
+  rcases hadj with hhor | hupper | hlowerAdj
+  · rcases hhor with ⟨hlevel, -, -⟩
+    have hEq : μ.level.1 = ν.level.1 := by
+      simpa using congrArg Fin.val hlevel.symm
+    omega
+  · rcases hupper with ⟨hlevel, -, -⟩
+    omega
+  · rcases hlowerAdj with ⟨hlevel, hsub, hmil⟩
+    have hsucc : μ.level.succ = ν.level.castSucc := by
+      apply Fin.ext
+      exact hlevel
+    apply hlower
+    exact
+      SubdivisionFace.imageContainsMilestone_mono (T := T) hsub.1 <|
+        by simpa [hsucc] using hmil
+
 /--
 The terminal vertices sought in Section 5: top-dimensional subdivision faces whose image contains
 the barycenter of the ambient simplex.
@@ -2545,6 +2569,22 @@ theorem exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrier
       with ⟨s, u, hsu, hu, hscard, hucard, hulower, himg⟩
   exact exists_verticalAdj_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone
     (T := T) (c := c) (φ := φ) hk hsu hu hscard hucard hulower himg
+
+theorem exists_lowerLevel_positive_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
+    (hspec : FaceLocalLargeLowerPrefixCarrierSpec (T := T) (c := c) (φ := φ))
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    (hcontains :
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc) :
+    ∃ μ : Section5PositiveNode c φ,
+      Adj (T := T) c φ (.positive ν) (.positive μ) ∧
+        μ.level.1 < ν.level.1 := by
+  rcases
+      exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
+        (T := T) (c := c) (φ := φ) hspec hk hcontains with
+    ⟨μ, hμ⟩
+  refine ⟨μ, Or.inr (Or.inr hμ), ?_⟩
+  rcases hμ with ⟨hlevel, -, -⟩
+  omega
 
 theorem exists_verticalAdj_of_contains_lowerMilestone_of_reflection
     (hreflect : PositiveFaceLowerPrefixReflection (T := T) (c := c) (φ := φ))
@@ -6958,14 +6998,25 @@ theorem
         (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level.castSucc :=
     chosenMilestoneChain_contains_lowerMilestone_of_missingNextMilestone_of_not_openCrossing
       (T := T) (φ := φ) (ν := ξ) hupper hclosed
-  rcases
-      exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
-        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
-        hlarge hk hlower with
-    ⟨ζ, hζ⟩
-  refine ⟨ζ, Or.inr (Or.inr hζ), ?_⟩
-  rcases hζ with ⟨hlevel, -, -⟩
-  omega
+  exact
+    exists_lowerLevel_positive_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+      hlarge hk hlower
+
+theorem
+    not_exists_lowerLevel_positive_of_not_contains_lowerMilestone
+    {ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hlower :
+      ¬ ξ.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ξ.level.castSucc) :
+    ¬ ∃ ζ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) (.positive ζ) ∧
+        ζ.level.1 < ξ.level.1 := by
+  rintro ⟨ζ, hζadj, hζlt⟩
+  exact
+    not_exists_lowerLevel_positiveAdj_of_not_contains_lowerMilestone
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ)
+      hlower hζadj hζlt
 
 structure ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec where
   exists_terminal_of_levelZero_belowTopDim :

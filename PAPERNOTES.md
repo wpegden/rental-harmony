@@ -297,15 +297,21 @@
   The new support lemmas `not_adj_positive_start_of_level_pos`,
   `level_relation_of_adj_positive_positive`, and
   `exists_two_distinct_positiveNeighbors_of_not_terminal_positiveLevel_belowTopDim_of_alternativeSpecs`
-  make the residual positive-level gap more precise: in the remaining next-milestone and
-  open-crossing branches, Lean already gets two distinct positive continuation neighbors and only
-  lacks a theorem selecting one of smaller level. The first exact subcase that still fails to
-  crystallize from the current API is
+  initially made the residual positive-level gap look like a lower-level selection problem among
+  two positive neighbors. The newer lemmas
+  `exists_lowerLevel_positive_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec`,
+  `not_exists_lowerLevel_positiveAdj_of_not_contains_lowerMilestone`, and
+  `not_exists_lowerLevel_positive_of_not_contains_lowerMilestone` sharpen that diagnosis:
+  strict descent is already provable once the current face contains the lower milestone
+  `b_k`, and is impossible if that lower milestone is absent. So the first exact direct-route
+  subcase that still fails to crystallize from the current API is still
   `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim`,
-  because `ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec` supplies only two unlabeled
-  continuation doors.
-  So the exact remaining direct-route local subcases are now the level-`0` base case, the
-  positive-level next-milestone branch, and the positive-level open-crossing branch.
+  but now in the more precise form that `ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec`
+  gives two continuation doors without any theorem forcing lower-milestone containment.
+  The open-crossing branch has the same remaining shape. So the exact remaining direct-route
+  local subcases are now the level-`0` base case, the positive-level next-milestone
+  lower-milestone-containment branch, and the positive-level open-crossing
+  lower-milestone-containment branch.
 - Formalization note after trying to prove those local degree lemmas directly:
   the current `Section5GraphNode.graph` is still built from the exact prefix barycenters
   `b_k`, but the paper's degree count is only claimed after a generic perturbation of those

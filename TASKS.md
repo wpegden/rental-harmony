@@ -49,14 +49,21 @@
   `exists_two_distinct_positiveNeighbors_of_not_terminal_positiveLevel_belowTopDim_of_alternativeSpecs`
   show that in the remaining positive-level branches the current API already yields two distinct
   positive neighbors and only lacks a way to choose one with smaller level.
-  After the latest proof search, the first exact subcase that still does not crystallize from the
-  current API is
-  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim`:
-  `ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec` supplies two unlabeled continuation
-  doors, but no current theorem identifies either door as a lower-level positive node.
-  So the exact remaining direct-route subcases are:
-  the level-`0` base case, the positive-level next-milestone branch, and the positive-level
-  open-crossing branch.
+  After the latest proof search, the direct-route obstruction is sharper than a mere
+  “choose the right neighbor” problem. The new lemmas
+  `exists_lowerLevel_positive_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec`,
+  `not_exists_lowerLevel_positiveAdj_of_not_contains_lowerMilestone`, and
+  `not_exists_lowerLevel_positive_of_not_contains_lowerMilestone`
+  show that strict descent is available exactly when the current face contains the lower
+  milestone, and impossible otherwise. So the first exact unresolved positive-level subcase is
+  still
+  `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim`,
+  but now in the more precise form: no current theorem derives
+  `ξ.face.ImageContainsMilestone ... ξ.level.castSucc` from the next-milestone away-from-boundary
+  hypotheses. The corresponding open-crossing branch has the same shape. The exact remaining
+  direct-route subcases are therefore:
+  the level-`0` base case, the positive-level next-milestone lower-milestone-containment branch,
+  and the positive-level open-crossing lower-milestone-containment branch.
 - [ ] Finish the positive-level no-open-crossing support at the exact graph interface.
   Top-dimensional branch:
   stop treating

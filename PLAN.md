@@ -213,15 +213,18 @@
   `level_relation_of_adj_positive_positive`, and
   `exists_two_distinct_positiveNeighbors_of_not_terminal_positiveLevel_belowTopDim_of_alternativeSpecs`
   further show that the remaining positive-level next/open branches already have two distinct
-  positive continuation neighbors; the unresolved issue is purely selecting one of smaller level.
-  After testing that route, the first exact positive-level subcase that still does not crystallize
-  from the current API is
+  positive continuation neighbors, but the latest support lemmas sharpen the issue further:
+  `exists_lowerLevel_positive_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec`
+  proves strict descent once lower-milestone containment is known, while
+  `not_exists_lowerLevel_positive_of_not_contains_lowerMilestone` shows strict descent is
+  impossible if the current face does not contain that lower milestone. So the first exact
+  positive-level subcase that still does not crystallize from the current API is still
   `ChosenMilestoneChainBelowTopDimPositiveBaseCaseAndCaseSplitDescentSpec.exists_lowerLevel_positive_of_nextMilestone_not_terminal_belowTopDim`,
-  because `ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec` currently gives only two
-  unlabeled doors and no lower-level choice principle.
-  So the sharpest current direct-route frontier is now the trio of remaining local subcases:
-  the level-`0` base case, the positive-level next-milestone branch, and the positive-level
-  open-crossing branch.
+  but now in the more precise form that the next-milestone away-from-boundary branch lacks any
+  theorem forcing lower-milestone containment. The open-crossing branch has the same remaining
+  shape. So the sharpest current direct-route frontier is now the trio of remaining local
+  subcases: the level-`0` base case, the positive-level next-milestone lower-milestone-containment
+  branch, and the positive-level open-crossing lower-milestone-containment branch.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:
