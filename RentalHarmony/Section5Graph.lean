@@ -5688,6 +5688,101 @@ theorem
       exact hw.1 (by simpa [hEq])
 
 theorem
+    eq_counterexampleNode_of_upperAdj_verticalNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hξ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ ξ) :
+    ξ = hdata.ν := by
+  rcases hμ with ⟨hμlevel, hμsub, hμmil⟩
+  rcases hξ with ⟨hξlevel, hξsub, -⟩
+  have hνlevel : hdata.ν.level.1 + 1 = dimension := by
+    simpa [hdata.ν.face_dim] using hdata.hνdim
+  have hξlevelEq : ξ.level = hdata.ν.level := by
+    apply Fin.ext
+    omega
+  have hξdim : ξ.face.dim = dimension := by
+    calc
+      ξ.face.dim = ξ.level.1 + 1 := ξ.face_dim
+      _ = hdata.ν.level.1 + 1 := by rw [hξlevelEq]
+      _ = dimension := hνlevel
+  let ρ' : SubdivisionFace.CarrierCodimOneSubface hdata.ν.face :=
+    SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface hμsub
+  have hsucc : μ.level.succ = hdata.ν.level.castSucc := by
+    apply Fin.ext
+    exact hμlevel
+  have hρ'mil :
+      ρ'.toSubdivisionFace.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap hdata.ν.level.castSucc := by
+    simpa [ρ', hsucc] using hμmil
+  have hρeq : ρ' = hdata.ρ := hdata.huniqueCarrier hρ'mil
+  have hμcarrier : μ.face.carrier = hdata.ρ.carrier := by
+    calc
+      μ.face.carrier = ρ'.carrier := by simp [ρ']
+      _ = hdata.ρ.carrier := by simpa [hρeq]
+  rcases ξ.face.subset_facet with ⟨σ, hσ, hξσ⟩
+  have hσeq : σ = ξ.face.carrier :=
+    (ambientFacet_eq_of_topDim (T := T) (φ := φ) ξ hσ hξσ hξdim).symm
+  have hξfacet : ξ.face.carrier ∈ T.facets := by
+    simpa [hσeq] using hσ
+  have hρsubset : hdata.ρ.carrier ⊆ ξ.face.carrier := by
+    calc
+      hdata.ρ.carrier = μ.face.carrier := hμcarrier.symm
+      _ ⊆ ξ.face.carrier := hξsub.1
+  have hfaceEq : ξ.face.carrier = hdata.ν.face.carrier :=
+    hdata.huniqFacet ξ.face.carrier hξfacet hρsubset
+  apply Section5PositiveNode.ext
+    (c := chosenMilestoneChain (φ := φ)) (φ := φ) hξlevelEq
+  exact SubdivisionFace.ext hfaceEq
+
+theorem
+    level_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hξne : ξ ≠ hdata.ν)
+    (hξadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ)) :
+    ξ.level.1 < hdata.ν.level.1 := by
+  have hμ' := hμ
+  rcases hμ with ⟨hμlevel, -, -⟩
+  have hμlt : μ.level.1 < hdata.ν.level.1 := by
+    omega
+  rcases hξadj with hhor | hupperAdj | hlowerAdj
+  · rcases hhor with ⟨hlevel, -, -⟩
+    have hEq : ξ.level.1 = μ.level.1 := by
+      exact congrArg Fin.val hlevel.symm
+    omega
+  · have hEq :
+        ξ = hdata.ν :=
+      eq_counterexampleNode_of_upperAdj_verticalNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ) hdata hμ' hupperAdj
+    exact False.elim (hξne hEq)
+  · rcases hlowerAdj with ⟨hlevel, -, -⟩
+    omega
+
+theorem
+    not_isTerminal_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+    (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ))
+    {μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hμ : μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν)
+    (hξne : ξ ≠ hdata.ν)
+    (hξadj : Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ)) :
+    ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ξ) := by
+  intro hξterm
+  rcases hξterm with ⟨hξdim, -⟩
+  have hξtop : ξ.level.1 + 1 = dimension := by
+    simpa [ξ.face_dim] using hξdim
+  have hνlevel : hdata.ν.level.1 + 1 = dimension := by
+    simpa [hdata.ν.face_dim] using hdata.hνdim
+  have hlt :=
+    level_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+      (T := T) (φ := φ) hdata hμ hξne hξadj
+  omega
+
+theorem
     not_adj_positive_start_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData_of_level_gt_one
     (hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
       (T := T) (φ := φ))
@@ -5817,6 +5912,31 @@ def
   exact
     exists_terminal_of_boundaryOnlyUniqueCarrierCounterexampleData_of_exists_terminal_of_positiveContinuationNeighbor_of_two_lt_dimension
       (T := T) (φ := φ) haway hdata hdim (hcont hdata)
+
+def
+    chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_lowerLevelPositiveContinuationNeighborTerminal_of_two_lt_dimension
+    (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))
+    (hdim : 2 < dimension)
+    (hcont :
+      ∀ hdata : TopDimNoOpenCrossingBoundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ),
+        ∀ μ ξ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+          μ.VerticalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ hdata.ν →
+          ξ ≠ hdata.ν →
+          Adj (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive μ) (.positive ξ) →
+          ξ.level.1 < hdata.ν.level.1 →
+          ∃ v : Section5GraphNode (chosenMilestoneChain (φ := φ)) φ,
+            v ≠ .start ∧
+              IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ v) :
+    ChosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec (T := T) (φ := φ) := by
+  refine
+    chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal_of_two_lt_dimension
+      (T := T) (φ := φ) haway hdim ?_
+  intro hdata μ ξ hμ hξne hξadj
+  exact
+    hcont hdata μ ξ hμ hξne hξadj
+      (level_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData
+        (T := T) (φ := φ) hdata hμ hξne hξadj)
 
 def chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_continuationNeighborTerminal
     (haway : ChosenMilestoneChainNextMilestoneAwayFromBoundarySpec (T := T) (φ := φ))

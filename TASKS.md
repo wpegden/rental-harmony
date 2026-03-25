@@ -85,8 +85,18 @@
   and
   `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_positiveContinuationNeighborTerminal_of_two_lt_dimension`
   sharpen the split further: for `2 < dimension` the continuation door cannot be `.start`, so only
-  a positive continuation node remains. The unresolved graph-level gap is now concentrated in the
-  low-dimensional start-continuation case and in proving eventual terminal existence from that
+  a positive continuation node remains. The new theorems
+  `eq_counterexampleNode_of_upperAdj_verticalNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData`
+  and
+  `level_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData`
+  sharpen this again: the distinct continuation node after the canonical descent cannot be another
+  top-dimensional upper coface, because the obstruction's unique ambient-facet hypothesis forces
+  any such upper coface to be the original node `ν`. So in the higher-dimensional branch the
+  continuation node is automatically positive and strictly lower-level, and
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_lowerLevelPositiveContinuationNeighborTerminal_of_two_lt_dimension`
+  shows that the exact remaining bypass theorem is now a lower-level continuation statement.
+  The unresolved graph-level gap is therefore concentrated in the residual low-dimensional
+  start-continuation case and in proving terminal existence from that strictly lower-level
   positive continuation node.
   Below-top-dimensional branch:
   finish the exact lower-dimensional no-open-crossing route, equivalently

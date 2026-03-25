@@ -917,3 +917,14 @@
   the unresolved start-continuation scenario is confined to the lowest top-dimensional case, while
   the higher-dimensional bypass now only needs eventual terminal existence from a positive
   continuation node.
+- The high-dimensional continuation node is now understood a bit more structurally. Lean proves
+  `eq_counterexampleNode_of_upperAdj_verticalNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData`,
+  so a descended node `μ` cannot have a second upper top-dimensional coface distinct from `ν`:
+  the obstruction's unique ambient-facet condition forces any upper coface through `μ.face` to be
+  `ν.face` itself. Consequently the unique distinct continuation node after the forced descent
+  must live at strictly lower level, formalized as
+  `level_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData`.
+  So the remaining higher-dimensional bypass problem is no longer "continue from some other
+  positive room" in the abstract; it is specifically to show terminal existence from a strictly
+  lower-level positive continuation node. The low-dimensional residual issue remains exactly the
+  special case where the continuation could still be `.start`.

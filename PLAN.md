@@ -836,6 +836,17 @@
   in higher dimensions, prove eventual terminal existence from that positive continuation node;
   in the lowest top-dimensional case, understand or exclude the residual start-continuation
   configuration.
+- The higher-dimensional positive-continuation branch is now sharper again.
+  `eq_counterexampleNode_of_upperAdj_verticalNeighbor_of_boundaryOnlyUniqueCarrierCounterexampleData`
+  proves that a descended node `μ` cannot have a second upper neighbor distinct from the original
+  obstruction node `ν`: the boundary-only unique ambient-facet clause forces any upper coface of
+  `μ.face` to be `ν.face` itself. Therefore every distinct continuation after the forced descent
+  must live at strictly lower level, which is formalized in
+  `level_lt_of_positiveContinuationNeighbor_of_verticalAdj_boundaryOnlyUniqueCarrierCounterexampleData`.
+  The reduction
+  `chosenMilestoneChainBoundaryOnlyUniqueCarrierBypassSpec_of_lowerLevelPositiveContinuationNeighborTerminal_of_two_lt_dimension`
+  packages the exact new frontier: in higher dimensions, it now suffices to prove terminal
+  existence from a strictly lower-level positive continuation node.
 
 ## Current input status
 - No proposed axioms.
