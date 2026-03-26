@@ -74,12 +74,22 @@
   `¬ ν.face.ImageContainsMilestone ... ν.level.castSucc`, an entrance carrier meeting
   `[b_{k-1}, b_k]` can now be upgraded first to an open-segment carrier and then to a witness in
   `λ(ρ)` that lies away from the boundary of `λ(ρ)` and off both endpoints. So the remaining
-  coface gap is no longer about choosing the right point on the endpoint-entry branch; it is
-  exactly the lower-endpoint zero-coordinate normalization, or else a direct same-level coface
-  proof from this stronger open-segment / away-from-boundary entrance-carrier data. The next proof
-  step is therefore to
-  either supply precisely that zero-coordinate normalization bridge, or prove the entrance-carrier
-  same-level coface theorem directly in a way that avoids it.
+  coface gap is no longer about choosing the right point on the endpoint-entry branch. In fact,
+  the lower-milestone half of the split is now discharged outright: the new theorem
+  `exists_lowerMilestoneCarrier_of_largeLowerPrefixCarrierSpec` preserves the normalized
+  `ν.level.castSucc` carrier needed by the old fixed-carrier API, and
+  `exists_sameLevelHorizontalAdj_of_nextMilestone_awayFromBoundary_and_contains_lowerMilestone_of_largeLowerPrefixCarrier_and_fixedCarrierContinuation`
+  closes that branch directly. Consequently the first remaining local next-milestone theorem is
+  now the endpoint-entry-only statement
+  `ChosenMilestoneChainNextMilestoneEndpointEntryCofaceContinuationSpec.
+  exists_sameLevelCoface_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`,
+  while
+  `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_largeLowerPrefixCarrier_and_fixedCarrierContinuation_and_endpointEntry`
+  already shows that proving just this endpoint-entry coface theorem is sufficient for the repaired
+  same-level continuation package. So the exact remaining obstruction is either the old
+  lower-endpoint zero-coordinate normalization for arbitrary entrance carriers, or a direct
+  endpoint-entry same-level coface proof from the stronger open-segment / away-from-boundary
+  entrance-carrier data.
 - [ ] Exact higher-dimensional deleted-spur frontier:
   prove the two fields of
   `Section5GraphNode.ChosenMilestoneChainDeletedSpurNoEscapeSpec`.

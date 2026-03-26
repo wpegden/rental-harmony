@@ -1315,5 +1315,18 @@
   specifically the zero-coordinate half: if the entrance point on `[b_{k-1}, b_k]` is the lower
   endpoint direction, Lean still lacks the manuscript-faithful bridge turning that image-side
   lower-endpoint situation into the `ν.level.castSucc` carrier normalization needed by the older
-  fixed-carrier continuation theorems. Either that zero-coordinate normalization must be proved,
-  or the same-level coface theorem must be established directly without passing through it.
+  fixed-carrier continuation theorems for an arbitrary entrance carrier. At the same time, the
+  lower-milestone branch of the manuscript's split is now formally closed: the new theorem
+  `exists_lowerMilestoneCarrier_of_largeLowerPrefixCarrierSpec` preserves the normalized lower
+  carrier, and
+  `exists_sameLevelHorizontalAdj_of_nextMilestone_awayFromBoundary_and_contains_lowerMilestone_of_largeLowerPrefixCarrier_and_fixedCarrierContinuation`
+  derives the required same-level continuation there. Consequently the first genuinely remaining
+  next-milestone continuation gap is now endpoint-entry-only, namely
+  `ChosenMilestoneChainNextMilestoneEndpointEntryCofaceContinuationSpec.
+  exists_sameLevelCoface_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`.
+  The combined reduction
+  `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_largeLowerPrefixCarrier_and_fixedCarrierContinuation_and_endpointEntry`
+  already shows that proving just this endpoint-entry theorem is enough for the repaired
+  continuation route. So either that zero-coordinate normalization must still be proved on the
+  endpoint-entry branch, or the same-level coface theorem must be established there directly
+  without passing through the older fixed-carrier API.

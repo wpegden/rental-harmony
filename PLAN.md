@@ -1145,8 +1145,20 @@
   can now push positive current-prefix information from the image simplex back to the domain
   carrier, but it still has no theorem converting zero current-prefix image data at the lower
   endpoint into the `ν.level.castSucc` carrier normalization needed by the fixed-carrier
-  continuation API. The next local job is therefore either to prove exactly that zero-coordinate
-  normalization bridge, or to bypass it with a direct entrance-carrier same-level coface theorem.
+  continuation API for an arbitrary entrance carrier. The positive news is that the split itself
+  is now compiled through the downstream route: the new theorem
+  `exists_lowerMilestoneCarrier_of_largeLowerPrefixCarrierSpec` and the corollary
+  `exists_sameLevelHorizontalAdj_of_nextMilestone_awayFromBoundary_and_contains_lowerMilestone_of_largeLowerPrefixCarrier_and_fixedCarrierContinuation`
+  settle the lower-milestone branch, and
+  `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_largeLowerPrefixCarrier_and_fixedCarrierContinuation_and_endpointEntry`
+  shows that the repaired same-level continuation theorem now depends only on the endpoint-entry
+  coface theorem. So the next local job is no longer the full universal entrance-carrier coface
+  theorem, but exactly the endpoint-entry statement
+  `ChosenMilestoneChainNextMilestoneEndpointEntryCofaceContinuationSpec.
+  exists_sameLevelCoface_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone`:
+  either prove the missing zero-coordinate normalization needed to reduce arbitrary entrance
+  carriers to the fixed-carrier API on that branch, or bypass that normalization with a direct
+  endpoint-entry same-level coface proof.
 
 ## Current input status
 - No proposed axioms.

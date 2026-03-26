@@ -2570,6 +2570,31 @@ theorem exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrier
   exact exists_verticalAdj_of_subset_in_largeLowerPrefixSubset_contains_lowerMilestone
     (T := T) (c := c) (φ := φ) hk hsu hu hscard hucard hulower himg
 
+theorem exists_lowerMilestoneCarrier_of_largeLowerPrefixCarrierSpec
+    (hspec : FaceLocalLargeLowerPrefixCarrierSpec (T := T) (c := c) (φ := φ))
+    {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
+    (hcontains :
+      ν.face.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc) :
+    ∃ ρ : SubdivisionFace.CarrierCodimOneSubface ν.face,
+      ρ.toSubdivisionFace.SubdividesPrefixFace (T := T) ν.level.castSucc ∧
+      ρ.toSubdivisionFace.ImageContainsMilestone (T := T) c φ.vertexMap ν.level.castSucc := by
+  rcases exists_verticalAdj_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
+      (T := T) (c := c) (φ := φ) hspec hk hcontains with ⟨μ, hμ⟩
+  rcases hμ with ⟨hlevel, hμν, hμmil⟩
+  let ρ : SubdivisionFace.CarrierCodimOneSubface ν.face :=
+    SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface hμν
+  have hsucc : μ.level.succ = ν.level.castSucc := by
+    apply Fin.ext
+    exact hlevel
+  refine ⟨ρ, ?_, ?_⟩
+  · intro v hv i hi
+    exact μ.subdivides v
+      (by
+        simpa [ρ, SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface_carrier] using hv)
+      i (by simpa [hsucc] using hi)
+  · simpa [SubdivisionFace.ImageContainsMilestone, hsucc, ρ,
+      SubdivisionFace.CarrierCodimOneSubface.ofIsCodimOneSubface_carrier] using hμmil
+
 theorem exists_lowerLevel_positive_of_contains_lowerMilestone_of_largeLowerPrefixCarrierSpec
     (hspec : FaceLocalLargeLowerPrefixCarrierSpec (T := T) (c := c) (φ := φ))
     {ν : Section5PositiveNode c φ} (hk : 0 < ν.level.1)
@@ -5821,6 +5846,83 @@ def chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_prefixEx
         (T := T) (φ := φ) hext)
 
 /--
+Endpoint-entry half of the next-milestone continuation theorem.
+
+This isolates the genuinely remaining manuscript-faithful local gap after separating off the
+lower-milestone branch, where the old fixed-carrier continuation API already applies once a
+normalized lower-milestone carrier has been produced.
+-/
+structure ChosenMilestoneChainNextMilestoneEndpointEntryCofaceContinuationSpec where
+  exists_sameLevelCoface_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone :
+    ∀ (ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ)
+      {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face},
+      0 < ν.level.1 →
+      ν.face.dim < dimension →
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ →
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc →
+      ¬ IsTerminal (T := T) (chosenMilestoneChain (φ := φ)) φ (.positive ν) →
+      ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level →
+      ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+        μ ≠ ν ∧
+        μ.level = ν.level ∧
+        ρ.toSubdivisionFace.IsCodimOneSubface μ.face
+
+def chosenMilestoneChainNextMilestoneEndpointEntryCofaceContinuationSpec_of_entranceCarrierCofaceContinuation
+    (hcoface :
+      ChosenMilestoneChainNextMilestoneEntranceCarrierCofaceContinuationSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneEndpointEntryCofaceContinuationSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν ρ hk hνdim haway _hlower hνterm hρmeets
+  exact hcoface.exists_sameLevelCoface_of_entranceCarrier ν hk hνdim haway hνterm hρmeets
+
+theorem
+    exists_sameLevelHorizontalAdj_of_nextMilestone_awayFromBoundary_and_contains_lowerMilestone_of_largeLowerPrefixCarrier_and_fixedCarrierContinuation
+    (hlarge :
+      FaceLocalLargeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hfixed :
+      ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec
+        (T := T) (φ := φ))
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    (hk : 0 < ν.level.1)
+    (hlower :
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc) :
+    ∃ μ : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ,
+      ν.HorizontalAdj (T := T) (chosenMilestoneChain (φ := φ)) φ μ := by
+  rcases exists_lowerMilestoneCarrier_of_largeLowerPrefixCarrierSpec
+      (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ) hlarge hk hlower with
+    ⟨ρ, hρsub, hρmil⟩
+  rcases hfixed.exists_candidate_of_carrier ν hρsub hρmil with ⟨μ, hμ⟩
+  rcases hμ with ⟨hμne, hlevel, hsubset⟩
+  have hρμ : ρ.toSubdivisionFace.IsCodimOneSubface μ.face := by
+    constructor
+    · simpa using hsubset
+    · calc
+        ρ.carrier.card + 1 = ν.face.carrier.card := ρ.card
+        _ = ν.level.1 + 2 := by rw [ν.face.card_eq_dim_succ, ν.face_dim]
+        _ = μ.level.1 + 2 := by simpa [hlevel]
+        _ = μ.face.carrier.card := by rw [μ.face.card_eq_dim_succ, μ.face_dim]
+  refine ⟨μ, ?_⟩
+  refine ⟨hlevel.symm, ?_, ρ.toSubdivisionFace, ρ.isCodimOneSubface, ?_, ?_⟩
+  · intro hface
+    exact hμne <|
+      Section5PositiveNode.ext (c := chosenMilestoneChain (φ := φ)) (φ := φ) hlevel hface.symm
+  · exact hρμ
+  · refine ⟨chosenMilestoneChain (φ := φ).point ν.level.castSucc, ?_, ?_⟩
+    · exact left_mem_segment ℝ
+        (((chosenMilestoneChain (φ := φ)).point ν.level.castSucc :
+            RentDivision (dimension + 1)) : RealPoint dimension)
+        (((chosenMilestoneChain (φ := φ)).point ν.level.succ :
+            RentDivision (dimension + 1)) : RealPoint dimension)
+    · simpa [SubdivisionFace.ImageContainsMilestone] using hρmil
+
+/--
 Route-changed next-milestone continuation package.
 
 This records the manuscript-faithful local consequence of the next-milestone branch that Lean can
@@ -5869,6 +5971,43 @@ def chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_entranceFace_a
       (T := T) (φ := φ) hentrance
       (chosenMilestoneChainNextMilestoneEntranceCarrierContinuationSpec_of_prefixExtension
         (T := T) (φ := φ) hext)
+
+def
+    chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_largeLowerPrefixCarrier_and_fixedCarrierContinuation_and_endpointEntry
+    (hlarge :
+      FaceLocalLargeLowerPrefixCarrierSpec
+        (T := T) (c := chosenMilestoneChain (φ := φ)) (φ := φ))
+    (hfixed :
+      ChosenMilestoneChainPositiveLevelFixedCarrierContinuationExistenceSpec
+        (T := T) (φ := φ))
+    (hendpoint :
+      ChosenMilestoneChainNextMilestoneEndpointEntranceFaceSpec
+        (T := T) (φ := φ))
+    (hcoface :
+      ChosenMilestoneChainNextMilestoneEndpointEntryCofaceContinuationSpec
+        (T := T) (φ := φ)) :
+    ChosenMilestoneChainNextMilestoneSameLevelContinuationSpec
+      (T := T) (φ := φ) := by
+  refine ⟨?_⟩
+  intro ν hk hνdim haway hνterm
+  by_cases hlower :
+      ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc
+  · exact
+      exists_sameLevelHorizontalAdj_of_nextMilestone_awayFromBoundary_and_contains_lowerMilestone_of_largeLowerPrefixCarrier_and_fixedCarrierContinuation
+        (T := T) (φ := φ) hlarge hfixed hk hlower
+  · rcases
+      hendpoint.exists_codimOneSubface_meets_segment_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone
+        ν hk hνdim haway hlower hνterm with
+      ⟨ρ, hρmeets⟩
+    rcases
+        hcoface.exists_sameLevelCoface_of_nextMilestone_awayFromBoundary_and_not_contains_lowerMilestone
+          ν hk hνdim haway hlower hνterm hρmeets with
+      ⟨μ, hμne, hlevel, hρμ⟩
+    exact
+      ⟨μ,
+        horizontalAdj_of_sameLevelCoface_meets_segment
+          (T := T) (φ := φ) hμne hlevel hρμ hρmeets⟩
 
 /--
 Uniqueness half of the filtered same-level continuation theorem.
