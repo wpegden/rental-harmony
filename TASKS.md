@@ -86,10 +86,19 @@
   while
   `chosenMilestoneChainNextMilestoneSameLevelContinuationSpec_of_largeLowerPrefixCarrier_and_fixedCarrierContinuation_and_endpointEntry`
   already shows that proving just this endpoint-entry coface theorem is sufficient for the repaired
-  same-level continuation package. So the exact remaining obstruction is either the old
-  lower-endpoint zero-coordinate normalization for arbitrary entrance carriers, or a direct
-  endpoint-entry same-level coface proof from the stronger open-segment / away-from-boundary
-  entrance-carrier data.
+  same-level continuation package. The newest checked support lemmas
+  `Section5MilestoneChain.coord_eq_zero_of_mem_segment`,
+  `Section5MilestoneChain.coord_eq_zero_of_mem_openSegment`,
+  `SubdivisionFace.all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_mem_milestoneSegment`,
+  and
+  `SubdivisionFace.all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_mem_openMilestoneSegment`
+  sharpen the endpoint-entry branch again: once an entrance carrier `ρ` contains a point of
+  `λ(ρ)` away from the boundary of `λ(ρ)` on `[b_{k-1}, b_k]` (or on the open segment), every
+  image vertex of `ρ` already has zero coordinates above the current prefix level. So the
+  endpoint-entry gap is no longer higher-coordinate normalization of the carrier image. The exact
+  remaining obstruction is now the domain-side continuation step itself: prove directly that such
+  an interior entrance codimension-`1` face of the induced current-prefix subdivision has a
+  distinct same-level coface across it, or isolate that exact interior-face/coface lemma.
 - [ ] Exact higher-dimensional deleted-spur frontier:
   prove the two fields of
   `Section5GraphNode.ChosenMilestoneChainDeletedSpurNoEscapeSpec`.

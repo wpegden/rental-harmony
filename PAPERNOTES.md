@@ -237,6 +237,22 @@
   domain-side continuation step: either normalize the complementary lower-endpoint case to a
   `ν.level.castSucc` carrier, or prove the same-level coface theorem directly from this stronger
   entrance-carrier witness.
+- Formalization note after the latest endpoint-entry coordinate reduction:
+  that endpoint-entry witness is now also normalized as far as the image coordinates seem to go.
+  The new lemmas
+  `Section5MilestoneChain.coord_eq_zero_of_mem_segment`,
+  `Section5MilestoneChain.coord_eq_zero_of_mem_openSegment`,
+  `SubdivisionFace.all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_mem_milestoneSegment`,
+  and
+  `SubdivisionFace.all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_mem_openMilestoneSegment`
+  prove that if an entrance carrier `ρ` contains a point of `λ(ρ)` away from the boundary of
+  `λ(ρ)` on `[b_{k-1}, b_k]` or on the open segment, then every image vertex of `ρ` already has
+  zero coordinates above the current prefix level. So the remaining gap is no longer about
+  showing that the entrance-carrier image lies in the current prefix face. The surviving
+  manuscript-faithful missing step is now the next domain-side statement: an interior
+  codimension-`1` face of the induced current-prefix subdivision should have a second same-level
+  coface across it. If that cannot yet be proved from the present support layer, that exact
+  interior-face/coface lemma is the right formalization target.
 - Formalization note after the latest higher-dimensional obstruction reduction:
   in the range `2 < dimension`, the current Section 5 development now reduces pure terminal
   existence to one explicit direct-route theorem:

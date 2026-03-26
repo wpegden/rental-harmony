@@ -697,6 +697,33 @@ def segment (c : Section5MilestoneChain (dimension := dimension)) (k : Fin dimen
     (((c.point k.castSucc : RentDivision (dimension + 1)) : RealPoint dimension))
     (((c.point k.succ : RentDivision (dimension + 1)) : RealPoint dimension))
 
+lemma coord_eq_zero_of_mem_segment
+    {c : Section5MilestoneChain (dimension := dimension)} {k : Fin dimension}
+    {x : RealPoint dimension} (hx : x ∈ c.segment k)
+    {i : Room (dimension + 1)} (hi : k.succ.1 < i.1) :
+    x i = 0 := by
+  rw [Section5MilestoneChain.segment, segment_eq_image_lineMap] at hx
+  rcases hx with
+    ⟨t, ht, rfl⟩
+  have hleft :
+      (((c.point k.castSucc : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 :=
+    c.point_subdividesPrefixFace k.castSucc i (lt_trans (Nat.lt_succ_self _) hi)
+  have hright :
+      (((c.point k.succ : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 :=
+    c.point_subdividesPrefixFace k.succ i hi
+  simp [AffineMap.lineMap_apply_module, hleft, hright]
+
+lemma coord_eq_zero_of_mem_openSegment
+    {c : Section5MilestoneChain (dimension := dimension)} {k : Fin dimension}
+    {x : RealPoint dimension} (hx : x ∈ openSegment ℝ
+      (((c.point k.castSucc : RentDivision (dimension + 1)) : RealPoint dimension))
+      (((c.point k.succ : RentDivision (dimension + 1)) : RealPoint dimension)))
+    {i : Room (dimension + 1)} (hi : k.succ.1 < i.1) :
+    x i = 0 := by
+  have hx' : x ∈ c.segment k := by
+    exact (openSegment_subset_segment ℝ _ _) hx
+  exact coord_eq_zero_of_mem_segment (c := c) (k := k) hx' hi
+
 end Section5MilestoneChain
 
 end PrefixGeometry
@@ -3816,6 +3843,37 @@ theorem all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of
   have hcoord_zero : ((sx.points j) i) = 0 := by
     nlinarith
   simpa [sx, carrierImageSimplex, j] using hcoord_zero
+
+theorem all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_mem_milestoneSegment
+    {c : Section5MilestoneChain (dimension := dimension)}
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)} {k : Fin dimension}
+    (hτdim : 0 < τ.dim)
+    (hxseg : ((x : RealPoint dimension) ∈ c.segment k))
+    (hxaway : τ.ImageContainsPointAwayFromBoundary (T := T) φ x)
+    {i : Room (dimension + 1)} (hi : k.succ.1 < i.1) :
+    ∀ v ∈ τ.carrier,
+      (((φ v : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 := by
+  apply all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_coord_eq_zero
+    (T := T) (τ := τ) (φ := φ) (x := x) hτdim hxaway
+  exact Section5MilestoneChain.coord_eq_zero_of_mem_segment (c := c) hxseg hi
+
+theorem all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_mem_openMilestoneSegment
+    {c : Section5MilestoneChain (dimension := dimension)}
+    {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}
+    {x : RentDivision (dimension + 1)} {k : Fin dimension}
+    (hτdim : 0 < τ.dim)
+    (hxseg :
+      ((x : RealPoint dimension) ∈ openSegment ℝ
+        (((c.point k.castSucc : RentDivision (dimension + 1)) : RealPoint dimension))
+        (((c.point k.succ : RentDivision (dimension + 1)) : RealPoint dimension))))
+    (hxaway : τ.ImageContainsPointAwayFromBoundary (T := T) φ x)
+    {i : Room (dimension + 1)} (hi : k.succ.1 < i.1) :
+    ∀ v ∈ τ.carrier,
+      (((φ v : RentDivision (dimension + 1)) : RealPoint dimension) i) = 0 := by
+  apply all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_coord_eq_zero
+    (T := T) (τ := τ) (φ := φ) (x := x) hτdim hxaway
+  exact Section5MilestoneChain.coord_eq_zero_of_mem_openSegment (c := c) hxseg hi
 
 theorem exists_imageVertex_coord_pos_of_imageContainsPointAwayFromBoundary_of_coord_pos
     {τ : SubdivisionFace T} {φ : Vertex → RentDivision (dimension + 1)}

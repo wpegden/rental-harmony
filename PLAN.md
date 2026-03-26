@@ -318,6 +318,20 @@
   then produce a fresh current-prefix ambient-facet vertex for that entrance face. The
   entrance-carrier side is now sharper in the endpoint-entry branch as well:
   `codimOneSubface_imageMeetsOpenMilestoneSegment_of_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone`
+  upgrades any endpoint-entry entrance carrier to one meeting the open segment, and
+  `exists_pointAwayFromBoundary_of_codimOne_face_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone`
+  then upgrades that to a point of `λ(ρ)` away from the boundary of `λ(ρ)` and off both
+  endpoints. The newest coordinate lemmas
+  `Section5MilestoneChain.coord_eq_zero_of_mem_segment`,
+  `Section5MilestoneChain.coord_eq_zero_of_mem_openSegment`,
+  `SubdivisionFace.all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_mem_milestoneSegment`,
+  and
+  `SubdivisionFace.all_imageVertices_coord_eq_zero_of_imageContainsPointAwayFromBoundary_of_mem_openMilestoneSegment`
+  now show that such an endpoint-entry witness already forces every image vertex of the entrance
+  carrier into the current prefix face. So the remaining next-milestone continuation frontier is
+  now genuinely domain-side: prove that an interior codimension-`1` entrance face of the induced
+  current-prefix subdivision has a distinct same-level coface, rather than adding more
+  coordinate-normalization wrappers.
   upgrades any entrance carrier meeting `[b_{k-1}, b_k]` to an open-segment carrier, and
   `exists_pointAwayFromBoundary_of_codimOne_face_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone`
   upgrades this further to a point of `λ(ρ)` away from the boundary of `λ(ρ)` and off both
