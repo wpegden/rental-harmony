@@ -66,7 +66,18 @@
   domain coordinate. So the remaining obstruction is now asymmetrical and exact. Positive
   current-prefix data can be pushed from the image back to the domain, but zero current-prefix
   data still does not normalize an arbitrary entrance carrier to a
-  `ν.level.castSucc`-subdividing lower-milestone carrier. The next proof step is therefore to
+  `ν.level.castSucc`-subdividing lower-milestone carrier. The new theorems
+  `codimOneSubface_imageMeetsOpenMilestoneSegment_of_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone`
+  and
+  `exists_pointAwayFromBoundary_of_codimOne_face_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone`
+  make that asymmetry more concrete on the endpoint-entry side: in the branch
+  `¬ ν.face.ImageContainsMilestone ... ν.level.castSucc`, an entrance carrier meeting
+  `[b_{k-1}, b_k]` can now be upgraded first to an open-segment carrier and then to a witness in
+  `λ(ρ)` that lies away from the boundary of `λ(ρ)` and off both endpoints. So the remaining
+  coface gap is no longer about choosing the right point on the endpoint-entry branch; it is
+  exactly the lower-endpoint zero-coordinate normalization, or else a direct same-level coface
+  proof from this stronger open-segment / away-from-boundary entrance-carrier data. The next proof
+  step is therefore to
   either supply precisely that zero-coordinate normalization bridge, or prove the entrance-carrier
   same-level coface theorem directly in a way that avoids it.
 - [ ] Exact higher-dimensional deleted-spur frontier:

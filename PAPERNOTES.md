@@ -224,6 +224,19 @@
   confirms the complementary half of that picture inside Lean as well, so the remaining checked
   local frontier is now exactly the project-specific simplex-entry package
   `ChosenMilestoneChainNextMilestoneCarrierImageSimplexInteriorEntrySpec`.
+- Formalization note after the latest entrance-carrier split:
+  manuscript lines 389--391 are now represented more faithfully on the endpoint-entry side of the
+  continuation argument. In the branch where `ν.face` does not already contain `b_{k-1}`, the
+  theorem
+  `codimOneSubface_imageMeetsOpenMilestoneSegment_of_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone`
+  shows that any entrance carrier meeting `[b_{k-1}, b_k]` actually meets the open segment, and
+  the genericity witness can then be sharpened by
+  `exists_pointAwayFromBoundary_of_codimOne_face_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone`
+  to a point of `λ(ρ)` away from the boundary of `λ(ρ)` and off both endpoints. So the remaining
+  Lean gap is no longer the existence of a suitable entrance point on this branch. It is the
+  domain-side continuation step: either normalize the complementary lower-endpoint case to a
+  `ν.level.castSucc` carrier, or prove the same-level coface theorem directly from this stronger
+  entrance-carrier witness.
 - Formalization note after the latest higher-dimensional obstruction reduction:
   in the range `2 < dimension`, the current Section 5 development now reduces pure terminal
   existence to one explicit direct-route theorem:

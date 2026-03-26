@@ -5694,6 +5694,39 @@ lemma horizontalAdj_of_sameLevelCoface_meets_segment
   · simpa using hρμ
 
 /--
+In the endpoint-entry subcase, an entrance carrier meeting `[b_{k-1}, b_k]` actually meets the
+open segment.
+
+The lower endpoint is excluded because `ν.face` itself does not already contain `b_{k-1}`, and
+the upper endpoint is excluded because `b_k` is away from the boundary of `λ(ν.face)`.
+-/
+theorem
+    codimOneSubface_imageMeetsOpenMilestoneSegment_of_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (haway :
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hlower :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (hρmeets :
+      ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level) :
+    ρ.toSubdivisionFace.ImageMeetsOpenMilestoneSegment (T := T)
+      (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level := by
+  refine
+    SubdivisionFace.imageMeetsOpenMilestoneSegment_of_meets_of_not_containsMilestones
+      (T := T) hρmeets ?_ ?_
+  · intro hρlower
+    exact
+      hlower <|
+        SubdivisionFace.imageContainsMilestone_mono (T := T) ρ.isCodimOneSubface.1 hρlower
+  · intro hρupper
+    exact haway.2 ρ.toSubdivisionFace ρ.isCodimOneSubface <|
+      by simpa [SubdivisionFace.ImageContainsMilestone] using hρupper
+
+/--
 Manuscript-faithful same-level coface continuation through an entrance carrier.
 
 This matches the paper's edge definition more closely than a fresh-vertex statement: the next
@@ -6370,6 +6403,39 @@ structure ChosenMilestoneChainCodimOneFaceSegmentInteriorWitnessSpec where
       ∃ x : RentDivision (dimension + 1),
         ((x : RealPoint dimension) ∈ (chosenMilestoneChain (φ := φ)).segment ν.level) ∧
         ρ.toSubdivisionFace.ImageContainsPointAwayFromBoundary (T := T) φ.vertexMap x
+
+theorem
+    exists_pointAwayFromBoundary_of_codimOne_face_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone
+    (hwitness :
+      ChosenMilestoneChainCodimOneFaceSegmentInteriorWitnessSpec
+        (T := T) (φ := φ))
+    {ν : Section5PositiveNode (chosenMilestoneChain (φ := φ)) φ}
+    {ρ : SubdivisionFace.CarrierCodimOneSubface ν.face}
+    (haway :
+      ν.face.ImageContainsMilestoneAwayFromBoundary (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.succ)
+    (hlower :
+      ¬ ν.face.ImageContainsMilestone (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level.castSucc)
+    (hρmeets :
+      ρ.toSubdivisionFace.ImageMeetsMilestoneSegment (T := T)
+        (chosenMilestoneChain (φ := φ)) φ.vertexMap ν.level) :
+    ∃ x : RentDivision (dimension + 1),
+      ((x : RealPoint dimension) ∈ (chosenMilestoneChain (φ := φ)).segment ν.level) ∧
+      x ≠ (chosenMilestoneChain (φ := φ)).point ν.level.castSucc ∧
+      x ≠ (chosenMilestoneChain (φ := φ)).point ν.level.succ ∧
+      ρ.toSubdivisionFace.ImageContainsPointAwayFromBoundary (T := T) φ.vertexMap x := by
+  rcases
+      hwitness.exists_pointAwayFromBoundary_of_codimOne_face_meets_segment hρmeets with
+    ⟨x, hxseg, hxaway⟩
+  refine ⟨x, hxseg, ?_, ?_, hxaway⟩
+  · intro hxlower
+    apply hlower
+    exact SubdivisionFace.imageContainsMilestone_mono (T := T) ρ.isCodimOneSubface.1 <|
+      by simpa [SubdivisionFace.ImageContainsMilestone, hxlower] using hxaway.1
+  · intro hxupper
+    exact haway.2 ρ.toSubdivisionFace ρ.isCodimOneSubface <|
+      by simpa [SubdivisionFace.ImageContainsMilestone, hxupper] using hxaway.1
 
 /--
 Image-side segment-escape principle needed to rule out the packaged top-dimensional obstruction.

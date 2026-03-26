@@ -315,7 +315,15 @@
   current prefix face. So the route-changed next-milestone frontier has split cleanly into two
   geometric bridge questions:
   first produce the entrance codimension-`1` face meeting `[b_{k-1}, b_k]`,
-  then produce a fresh current-prefix ambient-facet vertex for that entrance face.
+  then produce a fresh current-prefix ambient-facet vertex for that entrance face. The
+  entrance-carrier side is now sharper in the endpoint-entry branch as well:
+  `codimOneSubface_imageMeetsOpenMilestoneSegment_of_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone`
+  upgrades any entrance carrier meeting `[b_{k-1}, b_k]` to an open-segment carrier, and
+  `exists_pointAwayFromBoundary_of_codimOne_face_meets_segment_of_face_nextMilestoneAwayFromBoundary_and_not_contains_lowerMilestone`
+  upgrades this further to a point of `λ(ρ)` away from the boundary of `λ(ρ)` and off both
+  endpoints. So the endpoint-entry side no longer lacks a usable entrance-point witness. The
+  remaining local continuation gap is now exactly the lower-endpoint zero-coordinate
+  normalization, or a direct same-level coface theorem from this stronger entrance-carrier data.
 
 ### Section 6: multiple Sperner labelings
 - First theorem:
